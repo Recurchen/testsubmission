@@ -1,3 +1,4 @@
+from datetime import timezone
 from http.client import HTTPResponse
 from django.shortcuts import render
 
@@ -28,28 +29,41 @@ class StudiosAPIView(APIView):
         return Response(serializer.data)
 
 import requests
-from urllib.parse import urlencode
 
 
-
-
-
-# def test_view(request):
-#     res = extract_lat_lng("1600 Amphitheatre Parkway, Mountain View, CA")
-#     return Response(res)
 
 class TestView(APIView):
     
     def get(self, request):
-        url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=Washington%2C%20DC&destinations=New%20York%20City%2C%20NY&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
+        origin = '43.6629, -79.3957' # UTSG 
 
-        payload={}
-        headers = {}
+        destinations = ('43.5483, -79.6627', 'One Bloor St', 'Canada Wonderland', "M4K 2N2")
+        dest_order = {}
 
-        response = requests.request("GET", url, headers=headers, data=payload)
+        #destination = '43.5483, -79.6627' # UTM
+        #destination = '3 Gloucester St' # home
+        for i in range(len(destinations)):
+            origin = '43.6629, -79.3957'
+            destination = destinations[i]
+            url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + origin + "&destinations="+destination+"&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
 
-        content = response.text
-        json_data = json.loads(content)
+            payload={}
+            headers = {}
+        
+            response = requests.request("GET", url, headers=headers, data=payload)
+
+            content = response.text
+            json_data = json.loads(content)
+            time = json_data["rows"][0]["elements"][0]["duration"]["text"]
+            origin = json_data['origin_addresses']
+            dest = json_data['destination_addresses'][0]
+            seconds = json_data["rows"][0]["elements"][0]["duration"]["value"]
+
+            dest_order[dest] = seconds
+
+        dest_sorted = sorted(dest_order.items(), key=lambda x: x[1])
 
 
-        return Response(f"{json_data}")
+        return Response({'origin': origin,\
+                         'sorted_destinations':dest_sorted,
+                         'best_destinations': next(iter(dest_sorted))})

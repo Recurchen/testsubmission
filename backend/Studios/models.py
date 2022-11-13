@@ -7,7 +7,7 @@ class Studio(models.Model):
     address = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=255)
-    longtitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
 
 class Amenity(models.Model):
