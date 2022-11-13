@@ -22,7 +22,7 @@ class StudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studio
         fields = ['name', 'address', 'postal_code', 'phone_number',
-        'longtitude', 'latitude',
+        'longitude', 'latitude',
          'amenities', 'images']
 
 
