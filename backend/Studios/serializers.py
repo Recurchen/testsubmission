@@ -5,7 +5,6 @@ from .models import Studio, Image, Amenity
 
 
 
-
 class StudioImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
@@ -25,12 +24,6 @@ class StudioSerializer(serializers.ModelSerializer):
         'longitude', 'latitude',
          'amenities', 'images']
 
+class UserLocationSerializer(serializers.Serializer):
+    location = serializers.CharField(max_length = 255)
 
-
-
-# class ProductSerializer(serializers.ModelSerializer):
-#     store = StoreSerializer()
-
-#     class Meta:
-#         model = Product
-#         fields = ['store', 'name', 'price', 'is_available']

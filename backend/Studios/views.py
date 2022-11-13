@@ -8,7 +8,7 @@ from django.views import View
 
 import json
 
-from .serializers import StudioSerializer
+from .serializers import StudioSerializer, UserLocationSerializer
 from .models import Studio
 
 # Create your views here.
@@ -33,19 +33,30 @@ import requests
 
 
 class TestView(APIView):
-    
-    def get(self, request):
-        origin = '43.6629, -79.3957' # UTSG 
+    serializer_class = UserLocationSerializer
 
-        destinations = ('43.5483, -79.6627', 'One Bloor St', 'Canada Wonderland', "M4K 2N2")
+    def get(self, request, *args, **kwargs):
+        return Response({})
+    
+    def post(self, request, *args, **kwargs):
+        serializer = UserLocationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            origin_data = serializer.data.get('location')
+        # else:
+        #     return Response(
+        #         serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+        studios = Studio.objects.all()
+
+        #destinations = ('43.5483, -79.6627', 'One Bloor St', 'Canada Wonderland')
         dest_order = {}
 
-        #destination = '43.5483, -79.6627' # UTM
-        #destination = '3 Gloucester St' # home
-        for i in range(len(destinations)):
-            origin = '43.6629, -79.3957'
-            destination = destinations[i]
-            url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + origin + "&destinations="+destination+"&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
+        #for i in range(len(destinations)):
+        for studio in studios:
+            origin = origin_data
+            destination = studio.address
+            url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin+"&destinations="+destination+"&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
 
             payload={}
             headers = {}
