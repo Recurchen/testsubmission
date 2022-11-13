@@ -41,7 +41,6 @@ from urllib.parse import urlencode
 class TestView(APIView):
     
     def get(self, request):
-        api_key = 'AIzaSyAoaeqCybD4qXceoxt6gqB-guv4_ZCEKMM'
         url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=Washington%2C%20DC&destinations=New%20York%20City%2C%20NY&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
 
         payload={}
@@ -49,12 +48,8 @@ class TestView(APIView):
 
         response = requests.request("GET", url, headers=headers, data=payload)
 
-        context = response.text
-        json_data = json.loads(context)
-        print(type(context))
-        
-        # return time as text and as seconds
-        # time = r.json()["rows"][0]["elements"][0]["duration"]["text"]       
-        # seconds = r.json()["rows"][0]["elements"][0]["duration"]["value"]
+        content = response.text
+        json_data = json.loads(content)
+
 
         return Response(f"{json_data}")
