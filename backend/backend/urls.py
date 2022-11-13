@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from Studios.views import StudiosAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('studios/', StudiosAPIView.as_view() )
 ]
