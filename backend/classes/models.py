@@ -1,6 +1,6 @@
 from django.db import models
 from recurrence.fields import RecurrenceField
-
+from Studios.models import Studio
 
 class Category(models.Model):
     name = models.CharField(null=False, max_length=100)
@@ -10,7 +10,7 @@ class Category(models.Model):
 
 
 class Class(models.Model):
-    # studio = models.ForeignKey(Studio, on_delete=models.CASCADE, related_name='classes')
+    studio = models.ForeignKey(Studio, on_delete=models.CASCADE, related_name='classes')
     name = models.CharField(null=False, max_length=100)
     description = models.TextField(null=False, max_length=100)
     coach = models.CharField(null=False, max_length=100)

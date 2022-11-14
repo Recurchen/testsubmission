@@ -1,17 +1,12 @@
-from dateutil.rrule import rrulestr
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 # from rest_framework import mixins as drf_mixins
 # from rest_framework import viewsets as drf_viewsets
 # from rest_framework import pagination as drf_pagination
-import requests
-import json
-import recurrence
-from rest_framework.response import Response
-
 from classes.models import Category, Class
 from classes.serializers import CategorySerializer, ClassSerializer
+from django.shortcuts import get_object_or_404
 
 
 # class CreateClassView(CreateAPIView):
@@ -24,7 +19,8 @@ from classes.serializers import CategorySerializer, ClassSerializer
 #         data = request.data
 #         # recurrences = data['recurrences']
 #         # recurrence.base.rule_to_text(recurrences)
-#         # # "name": "", "description": "", "coach": "", "capacity": "", "recurrences": "", "start_time": "", "end_time": "", "start_date": "", "end_date": ""
+#         # # "name": "", "description": "", "coach": "", "capacity": "", "recurrences": "",
+#         "start_time": "", "end_time": "", "start_date": "", "end_date": ""
 #         r_list = data['recurrences'].split(',')
 #         if len(r_list)
 #         RECURRENCE_CHOICES = ['YEARLY', 'MONTHLY', 'WEEKLY', 'DAILY']
@@ -33,6 +29,7 @@ from classes.serializers import CategorySerializer, ClassSerializer
 #         return self.create(request, *args, **kwargs)
 
 
+# class details for specific studio
 class ClassesListView(ListAPIView):
     serializer_class = ClassSerializer
 
@@ -41,6 +38,10 @@ class ClassesListView(ListAPIView):
         return classes
 
     def get(self, request, *args, **kwargs):
+        id = self.kwargs['studio_id']
+        if not Class.objects.filter(studio_id=id):
+            return JsonResponse({"MESSAGE": "Not Found",
+                                 "STATUS": 404})
         classes = self.get_queryset()
         serializer = ClassSerializer(classes, many=True)
         return JsonResponse(serializer.data, safe=False)

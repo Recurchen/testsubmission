@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from classes.models import Category, Class
 
+from Studios.serializers import StudioSerializer
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,15 +13,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ClassSerializer(serializers.ModelSerializer):
-    # studio = StudioSerializer()
+    studio = StudioSerializer()
     categories = CategorySerializer(many=True, read_only=True)
     category_ids = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(), many=True, write_only=True)
 
     class Meta:
         model = Class
-        fields = ['id', 'name', 'description', 'coach', 'capacity', 'recurrences', 'start_time',
-                  'end_time', 'start_date', 'end_date', 'categories', 'category_ids']
+        fields = ['id', 'studio', 'name', 'description', 'coach', 'capacity', 'recurrences',
+                  'start_time', 'end_time', 'start_date', 'end_date', 'categories', 'category_ids']
 
     def create(self, validated_data):
         return super().create(validated_data)
@@ -36,6 +38,3 @@ class ClassSerializer(serializers.ModelSerializer):
     #     instance.end_time = validated_data.get('end_time', instance.end_time)
     #     instance.save()
     #     return instance
-
-
-
