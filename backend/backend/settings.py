@@ -40,9 +40,11 @@ INSTALLED_APPS = [
 
     ## customized
     'Studios',
+    'classes',
 
     ## third party package
-    'rest_framework'
+    'rest_framework',
+    'recurrence',
 
 ]
 
