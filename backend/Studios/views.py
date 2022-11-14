@@ -1,11 +1,10 @@
 from datetime import timezone
-from http.client import HTTPResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.views import View
-
+from rest_framework import generics
+import requests
 import json
 
 from .serializers import StudioSerializer, UserLocationSerializer
@@ -15,24 +14,20 @@ from .models import Studio
 
 api_key = 'AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs'
 
-class StudiosAPIView(APIView):
+class StudiosListView(generics.ListCreateAPIView):
     serializer_class = StudioSerializer
 
     def get_queryset(self):
         studios = Studio.objects.all()
         return studios
 
-    def get(self, request, *args, **kwargs):
-        studios = self.get_queryset()
-        serializer = StudioSerializer(studios, many = True)
-
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = StudioSerializer(queryset, many=True)
         return Response(serializer.data)
 
-import requests
 
-
-
-class TestView(APIView):
+class NearMeGymsView(APIView):
     serializer_class = UserLocationSerializer
 
     def get(self, request, *args, **kwargs):
@@ -52,7 +47,6 @@ class TestView(APIView):
         #destinations = ('43.5483, -79.6627', 'One Bloor St', 'Canada Wonderland')
         dest_order = {}
 
-        #for i in range(len(destinations)):
         for studio in studios:
             origin = origin_data
             destination = studio.address
@@ -78,3 +72,11 @@ class TestView(APIView):
         return Response({'origin': origin,\
                          'sorted_destinations':dest_sorted,
                          'best_destinations': next(iter(dest_sorted))})
+
+
+class StudioDetailView(generics.RetrieveAPIView):
+    serializer_class = StudioSerializer
+    # queryset = Studio.objects.all()
+
+    def get_object(self):
+        return get_object_or_404(Studio, id=self.kwargs['studio_id'])

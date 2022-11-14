@@ -20,7 +20,7 @@ class StudioSerializer(serializers.ModelSerializer):
     images = StudioImageSerializer(many = True)
     class Meta:
         model = Studio
-        fields = ['name', 'address', 'postal_code', 'phone_number',
+        fields = ['id', 'name', 'address', 'postal_code', 'phone_number',
         'longitude', 'latitude',
          'amenities', 'images']
 
