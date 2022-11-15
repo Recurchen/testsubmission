@@ -7,6 +7,8 @@ app_name = 'classes'
 urlpatterns = [
     path('<int:class_id>/', ClassView.as_view()),
     # path('all/', ClassesListView.as_view()),
+
+    # get all class in this studio
     path('<int:studio_id>/all', ClassesListView.as_view()),
 
     # not required stuff

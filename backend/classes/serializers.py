@@ -1,30 +1,59 @@
 from rest_framework import serializers
-
 from classes.models import Category, Class
-
 from Studios.serializers import StudioSerializer
+from rest_framework.response import Response
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name']
-        # read_only_fields = ['id','name']
 
 
 class ClassSerializer(serializers.ModelSerializer):
     studio = StudioSerializer()
-    categories = CategorySerializer(many=True, read_only=True)
+    categories = CategorySerializer(many=True)
     category_ids = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), many=True, write_only=True)
+        queryset=Category.objects.all(), many=True)
 
     class Meta:
         model = Class
         fields = ['id', 'studio', 'name', 'description', 'coach', 'capacity', 'recurrences',
                   'start_time', 'end_time', 'start_date', 'end_date', 'categories', 'category_ids']
 
-    def create(self, validated_data):
-        return super().create(validated_data)
+
+# class ClassOccurrencesCreateSerializer(serializers.ModelSerializer):
+#     studio = StudioSerializer()
+#     categories = CategorySerializer(many=True)
+#     category_ids = serializers.PrimaryKeyRelatedField(
+#         queryset=Category.objects.all(), many=True)
+#     # classes = ClassSerializer(many=True)
+#     class Meta:
+#         model = Class
+#         fields = ['id', 'studio', 'name', 'description', 'coach', 'capacity', 'recurrences',
+#                   'start_time', 'end_time', 'start_date', 'end_date', 'categories']
+
+
+# class ClassViewSerializer(serializers.ModelSerializer):
+#     studio = StudioSerializer()
+#     categories = CategorySerializer(many=True, read_only=True)
+#     category_ids = serializers.PrimaryKeyRelatedField(
+#         queryset=Category.objects.all(), many=True, write_only=True)
+#     occurrences = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = Class
+#         fields = ['id', 'studio', 'name', 'description', 'coach', 'capacity', 'recurrences',
+#                   'start_time', 'end_time', 'start_date', 'end_date', 'categories', 'category_ids']
+#         def get_occurrences(self, my_class):
+#             return ClassViewSerializer(my_class.occurrences, many=True).data
+#
+
+
+    # def create(self, validated_data):
+    #     return Response(validated_data)
+    #     return super().create(validated_data)
+
 
     # def create(self, validated_data):
     #     return super().create(validated_data)
