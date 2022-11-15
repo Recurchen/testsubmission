@@ -35,7 +35,6 @@ from Studios.serializers import StudioSerializer
 #         return Response(serializer.data)
 
 
-
 # class details for specific studio
 class ClassesListView(ListAPIView):
     serializer_class = ClassSerializer

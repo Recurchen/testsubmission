@@ -28,7 +28,7 @@ class ClassInstancesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassInstance
         fields = ['belonged_class', 'is_full', 'is_cancelled', 'start_time',
-                  'end_time', 'class_date']
+                  'end_time', 'class_date', 'capacity']
 
 # class ClassOccurrencesCreateSerializer(serializers.ModelSerializer):
 #     studio = StudioSerializer()
