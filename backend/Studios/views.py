@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import generics
 import requests
 import json
+from django.db.models.functions import Lower, Length, Concat
+from django.db.models import Count, F, Value, CharField, ExpressionWrapper
 
 from .serializers import StudioSerializer, UserLocationSerializer
 from .models import Studio
@@ -15,16 +17,49 @@ from .models import Studio
 api_key = 'AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs'
 
 class StudiosListView(generics.ListCreateAPIView):
-    serializer_class = StudioSerializer
+    serializer_class = UserLocationSerializer
 
     def get_queryset(self):
         studios = Studio.objects.all()
         return studios
 
+    def get_queryset_sorted(self, origin):
+        
+        def calculate_dist(origin, destination):
+            url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin+"&destinations="+destination+"&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
+
+            payload={}
+            headers = {}
+        
+            response = requests.request("GET", url, headers=headers, data=payload)
+
+            content = response.text
+            json_data = json.loads(content)
+            seconds = json_data["rows"][0]["elements"][0]["duration"]["value"]
+
+            return seconds
+
+        studios = Studio.objects.all()
+        sorted_studios = sorted(studios, key = lambda studio: calculate_dist(origin, studio.address), reverse = False)
+        return sorted_studios
+
     def list(self, request):
         queryset = self.get_queryset()
         serializer = StudioSerializer(queryset, many=True)
+
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = UserLocationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            origin_data = serializer.data.get('location')
+
+        queryset = self.get_queryset_sorted(origin_data)
+        serializer = StudioSerializer(queryset, many=True)
+
+        return Response(serializer.data)
+
 
 
 class NearMeGymsView(APIView):
@@ -76,7 +111,6 @@ class NearMeGymsView(APIView):
 
 class StudioDetailView(generics.RetrieveAPIView):
     serializer_class = StudioSerializer
-    # queryset = Studio.objects.all()
 
     def get_object(self):
         return get_object_or_404(Studio, id=self.kwargs['studio_id'])
