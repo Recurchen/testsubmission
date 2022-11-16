@@ -4,7 +4,7 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework import mixins as drf_mixins
 from rest_framework import viewsets as drf_viewsets
 from rest_framework import pagination as drf_pagination
-from classes.models import Class
+from classes.models import Class, ClassInstance
 from classes.serializers import ClassSerializer
 
 from rest_framework.response import Response

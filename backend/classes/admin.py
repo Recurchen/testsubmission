@@ -13,7 +13,7 @@ class ClassAdmin(admin.ModelAdmin):
 class ClassInstanceAdmin(admin.ModelAdmin):
     fields = ['belonged_class', 'start_time', 'end_time', 'class_date', 'is_full', 'is_cancelled',
               'capacity']
-    list_display = ['belonged_class', 'start_time', 'end_time', 'class_date', 'is_full', 'capacity',
+    list_display = ['belonged_class', 'start_time', 'end_time', 'class_date', 'capacity', 'is_full',
                     'is_cancelled']
 
 
