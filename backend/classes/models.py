@@ -152,7 +152,8 @@ class ClassInstance(models.Model):
     class_date = models.DateField(null=False)
     capacity = models.PositiveIntegerField(null=False)
 
-    def save(self, *args, **kwargs):
-        if not self.capacity > 0:
-            self.is_full = True
-        return super(ClassInstance, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # if count(registered_user) > capacity:
+    #     # self.is_full = True
+    #
+    #     return super(ClassInstance, self).save(*args, **kwargs)
