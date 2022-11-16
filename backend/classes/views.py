@@ -1,43 +1,19 @@
 from django.http import JsonResponse
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
-from rest_framework import mixins as drf_mixins
-from rest_framework import viewsets as drf_viewsets
-from rest_framework import pagination as drf_pagination
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+# from rest_framework import mixins as drf_mixins
+# from rest_framework import viewsets as drf_viewsets
+# from rest_framework import pagination as drf_pagination
+# from rest_framework.permissions import IsAuthenticated
 from classes.models import Class, ClassInstance
-from classes.serializers import ClassSerializer
-
+from classes.serializers import ClassInstancesSerializer, ClassSerializer
 from rest_framework.response import Response
 import datetime
 from Studios.models import Studio
 from Studios.serializers import StudioSerializer
 
 
-# class CreateClassView(CreateAPIView):
-#     serializer_class = ClassSerializer
-
-# class ClassesAPIViewSet(
-#     drf_viewsets.GenericViewSet,
-#     drf_mixins.ListModelMixin,
-#     drf_mixins.DestroyModelMixin,  # for deleting classes
-#     drf_mixins.CreateModelMixin,  # for model creation (class)
-#     drf_mixins.RetrieveModelMixin,  # for model retrieval (view class)
-# ):
-#     queryset = Class.objects.all()
-#
-#     def get_serializer_class(self):
-#         if self.action == "create":
-#             return ClassCreateSerializer
-#         return ClassViewSerializer
-#
-#     def get(self, request, *args, **kwargs):
-#         serializer = self.get_serializer_class()
-#         return Response(serializer.data)
-
-
-# class details for specific studio
-class ClassesListView(ListAPIView):
-    serializer_class = ClassSerializer
+class ClassInstancesListView(ListAPIView):
+    serializer_class = ClassInstance
 
     def get_queryset(self):
         classes = Class.objects.all()
@@ -53,44 +29,80 @@ class ClassesListView(ListAPIView):
         #     return Response({'no class in this studio'},)
         studio_serializer = StudioSerializer(Studio.objects.get(id=id))
         data = [{'Studio': studio_serializer.data}]
-
         classes_data = []
         data.append({'Classes': classes_data})
-        # append class by start time(after now)
-        classes = Class.objects.filter(studio_id=id).values('id')
-        class_objects = []
-        for i in range(0, len(classes)):
-            class_objects.append(Class.objects.get(id=classes[i]['id']))
+        # append class instances after now by start time
+        class_ids = Class.objects.filter(studio_id=id).values('id')
+        class_objects = []  # classes belong to the studio
+        for i in range(0, len(class_ids)):
+            class_objects.append(Class.objects.get(id=class_ids[i]['id']))
 
-        for j in range(0, len(classes)):
-            class_obj = Class.objects.get(id=classes[j]['id'])
-            text_rules_inclusion = []
-            for rule in class_obj.recurrences.rrules:
-                text_rules_inclusion.append(rule.to_text())
-            # list of categories name (keywords)
-            # categories_list = []
-            # for i in range(0, len(class_obj.categories.values('name'))):
-            #     category_name = class_obj.categories.values('name')[i]['name']
-            #     categories_list.append(category_name)
+        future_class_instances = []  # future class instances for all belonged classes
+        for c in class_objects:
+            class_instance_ids = ClassInstance.objects.filter(belonged_class=c).values('id')
+            class_instances = [ClassInstance.objects.get(id=class_instance_ids[i]['id'])
+                               for i in range(0, len(class_instance_ids))]
+            now = datetime.datetime.now()  # default timezone is utc
+            for i in class_instances:
+                class_start_time = datetime.datetime.combine(i.class_date, i.start_time)
+                if class_start_time >= now:
+                    future_class_instances.append(i)
+        # sort class instances with insertion sort algo
+        for i in range(1, len(future_class_instances)):
+            key_item = future_class_instances[i]
+            j = i - 1
+            key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
 
-            classes_data.append({"id": class_obj.id,
-                                 "name": class_obj.name,
-                                 'description': class_obj.description,
-                                 'coach': class_obj.coach,
-                                 'capacity': class_obj.capacity,
-                                 # 'start_time': class_obj.start_time,
-                                 # 'end_time': class_obj.end_time,
-                                 # 'start_date': class_obj.start_date,
-                                 # 'end_date': class_obj.end_date,
-                                 'start_time': datetime.datetime.combine(
-                                     class_obj.start_date, class_obj.start_time).strftime(
-                                     "%Y/%m/%d, %H:%M:%S"),
-                                 'end_time': datetime.datetime.combine(
-                                     class_obj.end_date, class_obj.end_time).strftime(
-                                     "%Y/%m/%d, %H:%M:%S"),
-                                 'frequency': text_rules_inclusion,
-                                 'categories': self.categories
-                                 })
+            while j >= 0 and datetime.datetime.combine(future_class_instances[j].class_date,
+                                                       future_class_instances[j].start_time) > \
+                    key_item_start:
+                future_class_instances[j + 1] = future_class_instances[j]
+                j -= 1
+            future_class_instances[j + 1] = key_item
+        # display class instances: current in utc timezone TODO:change to local timezone
+        for c in future_class_instances:
+            # c_data = {
+            #     "belonged_class_name": c.belonged_class.name,
+            #     "class_date": c.class_date,
+            #     "start_time": c.start_time,
+            #     "end_time": c.end_time,
+            #     "is_full": c.is_full,
+            #     "is_cancelled": c.is_cancelled,
+            #     "capacity": c.capacity
+            # }
+            # classes_data.append(c_data)
+            class_instance_serializer = ClassInstancesSerializer(c)
+            classes_data.append(class_instance_serializer.data)
+
+        # for j in range(0, len(classes)):
+        #     class_obj = Class.objects.get(id=classes[j]['id'])
+        #     text_rules_inclusion = []
+        #     for rule in class_obj.recurrences.rrules:
+        #         text_rules_inclusion.append(rule.to_text())
+        #     # list of categories name (keywords)
+        #     # categories_list = []
+        #     # for i in range(0, len(class_obj.categories.values('name'))):
+        #     #     category_name = class_obj.categories.values('name')[i]['name']
+        #     #     categories_list.append(category_name)
+        #
+        #     classes_data.append({"id": class_obj.id,
+        #                          "name": class_obj.name,
+        #                          'description': class_obj.description,
+        #                          'coach': class_obj.coach,
+        #                          'capacity': class_obj.capacity,
+        #                          # 'start_time': class_obj.start_time,
+        #                          # 'end_time': class_obj.end_time,
+        #                          # 'start_date': class_obj.start_date,
+        #                          # 'end_date': class_obj.end_date,
+        #                          'start_time': datetime.datetime.combine(
+        #                              class_obj.start_date, class_obj.start_time).strftime(
+        #                              "%Y/%m/%d, %H:%M:%S"),
+        #                          'end_time': datetime.datetime.combine(
+        #                              class_obj.end_date, class_obj.end_time).strftime(
+        #                              "%Y/%m/%d, %H:%M:%S"),
+        #                          'frequency': text_rules_inclusion,
+        #                          'categories': self.categories
+        #                          })
 
         return Response(data)
 
