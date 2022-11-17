@@ -52,4 +52,10 @@ class RetrieveUpdateProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class RestrictedProfileSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(source='userprofile.avatar')
+    class Meta:
+        model = get_user_model()
+        fields = ["username","avatar"]
+        read_only_fields = ["username","phone_number"]
 

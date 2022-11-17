@@ -1,27 +1,22 @@
 from django.shortcuts import get_object_or_404, render
-
-# Create your views here.
-import rest_framework
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import SignUpSerializer, RetrieveUpdateProfileSerializer
+from rest_framework import status
+from .serializers import SignUpSerializer, RetrieveUpdateProfileSerializer, RestrictedProfileSerializer
 from .models import Profile
 from django.contrib.auth.models import User
-import jwt, datetime
-
 
 class RegisterView(APIView):
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LogInView(APIView):
@@ -35,48 +30,44 @@ class LogInView(APIView):
         if user is None:
             raise AuthenticationFailed('Incorrent Username or Password')
         
-        response = {"message": "Login Successfull", "tokens": user.auth_token.key}
-        return Response(data=response)
+        token, created = Token.objects.get_or_create(user=user)
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+        response_data = {
+            "message": "Login Successfull",
+            'username': user.username,
+            'id':user.id,
+            'token': token.key
+        }
+
+        return Response(data=response_data, status=status.HTTP_200_OK)
 
 
-# class ProfileAPI(APIView):
-#     permission_classes = [IsAuthenticated]
-#     def get(self, request, *args, **kwargs):
-#         user = get_object_or_404(User, pk=kwargs['user_id'])
-#         profile = Profile.objects.get(user=user)
-#         print(profile)
-#         profile_serializer = RestrictedUserSerializer(profile.user)
-#         return Response(profile_serializer.data)
-        
-#     def post(self, request, *args, **kwargs):
-#         user = get_object_or_404(User, pk=kwargs['user_id'])
 
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = RetrieveUpdateProfileSerializer
 
+    def get_serializer_class(self):
+        if self.request.user.is_staff or (
+                self.request.user.id == int(self.request.parser_context["kwargs"]["user_id"])
+            ):
+                return RetrieveUpdateProfileSerializer
+        else:
+            return RestrictedProfileSerializer
+
     def retrieve(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs['user_id'])
         profile = Profile.objects.get(user=user)
-        profile_serializer = RetrieveUpdateProfileSerializer(profile.user)
-        return Response(profile_serializer.data)
+        profile_serializer = self.get_serializer(profile.user)
+        return Response(profile_serializer.data, status=status.HTTP_200_OK)
     
-    def perform_update(self, serializer):
-        return serializer.save()
     
     def update(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs['user_id'])
         profile = Profile.objects.get(user=user)
-        serializer = RetrieveUpdateProfileSerializer(profile.user, data=request.data)
+        serializer = self.get_serializer(profile.user, data=request.data)
         
         serializer.is_valid(raise_exception=True)
-        print("here")
-        print(serializer.data)
         instance = serializer.update(instance=profile, validated_data=request.data)
-        print(instance)
-        serializer = RetrieveUpdateProfileSerializer(instance.user)
-        return Response(serializer.data)
+        serializer = self.get_serializer(instance.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
