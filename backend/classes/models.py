@@ -30,26 +30,32 @@ class Class(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        # Assume we are not creating class in the past
+        # we will only create class in future
+        super(Class, self).save(*args, **kwargs)
         # 1) update Class
         if self.pk:
             # update self
             start = datetime.datetime.combine(self.start_date, self.start_time)
-            end = datetime.datetime.combine(self.end_date, self.start_time)
-            self.recurrences.dtstart = start
-            self.recurrences.dtend = end
-            super(Class, self).save(*args, **kwargs)
+            end = datetime.datetime.combine(self.end_date, self.end_time)
+            # self.recurrences.dtstart = start
+            # self.recurrences.dtend = end
+
             # get all class instances
             instance_ids = ClassInstance.objects.filter(belonged_class=self).values('id')
             instances = [ClassInstance.objects.get(id=instance_ids[i]['id'])
                          for i in range(0, len(instance_ids))]
 
             # new occurrences:
-            datetimes = list(self.recurrences.occurrences())   # this doesn't consider exdates
+            # this doesn't consider exdates
+            # datetimes = list(self.recurrences.occurrences())
+            datetimes = self.recurrences.between(start, end, inc=True)  # we only need its date
             dates = []
             for d in datetimes:
                 dates.append(d.date())  # convert datetime into date
             ex_datetimes = self.recurrences.exdates
             ex_dates = []
+
             if len(ex_datetimes) != 0:
                 for e in ex_datetimes:
                     ex_dates.append(e.date())  # convert datetime into date
@@ -99,27 +105,25 @@ class Class(models.Model):
             for d in dates:
                 if d not in instance_dates:
                     # create new class instance and save
-                    i = ClassInstance.objects.create(
+                    ClassInstance.objects.create(
                         belonged_class=self,
                         start_time=self.start_time,
                         end_time=self.end_time,
                         class_date=d,
                         capacity=self.capacity)
-                    i.save()
 
             for i in instances:
                 i.save()
             return
 
         # 2) create Class
-        # not correctly create instances if weekly
         start = datetime.datetime.combine(self.start_date, self.start_time)
-        end = datetime.datetime.combine(self.end_date, self.start_time)
-        self.recurrences.dtstart = start
-        self.recurrences.dtend = end
-        super(Class, self).save(*args, **kwargs)
+        end = datetime.datetime.combine(self.end_date, self.end_time)
+        # self.recurrences.dtstart = start
+        # self.recurrences.dtend = end
         # create class instances
-        datetimes = list(self.recurrences.occurrences())
+        # datetimes = list(self.recurrences.occurrences())
+        datetimes = self.recurrences.between(start, end, inc=True)
         dates = []
         for d in datetimes:
             dates.append(d.date())  # convert datetime into date
@@ -132,6 +136,7 @@ class Class(models.Model):
             for d in dates:
                 if d in ex_dates:
                     dates.remove(d)
+        print(dates)
         for d in dates:
             ClassInstance.objects.create(
                 belonged_class=self,
@@ -140,6 +145,7 @@ class Class(models.Model):
                 class_date=d,
                 capacity=self.capacity
             )
+
 
 
 class ClassInstance(models.Model):
