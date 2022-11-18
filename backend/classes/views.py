@@ -40,23 +40,23 @@ class ClassInstancesListView(ListAPIView):
             future_class_instances[j + 1] = key_item
         return future_class_instances
 
-    def search(self, by, value):
+    def search(self, by, value, studio_id):
         if by == 'class_name':
-            return self.search_by_class_name(value)
+            return self.search_by_class_name(value, studio_id)
         elif by == 'coach':
-            return self.search_by_coach(value)
+            return self.search_by_coach(value, studio_id)
         elif by == 'date':
-            return self.search_by_date(value)
+            return self.search_by_date(value, studio_id)
         elif by == 'time_range':
             time = value.split(",")
             start = time[0]
             end = time[1]
-            return self.search_by_time_range(start, end)
+            return self.search_by_time_range(start, end, studio_id)
         return
 
-    def search_by_coach(self, coach):
+    def search_by_coach(self, coach, studio_id):
         classes = []
-        class_ids = Class.objects.filter(coach=coach).values('id')
+        class_ids = Class.objects.filter(coach=coach, studio_id=studio_id).values('id')
         for i in range(0, len(class_ids)):
             classes.append(Class.objects.get(id=class_ids[i]['id']))
         class_instances = []
@@ -69,9 +69,9 @@ class ClassInstancesListView(ListAPIView):
         future_instances = self.future_instances(class_instances)
         return future_instances
 
-    def search_by_class_name(self, class_name):
+    def search_by_class_name(self, class_name, studio_id):
         classes = []
-        class_ids = Class.objects.filter(name=class_name).values('id')
+        class_ids = Class.objects.filter(name=class_name, studio_id=studio_id).values('id')
         for i in range(0, len(class_ids)):
             classes.append(Class.objects.get(id=class_ids[i]['id']))
         class_instances = []
@@ -84,23 +84,26 @@ class ClassInstancesListView(ListAPIView):
         future_instances = self.future_instances(class_instances)
         return future_instances
 
-    def search_by_date(self, date):
+    def search_by_date(self, date, studio_id):
         class_instances = []
+        classes = list(Class.objects.filter(studio_id=studio_id))
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-        class_instance_ids = ClassInstance.objects.filter(class_date=date).values('id')
+        class_instance_ids = ClassInstance.objects.filter(
+            belonged_class__in=classes, class_date=date).values('id')
         for i in range(0, len(class_instance_ids)):
             class_instances.append(ClassInstance.objects.get(id=class_instance_ids[i]['id']))
         future_instances = self.future_instances(class_instances)
         return future_instances
 
-    def search_by_time_range(self, start, end):
+    def search_by_time_range(self, start, end, studio_id):
         """filter class instances by their start time in the range of (start,end)
         start and end are type datetime.time"""
         start = datetime.datetime.strptime(start, '%H:%M').time()
         end = datetime.datetime.strptime(end, '%H:%M').time()
         class_instances = []
+        classes = list(Class.objects.filter(studio_id=studio_id))
         class_instance_ids = ClassInstance.objects.filter(
-            start_time__range=(start, end)).values('id')
+            belonged_class__in=classes, start_time__range=(start, end)).values('id')
         for i in range(0, len(class_instance_ids)):
             class_instances.append(ClassInstance.objects.get(id=class_instance_ids[i]['id']))
         future_instances = self.future_instances(class_instances)
@@ -111,6 +114,7 @@ class ClassInstancesListView(ListAPIView):
         # if any one isn't in allowed search/filter option, return invalid post request too
         keys = list(request.GET.keys())
         length = len(keys)
+        id = self.kwargs['studio_id']
         if length < 1:
             return Response({"details": "Invalid post request"})
         if length == 1:
@@ -125,7 +129,7 @@ class ClassInstancesListView(ListAPIView):
             value = request.GET.get(by)
             by_list = ['class_name', 'coach', 'date', 'time_range']
             if by in by_list:
-                searched_instances = self.search(by, value)
+                searched_instances = self.search(by, value, id)
                 data = []
                 for c in searched_instances:
                     class_instance_serializer = ClassInstancesSerializer(c)
@@ -141,7 +145,7 @@ class ClassInstancesListView(ListAPIView):
             for by in bys:
                 if by in by_list:
                     value = request.GET.get(by)
-                    searched_instances = self.search(by, value)
+                    searched_instances = self.search(by, value, studio_id=id)
                     potential_instances.append(searched_instances)
                 else:
                     return Response({"details": "Invalid post request"})
