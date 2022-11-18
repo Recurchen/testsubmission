@@ -2,6 +2,7 @@ from django.db import models
 from recurrence.fields import RecurrenceField
 from Studios.models import Studio
 import datetime
+from django.contrib.auth.models import User
 
 
 # class Category(models.Model):
@@ -23,6 +24,7 @@ class Class(models.Model):
     start_date = models.DateField(null=False)
     end_date = models.DateField(null=False)
     categories = models.CharField(null=True, blank=True, max_length=200)
+
     # categories = models.ManyToManyField(Category, related_name='classes', blank=True)
 
     def __str__(self):
@@ -98,7 +100,7 @@ class Class(models.Model):
             # we assume one class instance per day and
             # admin cancel class via setting recurrence with exclude
             for i in instances_still_in_time_range:
-                if i.class_date not in dates:   # the instance is excluded
+                if i.class_date not in dates:  # the instance is excluded
                     i.is_cancelled = True
             # check if we need new class instances
             instance_dates = [i.class_date for i in instances]
@@ -119,10 +121,6 @@ class Class(models.Model):
         # 2) create Class
         start = datetime.datetime.combine(self.start_date, self.start_time)
         end = datetime.datetime.combine(self.end_date, self.end_time)
-        # self.recurrences.dtstart = start
-        # self.recurrences.dtend = end
-        # create class instances
-        # datetimes = list(self.recurrences.occurrences())
         datetimes = self.recurrences.between(start, end, inc=True)
         dates = []
         for d in datetimes:
@@ -157,6 +155,9 @@ class ClassInstance(models.Model):
     class_date = models.DateField(null=False)
     capacity = models.PositiveIntegerField(null=False)
 
+    # registered_users = models.ForeignKey(User, on_delete=models.DO_NOTHING,
+    #                                      related_name='class_instances')
+
     def __str__(self):
         return self.belonged_class.name
 
@@ -165,3 +166,27 @@ class ClassInstance(models.Model):
     #     # self.is_full = True
     #
     #     return super(ClassInstance, self).save(*args, **kwargs)
+
+
+# class ClassFilter(django_filters.FilterSet):
+#     class Meta:
+#         model = Class
+#         fields = ('coach', 'name', 'capacity')
+
+
+# class ClassInstanceFilter(django_filters.FilterSet):
+#     class Meta:
+#         model = ClassInstance
+#         fields = {
+#             'class_date': ['exact', 'range'],
+#         }
+#
+#         #fields = ('class_date', 'end_time', 'start_time')
+#         @classmethod
+#         def filter_for_lookup(cls, f, lookup_type):
+#             # override date range lookups
+#             if isinstance(f, models.DateField) and lookup_type == 'range':
+#                 return django_filters.DateRangeFilter, {}
+#
+#             # use default behavior otherwise
+#             return super().filter_for_lookup(f, lookup_type)

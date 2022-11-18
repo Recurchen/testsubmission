@@ -1,6 +1,9 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
+
 from classes.models import Class, ClassInstance
 from Studios.serializers import StudioSerializer
+
 
 #
 # class CategorySerializer(serializers.ModelSerializer):
@@ -11,6 +14,7 @@ from Studios.serializers import StudioSerializer
 
 class ClassSerializer(serializers.ModelSerializer):
     studio = StudioSerializer()
+
     # categories = CategorySerializer(many=True)
     # category_ids = serializers.PrimaryKeyRelatedField(
     #     queryset=Category.objects.all(), many=True)
@@ -22,8 +26,11 @@ class ClassSerializer(serializers.ModelSerializer):
 
 
 class ClassInstancesSerializer(serializers.ModelSerializer):
-    belonged_class = ClassSerializer()
+    # belonged_class = ClassSerializer()
+    class_name = serializers.CharField(source='belonged_class.name')
+    coach = serializers.CharField(source='belonged_class.coach')
+
     class Meta:
         model = ClassInstance
-        fields = ['belonged_class', 'is_full', 'is_cancelled', 'start_time',
+        fields = ['class_name', 'coach', 'is_full', 'is_cancelled', 'start_time',
                   'end_time', 'class_date', 'capacity']

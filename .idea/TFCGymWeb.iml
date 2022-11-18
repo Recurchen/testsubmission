@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/backend" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/backend/classes" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/backend/studio_images" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/Accounts" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/env" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>

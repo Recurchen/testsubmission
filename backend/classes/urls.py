@@ -5,7 +5,7 @@ from classes.views import ClassInstancesListView, ClassView
 app_name = 'classes'
 
 urlpatterns = [
-    # path('<int:class_id>/', ClassView.as_view()),
+    path('<int:class_id>/', ClassView.as_view()),
     # path('all/', ClassesListView.as_view()),
 
     # get all class in a specific studio

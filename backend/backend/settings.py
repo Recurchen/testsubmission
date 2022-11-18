@@ -37,12 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     ## customized
     'Studios',
-     'Accounts',
+    'Accounts',
     'classes',
     ## third party package
     'rest_framework',
     'recurrence',
-    # 'django_filters',
     'rest_framework.authtoken'
 
 
@@ -111,8 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-# TIME_ZONE = 'EST'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
