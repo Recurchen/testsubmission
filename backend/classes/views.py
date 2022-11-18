@@ -110,7 +110,7 @@ class ClassInstancesListView(ListAPIView):
         return future_instances
 
     def post(self, request, *args, **kwargs):
-        # get query parameters
+        # we will get query parameters
         # if any one isn't in allowed search/filter option, return invalid post request too
         keys = list(request.GET.keys())
         length = len(keys)
