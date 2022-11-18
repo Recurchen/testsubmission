@@ -26,4 +26,6 @@ urlpatterns = [
     path('studio/', include('Studios.urls')),
     path('classes/', include('classes.urls')),
     re_path(r'^jsi18n/$', JavaScriptCatalog.as_view(), js_info_dict),
+    path('accounts/', include('Accounts.urls'))
+
 ]
