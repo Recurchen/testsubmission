@@ -40,23 +40,21 @@ class ClassInstancesListView(ListAPIView):
             future_class_instances[j + 1] = key_item
         return future_class_instances
 
-    def filter(self, request, filter_by, keys):
-        if filter_by == 'class_name':
-            class_name = request.GET.get(keys[1])
-            return self.filter_by_class_name(class_name)
-        elif filter_by == 'coach':
-            coach = request.GET.get(keys[1])
-            return self.filter_by_coach(coach)
-        elif filter_by == 'date':
-            date = request.GET.get(keys[1])
-            return self.filter_by_date(date)
-        elif filter_by == 'time_range':
-            start = request.GET.get(keys[1])
-            end = request.GET.get(keys[2])
-            return self.filter_by_time_range(start, end)
+    def search(self, by, value):
+        if by == 'class_name':
+            return self.search_by_class_name(value)
+        elif by == 'coach':
+            return self.search_by_coach(value)
+        elif by == 'date':
+            return self.search_by_date(value)
+        elif by == 'time_range':
+            time = value.split(",")
+            start = time[0]
+            end = time[1]
+            return self.search_by_time_range(start, end)
         return
 
-    def filter_by_coach(self, coach):
+    def search_by_coach(self, coach):
         classes = []
         class_ids = Class.objects.filter(coach=coach).values('id')
         for i in range(0, len(class_ids)):
@@ -68,14 +66,10 @@ class ClassInstancesListView(ListAPIView):
             for i in range(0, len(class_instance_ids)):
                 class_instances.append(ClassInstance.objects.get(
                     id=class_instance_ids[i]['id']))
-        data = []
         future_instances = self.future_instances(class_instances)
-        for c in future_instances:
-            class_instance_serializer = ClassInstancesSerializer(c)
-            data.append(class_instance_serializer.data)
-        return data
+        return future_instances
 
-    def filter_by_class_name(self, class_name):
+    def search_by_class_name(self, class_name):
         classes = []
         class_ids = Class.objects.filter(name=class_name).values('id')
         for i in range(0, len(class_ids)):
@@ -87,76 +81,86 @@ class ClassInstancesListView(ListAPIView):
             for i in range(0, len(class_instance_ids)):
                 class_instances.append(ClassInstance.objects.get(
                     id=class_instance_ids[i]['id']))
-        data = []
         future_instances = self.future_instances(class_instances)
-        for c in future_instances:
-            class_instance_serializer = ClassInstancesSerializer(c)
-            data.append(class_instance_serializer.data)
-        return data
+        return future_instances
 
-    def filter_by_date(self, date):
+    def search_by_date(self, date):
         class_instances = []
         date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         class_instance_ids = ClassInstance.objects.filter(class_date=date).values('id')
         for i in range(0, len(class_instance_ids)):
             class_instances.append(ClassInstance.objects.get(id=class_instance_ids[i]['id']))
-        data = []
         future_instances = self.future_instances(class_instances)
-        for c in future_instances:
-            class_instance_serializer = ClassInstancesSerializer(c)
-            data.append(class_instance_serializer.data)
-        return data
+        return future_instances
 
-    def filter_by_time_range(self, start, end):
-        """filter class instances by their start time and end time (no date)"""
+    def search_by_time_range(self, start, end):
+        """filter class instances by their start time in the range of (start,end)
+        start and end are type datetime.time"""
+        start = datetime.datetime.strptime(start, '%H:%M').time()
+        end = datetime.datetime.strptime(end, '%H:%M').time()
         class_instances = []
-        class_instance_ids = ClassInstance.objects.filter(start=start, end=end).values('id')
+        class_instance_ids = ClassInstance.objects.filter(
+            start_time__range=(start, end)).values('id')
         for i in range(0, len(class_instance_ids)):
             class_instances.append(ClassInstance.objects.get(id=class_instance_ids[i]['id']))
-        data = []
         future_instances = self.future_instances(class_instances)
-        for c in future_instances:
-            class_instance_serializer = ClassInstancesSerializer(c)
-            data.append(class_instance_serializer.data)
-        return data
+        return future_instances
 
     def post(self, request, *args, **kwargs):
         # get query parameters
+        # if any one isn't in allowed search/filter option, return invalid post request too
         keys = list(request.GET.keys())
         length = len(keys)
-        if length <= 1:
+        if length < 1:
             return Response({"details": "Invalid post request"})
-        method = keys[0]
-        if method == 'filter':
-            filter_by = request.GET.get(method)
-            if length == 3 and filter_by == 'time_range' and keys[1] == 'start' and \
-                    keys[2] == 'end':
-                data = self.filter(request, filter_by, keys)
-                return Response(data)
-            elif length == 2:
-                if filter_by == 'class_name' and keys[1] == 'class_name':
-                    data = self.filter(request, filter_by, keys)
-                    return Response(data)
-                elif filter_by == 'coach' and keys[1] == 'coach':
-                    data = self.filter(request, filter_by, keys)
-                    return Response(data)
-                elif filter_by == 'date' and keys[1] == 'date':
-                    data = self.filter(request, filter_by, keys)
-                    return Response(data)
+        if length == 1:
+            # search has only 1 query
+            method = 'search'
+        else:
+            # filter has more than 1 query
+            method = 'filter'
 
-        elif method == 'search':
-            pass
+        if method == 'search':
+            by = keys[0]
+            value = request.GET.get(by)
+            by_list = ['class_name', 'coach', 'date', 'time_range']
+            if by in by_list:
+                searched_instances = self.search(by, value)
+                data = []
+                for c in searched_instances:
+                    class_instance_serializer = ClassInstancesSerializer(c)
+                    data.append(class_instance_serializer.data)
+                return Response(data)
+            else:
+                return Response({"details": "Invalid post request"})
+
+        elif method == 'filter':
+            bys = keys
+            by_list = ['class_name', 'coach', 'date', 'time_range']
+            potential_instances = []
+            for by in bys:
+                if by in by_list:
+                    value = request.GET.get(by)
+                    searched_instances = self.search(by, value)
+                    potential_instances.append(searched_instances)
+                else:
+                    return Response({"details": "Invalid post request"})
+            if potential_instances == []:
+                return Response([])
+
+            intersected_instances = list(set.intersection(*map(set, potential_instances)))
+            data = []
+            for i in intersected_instances:
+                class_instance_serializer = ClassInstancesSerializer(i)
+                data.append(class_instance_serializer.data)
+            return Response(data)
 
         return Response({"details": "Invalid post request"})
 
     def get(self, request, *args, **kwargs):
         id = self.kwargs['studio_id']
-        # invalid studio_id
         if not Studio.objects.filter(id=id):
             return Response({"MESSAGE": "Not Found", "STATUS": 404})
-        # # this studio has no class
-        # if not Class.objects.filter(studio_id=id):
-        #     return Response({'no class in this studio'},)
         studio_serializer = StudioSerializer(Studio.objects.get(id=id))
         data = [{'Studio': studio_serializer.data}]
         classes_data = []
