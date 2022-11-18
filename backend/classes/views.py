@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 # from rest_framework import mixins as drf_mixins
 # from rest_framework import viewsets as drf_viewsets
@@ -12,18 +11,51 @@ from Studios.models import Studio
 from Studios.serializers import StudioSerializer
 
 
+# from django_filters.rest_framework import DjangoFilterBackend
+
+
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstance
+    # search_fields = ['is_full']
+    # filter_backends = [filters.SearchFilter]
+    # filter_backends = [DjangoFilterBackend]
+    queryset = ClassInstance.objects.all()
 
-    def get_queryset(self):
-        classes = Class.objects.all()
-        return classes
+    def post(self, request, *args, **kwargs):
+        length = len(request.data)
+        keys = list(request.data.keys())
+        if length <= 1:
+            return Response({"details": "Invalid post request"})
+        method = keys[0]
+        if method == 'filter':
+            filter_by = request.data['filter']
+            if length == 3 and filter_by == 'time_range':
+                start, end = request.data['start'], request.data['end']
+                pass
+            elif length == 2:
+                if filter_by == 'class_name':
+                    class_name = request.data['class_name']
+                    pass
+                elif filter_by == 'coach':
+                    coach = request.data['coach']
+                    pass
+                elif filter_by == 'date':
+                    date = request.data['date']
+                    pass
+        elif method == 'search':
+            pass
+
+        return Response({"details": "Invalid post request"})
+
+    # def get_queryset(self):
+    #     classes = Class.objects.all()
+    #     return classes
 
     def get(self, request, *args, **kwargs):
         id = self.kwargs['studio_id']
         # invalid studio_id
         if not Studio.objects.filter(id=id):
-            return JsonResponse({"MESSAGE": "Not Found", "STATUS": 404})
+            return Response({"MESSAGE": "Not Found", "STATUS": 404})
         # # this studio has no class
         # if not Class.objects.filter(studio_id=id):
         #     return Response({'no class in this studio'},)
@@ -105,7 +137,6 @@ class ClassInstancesListView(ListAPIView):
         #                          })
 
         return Response(data)
-
         # return JsonResponse(serializer.data, safe=False)
 
 
@@ -117,8 +148,8 @@ class ClassView(RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         if not Class.objects.filter(id=self.kwargs['class_id']):
-            return JsonResponse({"MESSAGE": "Not Found",
-                                 "STATUS": 404})
+            return Response({"MESSAGE": "Not Found",
+                             "STATUS": 404})
 
         serializer = ClassSerializer(Class.objects.get(id=self.kwargs['class_id']))
         # class_obj = Class.objects.get(id=self.kwargs['class_id'])

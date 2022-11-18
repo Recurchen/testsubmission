@@ -17,12 +17,12 @@ class ClassSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Class
-        fields = ['id', 'studio', 'name', 'description', 'coach', 'capacity', 'recurrences',
+        fields = ['name', 'id', 'studio', 'description', 'coach', 'capacity', 'recurrences',
                   'start_time', 'end_time', 'start_date', 'end_date', 'categories']
 
 
 class ClassInstancesSerializer(serializers.ModelSerializer):
-    belonged_class = ClassSerializer().Meta.model.name
+    belonged_class = ClassSerializer()
     class Meta:
         model = ClassInstance
         fields = ['belonged_class', 'is_full', 'is_cancelled', 'start_time',

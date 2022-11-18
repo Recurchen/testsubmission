@@ -23,15 +23,15 @@ class Class(models.Model):
     start_date = models.DateField(null=False)
     end_date = models.DateField(null=False)
     categories = models.CharField(null=True, blank=True, max_length=200)
-
     # categories = models.ManyToManyField(Category, related_name='classes', blank=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        # Assume we are not creating class in the past
-        # we will only create class in future
+        # Assume we are not creating class in the past, we will only create class in future
+        # Assume each class can have only one instance in one day
+        # Assume each class instance has same coach and capacity, as class
         super(Class, self).save(*args, **kwargs)
         # 1) update Class
         if self.pk:
@@ -136,7 +136,7 @@ class Class(models.Model):
             for d in dates:
                 if d in ex_dates:
                     dates.remove(d)
-        print(dates)
+
         for d in dates:
             ClassInstance.objects.create(
                 belonged_class=self,
@@ -145,7 +145,6 @@ class Class(models.Model):
                 class_date=d,
                 capacity=self.capacity
             )
-
 
 
 class ClassInstance(models.Model):

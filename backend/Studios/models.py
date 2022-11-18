@@ -19,6 +19,6 @@ class Image(models.Model):
     name = models.CharField(max_length=255)
     studio = models.ForeignKey(to=Studio, on_delete=models.CASCADE, related_name= 'images')
     image = models.ImageField(upload_to = 'studio_images/')
-    
-    def __str__(self) -> str:
+
+    def __str__(self):
         return self.name
