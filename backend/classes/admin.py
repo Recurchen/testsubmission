@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from classes.models import Class, ClassInstance
+from classes.models import Class, ClassInstance, Enrollment
+
+
+class EnrollmentAdmin(admin.ModelAdmin):
+    fields = ['class_instance', 'user']
+    list_display = ['class_instance', 'user']
 
 
 class ClassAdmin(admin.ModelAdmin):
@@ -19,5 +24,6 @@ class ClassInstanceAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(Class, ClassAdmin)
-# admin.site.register(Category)
 admin.site.register(ClassInstance, ClassInstanceAdmin)
+admin.site.register(Enrollment, EnrollmentAdmin)
+# admin.site.register(Category)
