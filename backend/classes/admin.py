@@ -26,4 +26,3 @@ class ClassInstanceAdmin(admin.ModelAdmin):
 admin.site.register(Class, ClassAdmin)
 admin.site.register(ClassInstance, ClassInstanceAdmin)
 admin.site.register(Enrollment, EnrollmentAdmin)
-# admin.site.register(Category)

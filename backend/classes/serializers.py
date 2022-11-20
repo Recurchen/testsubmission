@@ -17,12 +17,10 @@ class ClassSerializer(serializers.ModelSerializer):
 
 class ClassInstanceSerializer(serializers.ModelSerializer):
     belonged_class = ClassSerializer()
-    # class_name = serializers.CharField(source='belonged_class.name')
-    coach = serializers.CharField(source='belonged_class.coach')
 
     class Meta:
         model = ClassInstance
-        fields = ['belonged_class', 'coach', 'is_full', 'is_cancelled', 'start_time',
+        fields = ['belonged_class', 'is_full', 'is_cancelled', 'start_time',
                   'end_time', 'class_date', 'capacity']
 
 
