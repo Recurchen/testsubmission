@@ -4,8 +4,8 @@ from classes.models import Class, ClassInstance, Enrollment
 
 
 class EnrollmentAdmin(admin.ModelAdmin):
-    fields = ['class_instance', 'user']
-    list_display = ['class_instance', 'user']
+    fields = ['class_instance', 'user', 'is_cancelled', 'class_start_time']
+    list_display = ['class_instance', 'user', 'is_cancelled', 'class_start_time']
 
 
 class ClassAdmin(admin.ModelAdmin):

@@ -10,7 +10,6 @@ from rest_framework.response import Response
 import datetime
 from Studios.models import Studio
 from Studios.serializers import StudioSerializer
-from django.shortcuts import get_object_or_404
 
 
 def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance]:
@@ -168,16 +167,20 @@ class EnrollClassView(CreateAPIView):
             return Response({"details: You have already enrolled in each future occurrences of "
                              "this class"},
                             status=status.HTTP_404_NOT_FOUND)
-        enrollments = []
+        enrols = 0
+        class_dates = []
         for i in future_class_instances:
             if not i.is_full and not Enrollment.objects.filter(class_instance=i, user=user):
-                enrollment = Enrollment(class_instance=i, user=user)
+                class_start_time = datetime.datetime.combine(i.class_date, i.start_time)
+                enrollment = Enrollment(class_instance=i, user=user,
+                                        class_start_time=class_start_time)
                 enrollment.save()
                 i.capacity -= 1
                 i.save()
-                serializer = EnrollmentSerializer(enrollment)
-                enrollments.append(serializer.data)
-        return Response(enrollments, status=status.HTTP_201_CREATED)
+                enrols += 1
+                class_dates.append(i.class_date)
+        return Response([{'enroll': enrols}, {'class_id': request.GET.get('class_id')},
+                         {'class_dates': class_dates}], status=status.HTTP_201_CREATED)
 
 
 class DropClassView(DestroyAPIView):
@@ -217,6 +220,7 @@ class DropClassView(DestroyAPIView):
             class_instances = [e.class_instance for e in class_enrollments]
             future_class_instances = future_instances(class_instances)
             dropped = 0
+            class_dates = []
             for e in class_enrollments:
                 if e.class_instance in future_class_instances:
                     i = e.class_instance
@@ -224,7 +228,7 @@ class DropClassView(DestroyAPIView):
                     i.capacity += 1
                     i.save()
                     dropped += 1
-            return Response({"dropped": dropped}, status=status.HTTP_200_OK)
+                    class_dates.append(i.class_date)
         else:
             try:
                 class_date = datetime.datetime.strptime(request.GET.get('class_date'),
@@ -243,52 +247,64 @@ class DropClassView(DestroyAPIView):
                                  "date"},
                                 status=status.HTTP_404_NOT_FOUND)
             dropped = 0
+            class_dates = []
             for e in list(class_enrollments):
                 i = e.class_instance
                 e.delete()
                 i.capacity += 1
                 i.save()
                 dropped += 1
-            return Response({"dropped": dropped}, status=status.HTTP_200_OK)
+                class_dates.append(i.class_date)
+
+        return Response([{"dropped": dropped}, {'class_id': request.GET.get('class_id')},
+                         {'class_dates': class_dates}],
+                        status=status.HTTP_200_OK)
 
 
 class ClassInstancePagination(PageNumberPagination):
-    page_size = 5
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 2
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
     serializer_class = EnrollmentSerializer
     pagination_class = ClassInstancePagination
-    queryset = Enrollment.objects.all()
 
-    def get(self, request, *args, **kwargs):
+    def get_queryset(self):
         # user = self.request.user
         # TODO: change user later
         user = User.objects.get(username='a')
-        user_enrollments = list(self.get_queryset().filter(user=user))
-        # sort the enrollments by class_instance start time
-        class_instances = [e.class_instance for e in user_enrollments]
-        for i in range(1, len(class_instances)):
-            key_item = class_instances[i]
-            j = i - 1
-            key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
+        return Enrollment.objects.filter(user=user).order_by('class_start_time')
 
-            while j >= 0 and datetime.datetime.combine(class_instances[j].class_date,
-                                                       class_instances[j].start_time) > \
-                    key_item_start:
-                class_instances[j + 1] = class_instances[j]
-                j -= 1
-            class_instances[j + 1] = key_item
-        user_enrollments = []
-        for i in class_instances:
-            enrollment = list(self.get_queryset().filter(class_instance=i, user=user))
-            user_enrollments.append(enrollment[0])
-        print(user_enrollments)
-        data = []
-        for e in user_enrollments:
-            serializer = self.get_serializer(e)
-            data.append(serializer.data)
-        return Response(data)
+    # def get(self, request, *args, **kwargs):
+    #     # user = self.request.user
+    #     # TODO: change user later
+    #     user = User.objects.get(username='a')
+    #     user_enrollments = list(self.get_queryset().filter(user=user))
+    #     # sort the enrollments by class_instance start time
+    #     class_instances = [e.class_instance for e in user_enrollments]
+    #     for i in range(1, len(class_instances)):
+    #         key_item = class_instances[i]
+    #         j = i - 1
+    #         key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
+    #
+    #         while j >= 0 and datetime.datetime.combine(class_instances[j].class_date,
+    #                                                    class_instances[j].start_time) > \
+    #                 key_item_start:
+    #             class_instances[j + 1] = class_instances[j]
+    #             j -= 1
+    #         class_instances[j + 1] = key_item
+    #     user_enrollments = []
+    #     for i in class_instances:
+    #         enrollment = list(self.get_queryset().filter(class_instance=i, user=user))
+    #         user_enrollments.append(enrollment[0])
+    #     print(user_enrollments)
+    #     data = []
+    #     for e in user_enrollments:
+    #         serializer = self.get_serializer(e)
+    #         data.append(serializer.data)
+    #     return Response(data)
 
 
 class ClassInstancesListView(ListAPIView):

@@ -5,13 +5,6 @@ import datetime
 from django.contrib.auth.models import User
 
 
-# class Category(models.Model):
-#     name = models.CharField(null=False, max_length=100)
-#
-#     def __str__(self):
-#         return self.name
-
-
 class Class(models.Model):
     studio = models.ForeignKey(Studio, on_delete=models.CASCADE, related_name='classes')
     name = models.CharField(null=False, max_length=100)
@@ -25,10 +18,8 @@ class Class(models.Model):
     end_date = models.DateField(null=False)
     categories = models.CharField(null=True, blank=True, max_length=200)
 
-    # categories = models.ManyToManyField(Category, related_name='classes', blank=True)
-
     def __str__(self):
-        return 'class_id: ' + str(self.id) + ' name: ' + self.name
+        return 'class_id: ' + str(self.id) + ' name: ' + str(self.name)
 
     def save(self, *args, **kwargs):
         # Assume we are not creating class in the past, we will only create class in future
@@ -177,5 +168,11 @@ class Enrollment(models.Model):
     class_instance = models.ForeignKey(ClassInstance, on_delete=models.CASCADE,
                                        related_name='enrollments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
+    class_start_time = models.DateTimeField(null=False)
+    is_cancelled = models.BooleanField(default=False)
 
-    #def __str__(self):
+    def save(self, *args, **kwargs):
+        i = self.class_instance
+        self.class_start_time = datetime.datetime.combine(i.class_date, i.start_time)
+        self.is_cancelled = self.class_instance.is_cancelled
+        return super(Enrollment, self).save(*args, **kwargs)
