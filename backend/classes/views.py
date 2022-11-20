@@ -9,11 +9,13 @@ from classes.serializers import ClassInstanceSerializer, EnrollmentSerializer
 from rest_framework.response import Response
 import datetime
 from Studios.models import Studio
+from django.utils import timezone
 
 
 def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance]:
     class_ids = [c.id for c in class_instances]
-    now = datetime.datetime.now()
+    #now = datetime.datetime.now()
+    now = timezone.now()
 
     return ClassInstance.objects.filter(start_time__gt=now, is_cancelled=False,
                                         id__in=class_ids).order_by('start_time')

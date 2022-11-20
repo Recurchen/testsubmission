@@ -19,7 +19,7 @@ class Class(models.Model):
     categories = models.CharField(null=True, blank=True, max_length=200)
 
     def __str__(self):
-        return 'class_id: ' + str(self.id) + ' name: ' + str(self.name)
+        return self.name
 
     def save(self, *args, **kwargs):
         # Assume we are not creating class in the past, we will only create class in future
@@ -33,25 +33,27 @@ class Class(models.Model):
             end = datetime.datetime.combine(self.end_date, self.end_time)
 
             # get all class instances
-            instance_ids = ClassInstance.objects.filter(belonged_class=self).values('id')
-            instances = [ClassInstance.objects.get(id=instance_ids[i]['id'])
-                         for i in range(0, len(instance_ids))]
+            instances = list(ClassInstance.objects.filter(belonged_class=self))
+            # instance_ids = ClassInstance.objects.filter(belonged_class=self).values('id')
+            # instances = [ClassInstance.objects.get(id=instance_ids[i]['id'])
+            #              for i in range(0, len(instance_ids))]
 
             # new occurrences:
             # this doesn't consider exdates
             datetimes = self.recurrences.between(start, end, inc=True)  # we only need its date
-            dates = []
-            for d in datetimes:
-                dates.append(d.date())  # convert datetime into date
+            # dates = [d.date() for d in datetimes]  # convert datetime into date
+            # for d in datetimes:
+            #     dates.append(d.date())
             ex_datetimes = self.recurrences.exdates
-            ex_dates = []
-            if len(ex_datetimes) != 0:
-                for e in ex_datetimes:
-                    ex_dates.append(e.date())  # convert datetime into date
-            if len(ex_dates) != 0:
-                for d in dates:
-                    if d in ex_dates:
-                        dates.remove(d)
+            ex_dates = [d.date() for d in ex_datetimes]
+            dates = [d.date() for d in datetimes if d not in ex_dates]
+            # if len(ex_datetimes) != 0:
+            #     for e in ex_datetimes:
+            #         ex_dates.append(e.date())  # convert datetime into date
+            # if len(ex_dates) != 0:
+            #     for d in dates:
+            #         if d in ex_dates:
+            #             dates.remove(d)
 
             # cancel all class instances
             all_cancelled = False
@@ -151,12 +153,6 @@ class ClassInstance(models.Model):
     class_date = models.DateField(null=False)
     capacity = models.PositiveIntegerField(null=False)
 
-    # registered_users = models.ForeignKey(User, on_delete=models.DO_NOTHING,
-    #                                      related_name='class_instances')
-
-    def __str__(self):
-        return 'class_id' + str(self.belonged_class.id) + ' name:' + self.belonged_class.name
-
     def save(self, *args, **kwargs):
         if self.capacity < 1:
             self.is_full = True
@@ -171,7 +167,6 @@ class Enrollment(models.Model):
     is_cancelled = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        i = self.class_instance
-        self.class_start_time = i.start_time
+        self.class_start_time = self.class_instance.start_time
         self.is_cancelled = self.class_instance.is_cancelled
         return super(Enrollment, self).save(*args, **kwargs)
