@@ -16,7 +16,6 @@ def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance
     classins_ids = [c.id for c in class_instances]
     # now = datetime.datetime.now()
     now = timezone.now()
-
     return ClassInstance.objects.filter(start_time__gt=now, is_cancelled=False,
                                         id__in=classins_ids).order_by('start_time')
     # future_class_instances = []  # future class instances for all belonged classes
@@ -53,42 +52,22 @@ def search(by: str, value: str, studio_id: int) -> List[ClassInstance]:
 
 
 def search_by_coach(coach: str, studio_id: int) -> List[ClassInstance]:
-    classes = []
-    class_ids = Class.objects.filter(coach=coach, studio_id=studio_id).values('id')
-    for i in range(0, len(class_ids)):
-        classes.append(Class.objects.get(id=class_ids[i]['id']))
-    class_instances = []
-    for c in classes:
-        class_instance_ids = ClassInstance.objects.filter(
-            belonged_class=c).values('id')
-        for i in range(0, len(class_instance_ids)):
-            class_instances.append(ClassInstance.objects.get(
-                id=class_instance_ids[i]['id']))
+    classes = list(Class.objects.filter(coach=coach, studio_id=studio_id))
+    class_instances = [ClassInstance.objects.get(belonged_class=c) for c in classes]
     return future_instances(class_instances)
 
 
 def search_by_class_name(class_name: str, studio_id: int) -> List[ClassInstance]:
-    classes = []
-    class_ids = Class.objects.filter(name=class_name, studio_id=studio_id).values('id')
-    for i in range(0, len(class_ids)):
-        classes.append(Class.objects.get(id=class_ids[i]['id']))
-    class_instances = []
-    for c in classes:
-        class_instance_ids = ClassInstance.objects.filter(
-            belonged_class=c).values('id')
-        for i in range(0, len(class_instance_ids)):
-            class_instances.append(ClassInstance.objects.get(
-                id=class_instance_ids[i]['id']))
+    classes = list(Class.objects.filter(name=class_name, studio_id=studio_id))
+    class_instances = [ClassInstance.objects.get(belonged_class=c) for c in classes]
     return future_instances(class_instances)
 
 
 def search_by_date(date: str, studio_id: int) -> List[ClassInstance]:
-    class_instances = []
     classes = list(Class.objects.filter(studio_id=studio_id))
     date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
     class_instances = list(ClassInstance.objects.filter(
         belonged_class__in=classes, class_date=date))
-
     return future_instances(class_instances)
 
 
@@ -97,12 +76,9 @@ def search_by_time_range(start: str, end: str, studio_id: int) -> List[ClassInst
             start and end are type datetime.time"""
     start = datetime.datetime.strptime(start, '%H:%M').time()
     end = datetime.datetime.strptime(end, '%H:%M').time()
-    class_instances = []
     classes = list(Class.objects.filter(studio_id=studio_id))
-    class_instance_ids = ClassInstance.objects.filter(
-        belonged_class__in=classes, start_time__range=(start, end)).values('id')
-    for i in range(0, len(class_instance_ids)):
-        class_instances.append(ClassInstance.objects.get(id=class_instance_ids[i]['id']))
+    class_instances = list(ClassInstance.objects.filter(
+        belonged_class__in=classes, start_time__range=(start, end)))
     return future_instances(class_instances)
 
 
@@ -116,14 +92,13 @@ class EnrollClassView(CreateAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        # user = self.request.user
+        # user = Profile.objects.get(user=self.request.user)
         user = User.objects.get(username='a')
         # TODO: remove this after test
-        # if user and not user.is_active:
+        # if user and not user.is_subscribed:
         #     return Response({"details: user isn't an active subscriber"},
         #                     status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
-
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
             return Response({"details: no such class with this id"},
@@ -195,9 +170,10 @@ class DropClassView(DestroyAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        # user = self.request.user
+        # TODO: update user
+        # user =  user = Profile.objects.get(user=self.request.user)
         user = User.objects.get(username='a')
-        # if user and not user.is_active:
+        # if user and not user.is_subscribed:
         #     return Response({"details: user isn't an active subscriber"},
         #                     status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
@@ -274,7 +250,7 @@ class UserEnrollmentHistoryListView(ListAPIView):
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
-        # user = self.request.user
+        # user = Profile.objects.get(user=self.request.user)
         # TODO: change user later
         user = User.objects.get(username='a')
         return Enrollment.objects.filter(user=user).order_by('class_start_time')

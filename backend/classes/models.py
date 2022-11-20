@@ -4,7 +4,7 @@ from recurrence.fields import RecurrenceField
 from Studios.models import Studio
 import datetime
 from django.contrib.auth.models import User
-
+from pytz import timezone as tz
 
 class Class(models.Model):
     studio = models.ForeignKey(Studio, on_delete=models.CASCADE, related_name='classes')
@@ -36,7 +36,7 @@ class Class(models.Model):
             # delete future instances
             now = datetime.datetime.now()
             for i in instances:
-                if i.start_time > timezone.now():
+                if i.start_time > timezone.now() - datetime.timedelta(hours=5):
                     i.delete()
                 else:
                     i.start_time = start
@@ -45,13 +45,14 @@ class Class(models.Model):
             # since we assume max 1 class instance per day
             end = self.end_date + datetime.timedelta(days=1)
             end = datetime.datetime(end.year, end.month, end.day)
+            now = now - datetime.timedelta(hours=5)  # change utc back to est
+            if start > now:
+                now = start
             datetimes = self.recurrences.between(now, end, inc=True)
             ex_datetimes = self.recurrences.exdates
             ex_dates = [d.date() for d in ex_datetimes]
             dates = [d.date() for d in datetimes if d.date() not in ex_dates]
             for d in dates:
-                if ClassInstance.objects.filter(belonged_class=self, class_date=d):
-                    break
                 start_time = datetime.datetime.combine(d, self.start_time)
                 end_time = datetime.datetime.combine(d, self.end_time)
                 ClassInstance.objects.create(
@@ -66,6 +67,7 @@ class Class(models.Model):
                 for i in instances:
                     i.is_cancelled = True
                     i.save()
+
             return
 
             # datetimes = self.recurrences.between(start, end, inc=True)
