@@ -1,6 +1,7 @@
 from django.urls import path
 
-from classes.views import ClassInstancesListView, DropClassView, EnrollClassView
+from classes.views import ClassInstancesListView, DropClassView, EnrollClassView, \
+    UserEnrollmentHistoryListView
 
 app_name = 'classes'
 
@@ -8,9 +9,9 @@ urlpatterns = [
     # get all class in a specific studio
     path('<int:studio_id>/all', ClassInstancesListView.as_view()),
     path('enroll/', EnrollClassView.as_view()),
-    path('drop/', DropClassView.as_view())
-
-
+    path('drop/', DropClassView.as_view()),
+    # see user class schedule and history
+    path('enrollments/', UserEnrollmentHistoryListView.as_view()),
 
     # not required stuff
     # path('categories/all/', CategoriesListView.as_view()),

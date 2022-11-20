@@ -28,7 +28,7 @@ class Class(models.Model):
     # categories = models.ManyToManyField(Category, related_name='classes', blank=True)
 
     def __str__(self):
-        return 'id: ' + str(self.id) + ' name: ' + self.name
+        return 'class_id: ' + str(self.id) + ' name: ' + self.name
 
     def save(self, *args, **kwargs):
         # Assume we are not creating class in the past, we will only create class in future
@@ -165,7 +165,7 @@ class ClassInstance(models.Model):
     #                                      related_name='class_instances')
 
     def __str__(self):
-        return 'id' + str(self.id) + ' name:' + self.belonged_class.name
+        return 'class_id' + str(self.belonged_class.id) + ' name:' + self.belonged_class.name
 
     def save(self, *args, **kwargs):
         if self.capacity < 1:
@@ -177,3 +177,5 @@ class Enrollment(models.Model):
     class_instance = models.ForeignKey(ClassInstance, on_delete=models.CASCADE,
                                        related_name='enrollments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
+
+    #def __str__(self):

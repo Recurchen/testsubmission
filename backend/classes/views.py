@@ -196,7 +196,6 @@ class DropClassView(DestroyAPIView):
         #     return Response({"details: user isn't an active subscriber"},
         #                     status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
-
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
             return Response({"details: no such class with this id"},
@@ -257,9 +256,39 @@ class ClassInstancePagination(PageNumberPagination):
     page_size = 5
 
 
+class UserEnrollmentHistoryListView(ListAPIView):
+    serializer_class = EnrollmentSerializer
+    pagination_class = ClassInstancePagination
+    queryset = Enrollment.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        # user = self.request.user
+        # TODO: change user later
+        user = User.objects.get(username='a')
+        user_enrollments = self.get_queryset().filter(user=user)
+        # sort the enrollments by class_instance start time
+        class_instances = [e.class_instance for e in user_enrollments]
+        for i in range(1, len(class_instances)):
+            key_item = class_instances[i]
+            j = i - 1
+            key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
+
+            while j >= 0 and datetime.datetime.combine(class_instances[j].class_date,
+                                                       class_instances[j].start_time) > \
+                    key_item_start:
+                class_instances[j + 1] = class_instances[j]
+                j -= 1
+            class_instances[j + 1] = key_item
+        user_enrollments = [self.get_queryset().filter(class_instance=c) for c in class_instances]
+        data = []
+        for e in user_enrollments:
+            data.append(self.get_serializer(e).data)
+        return Response(data)
+
+
 class ClassInstancesListView(ListAPIView):
     # permission_classes = (IsAuthenticated,)
-    serializer_class = ClassInstance
+    serializer_class = ClassInstanceSerializer
     queryset = ClassInstance.objects.all()
     pagination_class = ClassInstancePagination
 
