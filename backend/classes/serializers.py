@@ -28,8 +28,6 @@ class ClassInstanceSerializer(serializers.ModelSerializer):
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     class_instance = ClassInstanceSerializer()
-    is_cancelled = serializers.BooleanField(source='class_instance.is_cancelled')
-    class_date = serializers.DateField(source='class_instance.class_date')
     class Meta:
         model = Enrollment
-        fields = ['is_cancelled', 'class_date', 'user', 'class_instance']
+        fields = ['user', 'class_instance']

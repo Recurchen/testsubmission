@@ -265,7 +265,7 @@ class UserEnrollmentHistoryListView(ListAPIView):
         # user = self.request.user
         # TODO: change user later
         user = User.objects.get(username='a')
-        user_enrollments = self.get_queryset().filter(user=user)
+        user_enrollments = list(self.get_queryset().filter(user=user))
         # sort the enrollments by class_instance start time
         class_instances = [e.class_instance for e in user_enrollments]
         for i in range(1, len(class_instances)):
@@ -279,10 +279,15 @@ class UserEnrollmentHistoryListView(ListAPIView):
                 class_instances[j + 1] = class_instances[j]
                 j -= 1
             class_instances[j + 1] = key_item
-        user_enrollments = [self.get_queryset().filter(class_instance=c) for c in class_instances]
+        user_enrollments = []
+        for i in class_instances:
+            enrollment = list(self.get_queryset().filter(class_instance=i, user=user))
+            user_enrollments.append(enrollment[0])
+        print(user_enrollments)
         data = []
         for e in user_enrollments:
-            data.append(self.get_serializer(e).data)
+            serializer = self.get_serializer(e)
+            data.append(serializer.data)
         return Response(data)
 
 
