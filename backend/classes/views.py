@@ -13,12 +13,12 @@ from django.utils import timezone
 
 
 def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance]:
-    class_ids = [c.id for c in class_instances]
-    #now = datetime.datetime.now()
+    classins_ids = [c.id for c in class_instances]
+    # now = datetime.datetime.now()
     now = timezone.now()
 
     return ClassInstance.objects.filter(start_time__gt=now, is_cancelled=False,
-                                        id__in=class_ids).order_by('start_time')
+                                        id__in=classins_ids).order_by('start_time')
     # future_class_instances = []  # future class instances for all belonged classes
     # for i in class_instances:
     #     if i.start_time > now and i.is_cancelled is False:
@@ -86,10 +86,9 @@ def search_by_date(date: str, studio_id: int) -> List[ClassInstance]:
     class_instances = []
     classes = list(Class.objects.filter(studio_id=studio_id))
     date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-    class_instance_ids = ClassInstance.objects.filter(
-        belonged_class__in=classes, class_date=date).values('id')
-    for i in range(0, len(class_instance_ids)):
-        class_instances.append(ClassInstance.objects.get(id=class_instance_ids[i]['id']))
+    class_instances = list(ClassInstance.objects.filter(
+        belonged_class__in=classes, class_date=date))
+
     return future_instances(class_instances)
 
 
@@ -288,55 +287,56 @@ class ClassInstancesListView(ListAPIView):
 
     def get_queryset(self):
         if self.request.method == "GET":
-            id = self.kwargs['studio_id']
-            if not Studio.objects.filter(id=id):
-                return Response({"MESSAGE": "Not Found", "STATUS": 404})
+            if list(self.request.GET.keys()) == []:  # no search/filter
+                id = self.kwargs['studio_id']
+                if not Studio.objects.filter(id=id):
+                    return Response({"MESSAGE": "Not Found", "STATUS": 404})
 
-            classes = Class.objects.filter(studio_id=id)
-            classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
-            return future_instances(classes_instances)
-
-        elif self.request.method == 'POST':
-            # we will get query parameters
-            # if any one isn't in allowed search/filter option, return invalid post request too
-            keys = list(request.GET.keys())
-            length = len(keys)
-            id = self.kwargs['studio_id']
-            if length < 1:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            if length == 1:  # search has only 1 query
-                method = 'search'
-            else:  # filter has more than 1 query
-                method = 'filter'
-            if method == 'search':
-                by = keys[0]
-                value = request.GET.get(by)
-                by_list = ['class_name', 'coach', 'date', 'time_range']
-                if by in by_list:
-                    searched_instances = search(by, value, id)
-                    return searched_instances
-                else:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-            elif method == 'filter':
-                bys = keys
-                by_list = ['class_name', 'coach', 'date', 'time_range']
-                potential_instances = []  # list of queryset
-                for by in bys:
+                classes = Class.objects.filter(studio_id=id)
+                classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
+                return future_instances(classes_instances)
+            else:
+                # we will get query parameters
+                # if any one isn't in allowed search/filter option, return invalid post request too
+                keys = list(self.request.GET.keys())
+                length = len(keys)
+                id = self.kwargs['studio_id']
+                if length == 1:  # search has only 1 query
+                    method = 'search'
+                else:  # filter has more than 1 query
+                    method = 'filter'
+                if method == 'search':
+                    by = keys[0]
+                    value = self.request.GET.get(by)
+                    by_list = ['class_name', 'coach', 'date', 'time_range']
                     if by in by_list:
-                        value = request.GET.get(by)
-                        searched_instances = search(by, value, studio_id=id)
-                        potential_instances.append(searched_instances)
+                        searched_instances = search(by, value, id)
+                        return searched_instances
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
-                if potential_instances == []:
-                    return Response(status=status.HTTP_404_NOT_FOUND, data=[])
-                intersection_instances = potential_instances[0]
-                for i in range(1, len(potential_instances)):
-                    q = potential_instances[i]
-                    intersection_instances = intersection_instances.intersection(q)
-                return intersection_instances
+                elif method == 'filter':
+                    bys = keys
+                    by_list = ['class_name', 'coach', 'date', 'time_range']
+                    potential_instances = []  # list of queryset
+                    for by in bys:
+                        if by in by_list:
+                            value = self.request.GET.get(by)
+                            searched_instances = search(by, value, studio_id=id)
+                            potential_instances.append(searched_instances)
+                        else:
+                            return Response(status=status.HTTP_400_BAD_REQUEST)
+                    if potential_instances == []:
+                        return Response(status=status.HTTP_404_NOT_FOUND, data=[])
+                    intersection_instances = potential_instances[0]
+                    for i in range(1, len(potential_instances)):
+                        q = potential_instances[i]
+                        intersection_instances = intersection_instances.intersection(q)
+                    return intersection_instances
 
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    # def post(self, request, *args, **kwargs):
+    #     return self.get_queryset()
 
     # def post(self, request, *args, **kwargs):
     # # we will get query parameters

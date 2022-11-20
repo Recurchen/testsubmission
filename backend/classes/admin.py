@@ -39,8 +39,12 @@ class ClassInstanceAdmin(admin.ModelAdmin):
 
     fields = ['belonged_class', 'start_time', 'end_time', 'class_date', 'is_full', 'is_cancelled',
               'capacity']
-    list_display = ['class_instance_id', 'class_ID', 'class_name', 'coach', 'start_time', 'end_time', 'class_date',
-                    'capacity', 'is_full', 'is_cancelled']
+    list_display = ['class_instance_id', 'class_ID', 'class_name', 'coach', 'start_time',
+                    'end_time', 'class_date', 'capacity', 'is_full', 'is_cancelled',
+                    'current_enrollments']
+
+    def current_enrollments(self, obj):
+        return len(list(Enrollment.objects.filter(class_instance=obj)))
 
     def coach(self, obj):
         return obj.belonged_class.coach
