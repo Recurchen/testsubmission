@@ -12,7 +12,8 @@ class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
         fields = ['name', 'id', 'studio', 'description', 'coach', 'capacity', 'recurrences',
-                  'start_time', 'end_time', 'start_date', 'end_date', 'categories']
+                  'start_time', 'end_time', 'start_date', 'end_date', 'categories',
+                  'all_cancelled']
 
 
 class ClassInstanceSerializer(serializers.ModelSerializer):

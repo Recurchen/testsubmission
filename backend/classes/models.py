@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from recurrence.fields import RecurrenceField
 from Studios.models import Studio
 import datetime
@@ -16,6 +17,7 @@ class Class(models.Model):
     end_time = models.TimeField(null=False)
     start_date = models.DateField(null=False)
     end_date = models.DateField(null=False)
+    all_cancelled = models.BooleanField(default=False)  # cancel all class instances if True
     categories = models.CharField(null=True, blank=True, max_length=200)
 
     def __str__(self):
@@ -26,111 +28,118 @@ class Class(models.Model):
         # Assume each class can have only one instance in one day
         # Assume each class instance has same coach and capacity, as class
         super(Class, self).save(*args, **kwargs)
-        # 1) update Class
+        # update class
         if self.pk:
-            # update self
             start = datetime.datetime.combine(self.start_date, self.start_time)
             end = datetime.datetime.combine(self.end_date, self.end_time)
-
-            # get all class instances
             instances = list(ClassInstance.objects.filter(belonged_class=self))
-            # instance_ids = ClassInstance.objects.filter(belonged_class=self).values('id')
-            # instances = [ClassInstance.objects.get(id=instance_ids[i]['id'])
-            #              for i in range(0, len(instance_ids))]
-
-            # new occurrences:
-            # this doesn't consider exdates
-            datetimes = self.recurrences.between(start, end, inc=True)  # we only need its date
-            # dates = [d.date() for d in datetimes]  # convert datetime into date
-            # for d in datetimes:
-            #     dates.append(d.date())
+            # delete future instances
+            now = datetime.datetime.now()
+            for i in instances:
+                if i.start_time > timezone.now():
+                    i.delete()
+                else:
+                    i.start_time = start
+                    i.end_time = end
+            # regenerate future instances
+            # since we assume max 1 class instance per day
+            end = self.end_date + datetime.timedelta(days=1)
+            end = datetime.datetime(end.year, end.month, end.day)
+            datetimes = self.recurrences.between(now, end, inc=True)
             ex_datetimes = self.recurrences.exdates
             ex_dates = [d.date() for d in ex_datetimes]
-            dates = [d.date() for d in datetimes if d not in ex_dates]
-            # if len(ex_datetimes) != 0:
-            #     for e in ex_datetimes:
-            #         ex_dates.append(e.date())  # convert datetime into date
-            # if len(ex_dates) != 0:
-            #     for d in dates:
-            #         if d in ex_dates:
-            #             dates.remove(d)
-
-            # cancel all class instances
-            all_cancelled = False
-            if len(dates) == 0:
-                all_cancelled = True
-            if all_cancelled:
+            dates = [d.date() for d in datetimes if d.date() not in ex_dates]
+            for d in dates:
+                if ClassInstance.objects.filter(belonged_class=self, class_date=d):
+                    break
+                start_time = datetime.datetime.combine(d, self.start_time)
+                end_time = datetime.datetime.combine(d, self.end_time)
+                ClassInstance.objects.create(
+                    belonged_class=self,
+                    start_time=start_time,
+                    end_time=end_time,
+                    class_date=d,
+                    capacity=self.capacity
+                )
+            instances = list(ClassInstance.objects.filter(belonged_class=self))
+            if self.all_cancelled:
                 for i in instances:
                     i.is_cancelled = True
-                    i.start_time = datetime.datetime.combine(i.class_date, self.start_time)
-                    i.end_time = datetime.datetime.combine(i.class_date, self.end_time)
                     i.save()
-                return
+            return
+
+            # datetimes = self.recurrences.between(start, end, inc=True)
+            # ex_datetimes = self.recurrences.exdates
+            # ex_dates = [d.date() for d in ex_datetimes]
+            # # new occurrences dates
+            # dates = [d.date() for d in datetimes if d not in ex_dates]
+            # cancel all class instances
+
+            # all_cancelled = False
+            # if len(dates) == 0:
+            #     all_cancelled = True
+            # if all_cancelled:
+            #     for i in instances:
+            #         i.is_cancelled = True
+            #         i.start_time = datetime.datetime.combine(i.class_date, self.start_time)
+            #         i.end_time = datetime.datetime.combine(i.class_date, self.end_time)
+            #         i.save()
+            #     return
 
             # dates is not an empty list:
             # if class instance has been cancel but want to de-cancel it.
-            for i in instances:
-                if i.class_date in dates and i.is_cancelled:
-                    i.is_cancelled = False
+            # for i in instances:
+            #     if i.class_date in dates and i.is_cancelled:
+            #         i.is_cancelled = False
 
             # instances in new time range, need further check for is_cancel status
-            instances_still_in_time_range = []
-            for i in instances:
-                start_time = datetime.datetime.combine(i.class_date, self.start_time)
-                end_time = datetime.datetime.combine(i.class_date, self.end_time)
-                i.start_time = start_time
-                i.end_time = end_time
-                # if self update class date range (start date, end date)
-                if i.class_date < self.start_date or i.class_date > self.end_date:
-                    # since we know max one class instance per day
-                    # i.is_cancelled = True
-                    i.delete()
-                    instances.remove(i)
-                else:
-                    instances_still_in_time_range.append(i)
-
-            # we assume one class instance per day and
-            # admin cancel class via setting recurrence with exclude
-            for i in instances_still_in_time_range:
-                if i.class_date not in dates:  # the instance is excluded
-                    i.is_cancelled = True
-            # check if we need new class instances
-            instance_dates = [i.class_date for i in instances]
-            for d in dates:
-                if d not in instance_dates:
-                    # create new class instance and save
-                    start_time = datetime.datetime.combine(d, self.start_time)
-                    end_time = datetime.datetime.combine(d, self.end_time)
-                    ClassInstance.objects.create(
-                        belonged_class=self,
-                        start_time=start_time,
-                        end_time=end_time,
-                        class_date=d,
-                        capacity=self.capacity)
-            for i in instances:
-                i.save()
-            return
+            # instances_still_in_time_range = []
+            # for i in instances:
+            #     start_time = datetime.datetime.combine(i.class_date, self.start_time)
+            #     end_time = datetime.datetime.combine(i.class_date, self.end_time)
+            #     i.start_time = start_time
+            #     i.end_time = end_time
+            #     # if self update class date range (start date, end date)
+            #     if i.class_date < self.start_date or i.class_date > self.end_date:
+            #         # since we know max one class instance per day
+            #         # i.is_cancelled = True
+            #         i.delete()
+            #         instances.remove(i)
+            #     else:
+            #         instances_still_in_time_range.append(i)
+            #
+            # # we assume one class instance per day and
+            # # admin cancel class via setting recurrence with exclude
+            # for i in instances_still_in_time_range:
+            #     if i.class_date not in dates:  # the instance is excluded
+            #         i.is_cancelled = True
+            # # check if we need new class instances
+            # instance_dates = [i.class_date for i in instances]
+            # for d in dates:
+            #     if d not in instance_dates:
+            #         # create new class instance and save
+            #         start_time = datetime.datetime.combine(d, self.start_time)
+            #         end_time = datetime.datetime.combine(d, self.end_time)
+            #         ClassInstance.objects.create(
+            #             belonged_class=self,
+            #             start_time=start_time,
+            #             end_time=end_time,
+            #             class_date=d,
+            #             capacity=self.capacity)
+            # for i in instances:
+            #     i.save()
+            # return
 
         # 2) create Class
         start = datetime.datetime.combine(self.start_date, self.start_time)
-        # end = datetime.datetime.combine(self.end_date, self.end_time)
         # since we assume max 1 class instance per day
         end = self.end_date + datetime.timedelta(days=1)
-        datetime.datetime(end.year, end.month, end.day)
+        end = datetime.datetime(end.year, end.month, end.day)
         datetimes = self.recurrences.between(start, end, inc=True)
-        dates = []
-        for d in datetimes:
-            dates.append(d.date())  # convert datetime into date
         ex_datetimes = self.recurrences.exdates
-        ex_dates = []
-        if len(ex_datetimes) != 0:
-            for e in ex_datetimes:
-                ex_dates.append(e.date())  # convert datetime into date
-        if len(ex_dates) != 0:
-            for d in dates:
-                if d in ex_dates:
-                    dates.remove(d)
-
+        ex_dates = [d.date() for d in ex_datetimes]
+        dates = [d.date() for d in datetimes if d.date() not in ex_dates]
+        print(dates)
         for d in dates:
             start_time = datetime.datetime.combine(d, self.start_time)
             end_time = datetime.datetime.combine(d, self.end_time)

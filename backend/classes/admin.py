@@ -15,14 +15,12 @@ class EnrollmentAdmin(admin.ModelAdmin):
         return obj.class_instance.belonged_class.id
 
 
-
-
 class ClassAdmin(admin.ModelAdmin):
-    fields = ['studio', 'name', 'description', 'coach', 'capacity', 'recurrences',
+    fields = ['studio', 'name', 'description', 'coach', 'capacity', 'recurrences', 'all_cancelled',
               'start_time', 'end_time', 'start_date', 'end_date', 'categories']
 
-    list_display = ['class_ID', 'studio_id', 'name', 'coach', 'recurrences_rule', 'start_time',
-                    'end_time', 'start_date', 'end_date', 'categories']
+    list_display = ['class_ID', 'studio_id', 'name', 'coach', 'recurrences_rule', 'all_cancelled',
+                    'start_time', 'end_time', 'start_date', 'end_date', 'categories']
 
     def recurrences_rule(self, obj):
         text_rules_inclusion = []
