@@ -39,11 +39,15 @@ INSTALLED_APPS = [
     'Studios',
     'Accounts',
     'classes',
+    'Subscriptions',
+    
     ## third party package
     'rest_framework',
     'django_filters',
     'recurrence',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'phone_field',
+    'schedule',
 
 
 ]
