@@ -244,7 +244,7 @@ class UserEnrollmentHistoryListView(ListAPIView):
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
-        user = Profile.objects.get(user=self.request.user)
+        user = Profile.objects.get(user=self.request.user).user
         return Enrollment.objects.filter(user=user).order_by('class_start_time')
 
 
