@@ -25,4 +25,6 @@ class StudioSerializer(serializers.ModelSerializer):
          'amenities', 'images']
 
 class UserLocationSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length = 255)
     location = serializers.CharField(max_length = 255)
+    amenities = serializers.CharField(max_length = 255)
