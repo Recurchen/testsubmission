@@ -26,4 +26,3 @@ class StudioSerializer(serializers.ModelSerializer):
 
 class UserLocationSerializer(serializers.Serializer):
     location = serializers.CharField(max_length = 255)
-

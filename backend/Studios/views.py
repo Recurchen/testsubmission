@@ -1,6 +1,4 @@
-from datetime import timezone
-from django.shortcuts import render, get_object_or_404
-
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
@@ -32,7 +30,7 @@ class NearMeGymsView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({})
-    
+
     def post(self, request, *args, **kwargs):
         serializer = UserLocationSerializer(data=request.data)
 
@@ -40,7 +38,7 @@ class NearMeGymsView(APIView):
             origin_data = serializer.data.get('location')
         # else:
         #     return Response(
-        #         serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        #         serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         studios = Studio.objects.all()
 
@@ -54,7 +52,7 @@ class NearMeGymsView(APIView):
 
             payload={}
             headers = {}
-        
+
             response = requests.request("GET", url, headers=headers, data=payload)
 
             content = response.text
