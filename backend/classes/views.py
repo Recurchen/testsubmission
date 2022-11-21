@@ -3,13 +3,13 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
 from rest_framework.pagination import PageNumberPagination
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from classes.models import Class, ClassInstance, Enrollment
 from classes.serializers import ClassInstanceSerializer, EnrollmentSerializer
 from rest_framework.response import Response
 import datetime
+from Accounts.models import Profile
 from Studios.models import Studio
-from django.utils import timezone
 
 
 def drop_class_after(after: datetime.datetime, user: User):
@@ -86,7 +86,7 @@ class EnrollClassView(CreateAPIView):
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
         user = Profile.objects.get(user=self.request.user)
-        
+
         if user and not user.is_subscribed:
             return Response({"details: user isn't an active subscriber"},
                              status=status.HTTP_401_UNAUTHORIZED)
@@ -165,7 +165,7 @@ class DropClassView(DestroyAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         user = Profile.objects.get(user=self.request.user)
-        
+
         if user and not user.is_subscribed:
             return Response({"details: user isn't an active subscriber"},
                             status=status.HTTP_401_UNAUTHORIZED)
