@@ -11,6 +11,7 @@ from .serializers import SignUpSerializer, RetrieveUpdateProfileSerializer, Rest
 from .models import Profile
 from django.contrib.auth.models import User
 from .permissions import IsSelf
+from .tokens import create_jwt_pair_for_user
 
 class RegisterView(APIView):
     def post(self, request):
@@ -31,13 +32,14 @@ class LogInView(APIView):
         if user is None:
             raise AuthenticationFailed('Incorrent Username or Password')
         
-        token, created = Token.objects.get_or_create(user=user)
+        # token, created = Token.objects.get_or_create(user=user)
+        tokens = create_jwt_pair_for_user(user)
 
         response_data = {
             "message": "Login Successfull",
             'username': user.username,
             'id':user.id,
-            'token': token.key
+            'tokens': tokens
         }
 
         return Response(data=response_data, status=status.HTTP_200_OK)
