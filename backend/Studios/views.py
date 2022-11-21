@@ -1,6 +1,7 @@
+
 from datetime import timezone
 from django.shortcuts import get_object_or_404
-
+from rest_framework.views import APIView
 
 from rest_framework.response import Response
 from rest_framework import generics, filters
@@ -33,6 +34,29 @@ class StudiosListView(generics.ListCreateAPIView):
 
 
 
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = StudioSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class NearMeGymsView(APIView):
+    serializer_class = UserLocationSerializer
+
+    def get(self, request, *args, **kwargs):
+        return Response({})
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserLocationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            origin_data = serializer.data.get('location')
+        # else:
+        #     return Response(
+        #         serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
     def get_queryset_sorted(self, origin, filter=None):
         
@@ -41,7 +65,7 @@ class StudiosListView(generics.ListCreateAPIView):
 
             payload={}
             headers = {}
-        
+
             response = requests.request("GET", url, headers=headers, data=payload)
 
             content = response.text

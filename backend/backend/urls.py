@@ -15,9 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from django.views.i18n import JavaScriptCatalog
+from django.urls import re_path
+js_info_dict = {
+    'packages': ('recurrence',),
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('studio/', include('Studios.urls')),
+    path('classes/', include('classes.urls')),
+    re_path(r'^jsi18n/$', JavaScriptCatalog.as_view(), js_info_dict),
+    path('accounts/', include('Accounts.urls'))
+
 ]
