@@ -12,6 +12,16 @@ from Studios.models import Studio
 from django.utils import timezone
 
 
+def drop_class_after(after: datetime.datetime, user: User):
+    user_enrollments = list(Enrollment.objects.filter(user=user))
+    for e in user_enrollments:
+        if e.class_instance.start_time > after:
+            i = e.class_instance
+            e.delete()
+            i.capacity += 1
+            i.save()
+
+
 def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance]:
     classins_ids = [c.id for c in class_instances]
     # now = datetime.datetime.now()
