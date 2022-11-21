@@ -24,27 +24,9 @@ def drop_class_after(after: datetime.datetime, user: User):
 
 def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance]:
     classins_ids = [c.id for c in class_instances]
-    # now = datetime.datetime.now()
-    now = timezone.now()
+    now = datetime.datetime.now()
     return ClassInstance.objects.filter(start_time__gt=now, is_cancelled=False,
                                         id__in=classins_ids).order_by('start_time')
-    # future_class_instances = []  # future class instances for all belonged classes
-    # for i in class_instances:
-    #     if i.start_time > now and i.is_cancelled is False:
-    #         future_class_instances.append(i)
-    # # sort class instances with insertion sort algo
-    # for i in range(1, len(future_class_instances)):
-    #     key_item = future_class_instances[i]
-    #     j = i - 1
-    #     key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
-    #
-    #     while j >= 0 and datetime.datetime.combine(future_class_instances[j].class_date,
-    #                                                future_class_instances[j].start_time) > \
-    #             key_item_start:
-    #         future_class_instances[j + 1] = future_class_instances[j]
-    #         j -= 1
-    #     future_class_instances[j + 1] = key_item
-    # return future_class_instances
 
 
 def search(by: str, value: str, studio_id: int) -> List[ClassInstance]:
