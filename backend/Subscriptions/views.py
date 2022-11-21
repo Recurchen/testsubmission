@@ -9,12 +9,14 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
-from .serializers import PlanSerializer, SubscriptionSerializer
+from .serializers import PlanSerializer, SubscriptionSerializer, PaymentSerializer
 from django.contrib.auth.models import User
 from .models import Plan, Subscription, Payment
 from .permissions import IsSelfOrAdmin
 from Accounts.models import Profile
 from datetime import timedelta
+from classes.views import drop_class_after
+from django.utils import timezone
 
 import schedule
 import time
@@ -62,7 +64,7 @@ def _make_payment(subscription):
         return False # declined as no payment method
     else:
         Payment.objects.create(user=user.user, subscription=subscription, 
-                                payment_method=payment_method, datetime=datetime.utcnow())
+                                payment_method=payment_method, datetime=datetime.now())
         return True
 
 def _make_future_payment(subscription):
@@ -105,6 +107,8 @@ class CreateSubView(CreateAPIView):
         if paid:
             _make_future_payment(sub)
             _set_auto_payment(sub)
+            profile.is_subscribed=True
+            profile.save()
             res = {"message":"success! enjoy your time in our gym"}
             return Response(res, status=status.HTTP_200_OK)
         
@@ -115,4 +119,43 @@ class CreateSubView(CreateAPIView):
         # return super().post(request, *args, **kwargs)
 
 class CancelSubView(APIView):
-    pass
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    serializer_class = SubscriptionSerializer
+    
+    def post(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs['user_id'])
+        self.check_object_permissions(request, user)
+
+        try:
+            profile = Profile.objects.get(user=user)
+            sub = Subscription.objects.get(user=profile)
+            sub.cancel()
+
+            future_payments = Payment.objects.filter(subscription=sub)
+            
+            now = timezone.now()
+
+            for payment in future_payments:
+                if payment.datetime > now:
+                    payment.delete()
+            
+            drop_class_after(now, user)
+
+            res = {"message":"your subscription is canceled"}
+            return Response(res, status=status.HTTP_200_OK)
+
+        except (Profile.DoesNotExist, Subscription.DoesNotExist, Payment.DoesNotExist):
+            res = {"message":"Sorry! some thing is wrong"}
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+
+class PaymentHistoryView(ListAPIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    serializer_class = PaymentSerializer
+    model = Payment
+    
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(User, pk=user_id)
+        self.check_object_permissions(self.request, user)
+        queryset = self.model.objects.filter(user=user_id)
+        return queryset.order_by('datetime')
