@@ -92,7 +92,7 @@ class Subscription(models.Model):
         self.auto_pay = False
 
     def __str__(self):
-        return f'{self.user.user.username} -- {self.plan.name} -- {self.start_time} -- {self.get_end_time()}'
+        return f'{self.user.user.username} -- {self.plan.name} -- {self.start_time}'
 
 class Payment(models.Model):
     user = models.ForeignKey(to=User, on_delete=CASCADE, related_name='payment')
