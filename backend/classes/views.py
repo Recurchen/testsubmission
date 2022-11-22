@@ -1,15 +1,15 @@
 from typing import List
 from django.contrib.auth.models import User
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, DestroyAPIView, get_object_or_404, ListAPIView
 from rest_framework.pagination import PageNumberPagination
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from classes.models import Class, ClassInstance, Enrollment
 from classes.serializers import ClassInstanceSerializer, EnrollmentSerializer
 from rest_framework.response import Response
 import datetime
+from Accounts.models import Profile
 from Studios.models import Studio
-from django.utils import timezone
 
 
 def drop_class_after(after: datetime.datetime, user: User):
@@ -24,27 +24,9 @@ def drop_class_after(after: datetime.datetime, user: User):
 
 def future_instances(class_instances: List[ClassInstance]) -> List[ClassInstance]:
     classins_ids = [c.id for c in class_instances]
-    # now = datetime.datetime.now()
-    now = timezone.now()
+    now = datetime.datetime.now()
     return ClassInstance.objects.filter(start_time__gt=now, is_cancelled=False,
                                         id__in=classins_ids).order_by('start_time')
-    # future_class_instances = []  # future class instances for all belonged classes
-    # for i in class_instances:
-    #     if i.start_time > now and i.is_cancelled is False:
-    #         future_class_instances.append(i)
-    # # sort class instances with insertion sort algo
-    # for i in range(1, len(future_class_instances)):
-    #     key_item = future_class_instances[i]
-    #     j = i - 1
-    #     key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
-    #
-    #     while j >= 0 and datetime.datetime.combine(future_class_instances[j].class_date,
-    #                                                future_class_instances[j].start_time) > \
-    #             key_item_start:
-    #         future_class_instances[j + 1] = future_class_instances[j]
-    #         j -= 1
-    #     future_class_instances[j + 1] = key_item
-    # return future_class_instances
 
 
 def search(by: str, value: str, studio_id: int) -> List[ClassInstance]:
@@ -63,13 +45,17 @@ def search(by: str, value: str, studio_id: int) -> List[ClassInstance]:
 
 def search_by_coach(coach: str, studio_id: int) -> List[ClassInstance]:
     classes = list(Class.objects.filter(coach=coach, studio_id=studio_id))
-    class_instances = [ClassInstance.objects.get(belonged_class=c) for c in classes]
+    class_instances = []
+    for c in classes:
+        class_instances.extend(list(ClassInstance.objects.filter(belonged_class=c)))
     return future_instances(class_instances)
 
 
 def search_by_class_name(class_name: str, studio_id: int) -> List[ClassInstance]:
     classes = list(Class.objects.filter(name=class_name, studio_id=studio_id))
-    class_instances = [ClassInstance.objects.get(belonged_class=c) for c in classes]
+    class_instances = []
+    for c in classes:
+        class_instances.extend(list(ClassInstance.objects.filter(belonged_class=c)))
     return future_instances(class_instances)
 
 
@@ -94,6 +80,7 @@ def search_by_time_range(start: str, end: str, studio_id: int) -> List[ClassInst
 
 class EnrollClassView(CreateAPIView):
     serializer_class = EnrollmentSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         if request.GET.get('class_id', '') == '':
@@ -102,12 +89,11 @@ class EnrollClassView(CreateAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        # user = Profile.objects.get(user=self.request.user)
-        user = User.objects.get(username='a')
-        # TODO: remove this after test
-        # if user and not user.is_subscribed:
-        #     return Response({"details: user isn't an active subscriber"},
-        #                     status=status.HTTP_401_UNAUTHORIZED)
+        user = Profile.objects.get(user=self.request.user).user
+        profile = Profile.objects.get(user=self.request.user)
+        if user and not profile.is_subscribed:
+            return Response({"details: user isn't an active subscriber"},
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -172,6 +158,7 @@ class EnrollClassView(CreateAPIView):
 
 class DropClassView(DestroyAPIView):
     serializer_class = EnrollmentSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         if request.GET.get('class_id', '') == '':
@@ -180,12 +167,12 @@ class DropClassView(DestroyAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        # TODO: update user
-        # user =  user = Profile.objects.get(user=self.request.user)
-        user = User.objects.get(username='a')
-        # if user and not user.is_subscribed:
-        #     return Response({"details: user isn't an active subscriber"},
-        #                     status=status.HTTP_401_UNAUTHORIZED)
+
+        user = Profile.objects.get(user=self.request.user).user
+        profile = Profile.objects.get(user=self.request.user)
+        if user and not profile.is_subscribed:
+            return Response({"details: user isn't an active subscriber"},
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -251,164 +238,107 @@ class DropClassView(DestroyAPIView):
 
 class ClassInstancePagination(PageNumberPagination):
     page_size = 1
-    page_size_query_param = 'page_size'
-    max_page_size = 2
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = EnrollmentSerializer
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
-        # user = Profile.objects.get(user=self.request.user)
-        # TODO: change user later
-        user = User.objects.get(username='a')
+        user = Profile.objects.get(user=self.request.user).user
         return Enrollment.objects.filter(user=user).order_by('class_start_time')
 
 
 class ClassInstancesListView(ListAPIView):
-    # permission_classes = (IsAuthenticated,)
     serializer_class = ClassInstanceSerializer
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
-        if self.request.method == "GET":
-            if list(self.request.GET.keys()) == []:  # no search/filter
-                id = self.kwargs['studio_id']
-                if not Studio.objects.filter(id=id):
-                    return Response({"MESSAGE": "Not Found", "STATUS": 404})
+        keys = list(self.request.GET.keys())
+        if list(self.request.GET.keys()) == []:  # no search/filter
+            id = self.kwargs['studio_id']
+            studio = get_object_or_404(Studio, id=id)
+            classes = Class.objects.filter(studio_id=id)
+            classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
+            return future_instances(classes_instances)
+        # if len(keys) == []:  # no search/filter
+        #     classes_instances = ClassInstance.objects.filter(
+        #         belonged_class__in=Class.objects.filter(studio_id=self.kwargs['studio_id']),
+        #         start_time__gt=datetime.datetime.now(), is_cancelled=False).order_by(
+        #         'start_time')
+        #
+        #     return classes_instances
+        #     # return future_instances(classes_instances)
+        else:
+            # we will get query parameters
+            # if any one isn't in allowed search/filter option, return invalid post request too
+            length = len(keys)
+            id = self.kwargs['studio_id']
+            if length == 1:  # search has only 1 query
+                method = 'search'
+            else:  # filter has more than 1 query
+                method = 'filter'
+            if method == 'search':
+                by = keys[0]
+                value = self.request.GET.get(by)
+                by_list = ['class_name', 'coach', 'date', 'time_range']
+                if by in by_list:
+                    searched_instances = search(by, value, id)
+                    return searched_instances
 
-                classes = Class.objects.filter(studio_id=id)
-                classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
-                return future_instances(classes_instances)
-            else:
-                # we will get query parameters
-                # if any one isn't in allowed search/filter option, return invalid post request too
-                keys = list(self.request.GET.keys())
-                length = len(keys)
-                id = self.kwargs['studio_id']
-                if length == 1:  # search has only 1 query
-                    method = 'search'
-                else:  # filter has more than 1 query
-                    method = 'filter'
-                if method == 'search':
-                    by = keys[0]
-                    value = self.request.GET.get(by)
-                    by_list = ['class_name', 'coach', 'date', 'time_range']
+            elif method == 'filter':
+                bys = keys
+                by_list = ['class_name', 'coach', 'date', 'time_range']
+                potential_instances = []  # list of queryset
+                for by in bys:
                     if by in by_list:
-                        searched_instances = search(by, value, id)
-                        return searched_instances
-                    else:
-                        return Response(status=status.HTTP_400_BAD_REQUEST)
-                elif method == 'filter':
-                    bys = keys
-                    by_list = ['class_name', 'coach', 'date', 'time_range']
-                    potential_instances = []  # list of queryset
-                    for by in bys:
-                        if by in by_list:
-                            value = self.request.GET.get(by)
-                            searched_instances = search(by, value, studio_id=id)
-                            potential_instances.append(searched_instances)
-                        else:
-                            return Response(status=status.HTTP_400_BAD_REQUEST)
-                    if potential_instances == []:
-                        return Response(status=status.HTTP_404_NOT_FOUND, data=[])
+                        value = self.request.GET.get(by)
+                        searched_instances = search(by, value, studio_id=id)
+                        potential_instances.append(searched_instances)
+                if potential_instances != []:
                     intersection_instances = potential_instances[0]
                     for i in range(1, len(potential_instances)):
                         q = potential_instances[i]
                         intersection_instances = intersection_instances.intersection(q)
                     return intersection_instances
+                return
 
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    # def post(self, request, *args, **kwargs):
-    #     return self.get_queryset()
-
-    # def post(self, request, *args, **kwargs):
-    # # we will get query parameters
-    # # if any one isn't in allowed search/filter option, return invalid post request too
-    # keys = list(request.GET.keys())
-    # length = len(keys)
-    # id = self.kwargs['studio_id']
-    # if length < 1:
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
-    # if length == 1:# search has only 1 query
-    #     method = 'search'
-    # else: # filter has more than 1 query
-    #     method = 'filter'
-    # if method == 'search':
-    #     by = keys[0]
-    #     value = request.GET.get(by)
-    #     by_list = ['class_name', 'coach', 'date', 'time_range']
-    #     if by in by_list:
-    #         searched_instances = search(by, value, id)
-    #         data = []
-    #         for c in searched_instances:
-    #             class_instance_serializer = ClassInstanceSerializer(c)
-    #             data.append(class_instance_serializer.data)
-    #         return Response(data)
+    # if self.request.method == "GET":
+    #     if list(self.request.GET.keys()) == []:  # no search/filter
+    #         id = self.kwargs['studio_id']
+    #         studio = get_object_or_404(Studio, id=id)
+    #         classes = Class.objects.filter(studio_id=id)
+    #         classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
+    #         return future_instances(classes_instances)
     #     else:
-    #         return Response(status=status.HTTP_400_BAD_REQUEST)
-    # elif method == 'filter':
-    #     bys = keys
-    #     by_list = ['class_name', 'coach', 'date', 'time_range']
-    #     potential_instances = []
-    #     for by in bys:
-    #         if by in by_list:
-    #             value = request.GET.get(by)
-    #             searched_instances = search(by, value, studio_id=id)
-    #             potential_instances.append(searched_instances)
-    #         else:
-    #             return Response(status=status.HTTP_400_BAD_REQUEST)
-    #     if potential_instances == []:
-    #         return Response(status=status.HTTP_404_NOT_FOUND, data=[])
-    #     intersected_instances = list(set.intersection(*map(set, potential_instances)))
-    #     data = []
-    #     for i in intersected_instances:
-    #         class_instance_serializer = ClassInstanceSerializer(i)
-    #         data.append(class_instance_serializer.data)
-    #     return Response(data)
-    # return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    # def get(self, request, *args, **kwargs):
-    #     id = self.kwargs['studio_id']
-    #     if not Studio.objects.filter(id=id):
-    #         return Response({"MESSAGE": "Not Found", "STATUS": 404})
-    #     studio_serializer = StudioSerializer(Studio.objects.get(id=id))
-    #     data = [{'Studio': studio_serializer.data}]
-    #     classes_data = []
-    #     data.append({'Classes': classes_data})
-    #     # append class instances after now by start time
-    #     class_ids = Class.objects.filter(studio_id=id).values('id')
-    #     class_objects = []  # classes belong to the studio
-    #     for i in range(0, len(class_ids)):
-    #         class_objects.append(Class.objects.get(id=class_ids[i]['id']))
-    #
-    #     future_class_instances = []  # future class instances for all belonged classes
-    #     for c in class_objects:
-    #         class_instance_ids = ClassInstance.objects.filter(belonged_class=c).values('id')
-    #         class_instances = [ClassInstance.objects.get(id=class_instance_ids[i]['id'])
-    #                            for i in range(0, len(class_instance_ids))]
-    #         now = datetime.datetime.now()  # default timezone is utc
-    #         for i in class_instances:
-    #             class_start_time = datetime.datetime.combine(i.class_date, i.start_time)
-    #             if class_start_time >= now and i.is_cancelled is False:
-    #                 future_class_instances.append(i)
-    #     # sort class instances with insertion sort algo
-    #     for i in range(1, len(future_class_instances)):
-    #         key_item = future_class_instances[i]
-    #         j = i - 1
-    #         key_item_start = datetime.datetime.combine(key_item.class_date, key_item.start_time)
-    #
-    #         while j >= 0 and datetime.datetime.combine(future_class_instances[j].class_date,
-    #                                                    future_class_instances[j].start_time) > \
-    #                 key_item_start:
-    #             future_class_instances[j + 1] = future_class_instances[j]
-    #             j -= 1
-    #         future_class_instances[j + 1] = key_item
-    #     # display class instances: in toronto timezone
-    #     for c in future_class_instances:
-    #         class_instance_serializer = ClassInstanceSerializer(c)
-    #         classes_data.append(class_instance_serializer.data)
-    #
-    #     return Response(data)
+    #         # we will get query parameters
+    #         # if any one isn't in allowed search/filter option, return invalid post request too
+    #         keys = list(self.request.GET.keys())
+    #         length = len(keys)
+    #         id = self.kwargs['studio_id']
+    #         if length == 1:  # search has only 1 query
+    #             method = 'search'
+    #         else:  # filter has more than 1 query
+    #             method = 'filter'
+    #         if method == 'search':
+    #             by = keys[0]
+    #             value = self.request.GET.get(by)
+    #             by_list = ['class_name', 'coach', 'date', 'time_range']
+    #             if by in by_list:
+    #                 searched_instances = search(by, value, id)
+    #                 return searched_instances
+    #         elif method == 'filter':
+    #             bys = keys
+    #             by_list = ['class_name', 'coach', 'date', 'time_range']
+    #             potential_instances = []  # list of queryset
+    #             for by in bys:
+    #                 if by in by_list:
+    #                     value = self.request.GET.get(by)
+    #                     searched_instances = search(by, value, studio_id=id)
+    #                     potential_instances.append(searched_instances)
+    #             intersection_instances = potential_instances[0]
+    #             for i in range(1, len(potential_instances)):
+    #                 q = potential_instances[i]
+    #                 intersection_instances = intersection_instances.intersection(q)
+    #             return intersection_instances

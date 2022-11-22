@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'recurrence',
     'rest_framework.authtoken',
     'phone_field',
-    'schedule',
+    #'schedule',
 
 
 ]

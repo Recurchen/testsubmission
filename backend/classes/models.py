@@ -102,6 +102,11 @@ class ClassInstance(models.Model):
     def save(self, *args, **kwargs):
         if self.capacity < 1:
             self.is_full = True
+        if self.is_cancelled:
+            enrollments = list(Enrollment.objects.filter(class_instance=self))
+            for e in enrollments:
+                e.is_cancelled = True
+                e.save()
         return super(ClassInstance, self).save(*args, **kwargs)
 
 
