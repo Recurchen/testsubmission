@@ -1,13 +1,11 @@
 # TFCGymWeb
 
 This is a web dev course project built for a gym.
-We use Django and REST for backend.
+We use Django and REST Framework for backend.
 
 
-Notes:
-1. In Studio search and filter, your inputs are not case-sensitive.
+Please check doc.pdf to see specfic instructions.
 
-e.g. 
-
+Make sure startup.sh and run.sh are in the root folder where TFCGymWeb exists.
 
 
