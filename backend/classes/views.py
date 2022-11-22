@@ -1,7 +1,7 @@
 from typing import List
 from django.contrib.auth.models import User
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, DestroyAPIView, get_object_or_404, ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from classes.models import Class, ClassInstance, Enrollment
@@ -89,7 +89,7 @@ class EnrollClassView(CreateAPIView):
 
         if user and not user.is_subscribed:
             return Response({"details: user isn't an active subscriber"},
-                             status=status.HTTP_401_UNAUTHORIZED)
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -253,13 +253,26 @@ class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
     pagination_class = ClassInstancePagination
 
+    def get(self, request, *args, **kwargs):
+        studio = get_object_or_404(Studio, id=self.kwargs['studio_id'])
+        keys = list(self.request.GET.keys())
+        by_list = ['class_name', 'coach', 'date', 'time_range']
+        for by in keys:
+            if by not in by_list:
+                return Response({"details": "invalid query params"},
+                                status=status.HTTP_400_BAD_REQUEST)
+        potential_instances = []  # list of queryset
+        for by in keys:
+            value = self.request.GET.get(by)
+            searched_instances = search(by, value, studio_id=self.kwargs['studio_id'])
+            potential_instances.append(searched_instances)
+        if potential_instances == []:
+            return Response({"details": "no result"}, status=status.HTTP_404_NOT_FOUND)
+
     def get_queryset(self):
         if self.request.method == "GET":
             if list(self.request.GET.keys()) == []:  # no search/filter
                 id = self.kwargs['studio_id']
-                if not Studio.objects.filter(id=id):
-                    return Response({"MESSAGE": "Not Found", "STATUS": 404})
-
                 classes = Class.objects.filter(studio_id=id)
                 classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
                 return future_instances(classes_instances)
@@ -280,8 +293,6 @@ class ClassInstancesListView(ListAPIView):
                     if by in by_list:
                         searched_instances = search(by, value, id)
                         return searched_instances
-                    else:
-                        return Response(status=status.HTTP_400_BAD_REQUEST)
                 elif method == 'filter':
                     bys = keys
                     by_list = ['class_name', 'coach', 'date', 'time_range']
@@ -291,14 +302,10 @@ class ClassInstancesListView(ListAPIView):
                             value = self.request.GET.get(by)
                             searched_instances = search(by, value, studio_id=id)
                             potential_instances.append(searched_instances)
-                        else:
-                            return Response(status=status.HTTP_400_BAD_REQUEST)
-                    if potential_instances == []:
-                        return Response(status=status.HTTP_404_NOT_FOUND, data=[])
+                    # if potential_instances == []:
+                    #     return Response(status=status.HTTP_404_NOT_FOUND, data=[])
                     intersection_instances = potential_instances[0]
                     for i in range(1, len(potential_instances)):
                         q = potential_instances[i]
                         intersection_instances = intersection_instances.intersection(q)
                     return intersection_instances
-
-                return Response(status=status.HTTP_400_BAD_REQUEST)
