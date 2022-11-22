@@ -14,10 +14,30 @@ class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password', 'password2','phone_number', 'avatar', 'is_subscribed')
-        required = ['username', 'first_name', 'last_name', 'email', 'password', 'password2',]
+        # required = ['username', 'first_name', 'last_name', 'email', 'password', 'password2',]
         extra_kwargs = {
             'password' : {'write_only': True, "style": {"input_type": "password"}},
         }
+
+    def validate(self, attrs):
+        if not attrs.get('username'):
+            raise serializers.ValidationError('username field is required.')
+        if not attrs.get('first_name'):
+            raise serializers.ValidationError('first_name field is required.')
+        
+        if not attrs.get('last_name'):
+            raise serializers.ValidationError('last_name field is required.')
+
+        if not attrs.get('email'):
+            raise serializers.ValidationError('email field is required.')
+        
+        if not attrs.get('password'):
+            raise serializers.ValidationError('password field is required.')
+
+        if not attrs.get('password2'):
+            raise serializers.ValidationError('password2 field is required.')
+        
+        return attrs
 
     def create(self, validated_data):
         if validated_data.get('password') != validated_data.get('password2'):
