@@ -253,26 +253,12 @@ class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
     pagination_class = ClassInstancePagination
 
-    def get(self, request, *args, **kwargs):
-        studio = get_object_or_404(Studio, id=self.kwargs['studio_id'])
-        keys = list(self.request.GET.keys())
-        by_list = ['class_name', 'coach', 'date', 'time_range']
-        for by in keys:
-            if by not in by_list:
-                return Response({"details": "invalid query params"},
-                                status=status.HTTP_400_BAD_REQUEST)
-        potential_instances = []  # list of queryset
-        for by in keys:
-            value = self.request.GET.get(by)
-            searched_instances = search(by, value, studio_id=self.kwargs['studio_id'])
-            potential_instances.append(searched_instances)
-        if potential_instances == []:
-            return Response({"details": "no result"}, status=status.HTTP_404_NOT_FOUND)
 
     def get_queryset(self):
         if self.request.method == "GET":
             if list(self.request.GET.keys()) == []:  # no search/filter
                 id = self.kwargs['studio_id']
+                studio = get_object_or_404(Studio, id=id)
                 classes = Class.objects.filter(studio_id=id)
                 classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
                 return future_instances(classes_instances)
@@ -302,8 +288,6 @@ class ClassInstancesListView(ListAPIView):
                             value = self.request.GET.get(by)
                             searched_instances = search(by, value, studio_id=id)
                             potential_instances.append(searched_instances)
-                    # if potential_instances == []:
-                    #     return Response(status=status.HTTP_404_NOT_FOUND, data=[])
                     intersection_instances = potential_instances[0]
                     for i in range(1, len(potential_instances)):
                         q = potential_instances[i]
