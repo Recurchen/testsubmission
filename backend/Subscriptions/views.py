@@ -18,21 +18,11 @@ from datetime import timedelta
 from classes.views import drop_class_after
 from django.utils import timezone
 
-import time
-
 END_DELTA = timedelta(days=366)
 
-def _set_auto_payment(subscription):
-    print("called1")
-    start_time = subscription.start_time
-    end_time = subscription.get_end_time(start_time)
-    duration = (end_time - start_time).total_seconds()
-    
-    schedule.every(duration).seconds.do(_update_sub_make_pay, subscription=subscription)
-
-def _update_sub_make_pay(subscription):
-    print("called")
-    initial_end = subscription.get_end_time(subscription.starttime)
+def update_sub_make_pay(subscription):
+    st = subscription.start_time
+    initial_end = subscription.get_end_time(st)
     user = subscription.user
     payment_method = user.payment_method
     if payment_method is None or subscription.auto_pay == False:
@@ -105,7 +95,6 @@ class CreateSubView(CreateAPIView):
 
         if paid:
             _make_future_payment(sub)
-            _set_auto_payment(sub)
             profile.is_subscribed=True
             profile.save()
             res = {"message":"success! enjoy your time in our gym"}
@@ -115,7 +104,6 @@ class CreateSubView(CreateAPIView):
             res = {"message":"oops! subscription is canceled as no recorded payment method"}
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
-        # return super().post(request, *args, **kwargs)
 
 class CancelSubView(APIView):
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
@@ -129,6 +117,8 @@ class CancelSubView(APIView):
             profile = Profile.objects.get(user=user)
             sub = Subscription.objects.get(user=profile)
             sub.cancel()
+            profile.is_subscribed = False
+            profile.save()
 
             future_payments = Payment.objects.filter(subscription=sub)
             
