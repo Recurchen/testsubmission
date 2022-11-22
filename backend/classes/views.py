@@ -85,9 +85,9 @@ class EnrollClassView(CreateAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        user = Profile.objects.get(user=self.request.user)
-
-        if user and not user.is_subscribed:
+        user = Profile.objects.get(user=self.request.user).user
+        profile = Profile.objects.get(user=self.request.user)
+        if user and not profile.is_subscribed:
             return Response({"details: user isn't an active subscriber"},
                             status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
@@ -164,9 +164,9 @@ class DropClassView(DestroyAPIView):
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        user = Profile.objects.get(user=self.request.user)
-
-        if user and not user.is_subscribed:
+        user = Profile.objects.get(user=self.request.user).user
+        profile = Profile.objects.get(user=self.request.user)
+        if user and not profile.is_subscribed:
             return Response({"details: user isn't an active subscriber"},
                             status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
