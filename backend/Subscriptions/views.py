@@ -18,22 +18,11 @@ from datetime import timedelta
 from classes.views import drop_class_after
 from django.utils import timezone
 
-import schedule
-import time
-
 END_DELTA = timedelta(days=366)
 
-def _set_auto_payment(subscription):
-    print("called1")
-    start_time = subscription.start_time
-    end_time = subscription.get_end_time(start_time)
-    duration = (end_time - start_time).total_seconds()
-    
-    schedule.every(duration).seconds.do(_update_sub_make_pay, subscription=subscription)
-
-def _update_sub_make_pay(subscription):
-    print("called")
-    initial_end = subscription.get_end_time(subscription.starttime)
+def update_sub_make_pay(subscription):
+    st = subscription.start_time
+    initial_end = subscription.get_end_time(st)
     user = subscription.user
     payment_method = user.payment_method
     if payment_method is None or subscription.auto_pay == False:

@@ -12,6 +12,9 @@ from .models import Profile
 from django.contrib.auth.models import User
 from .permissions import IsSelf
 from .tokens import create_jwt_pair_for_user
+from Subscriptions.models import Subscription
+from Subscriptions.views import update_sub_make_pay
+from django.utils import timezone
 
 class RegisterView(APIView):
     def post(self, request):
@@ -42,8 +45,17 @@ class LogInView(APIView):
             'tokens': tokens
         }
 
-        return Response(data=response_data, status=status.HTTP_200_OK)
+        try:
+            profile = Profile.objects.get(user=user)
+            sub = Subscription.objects.get(user=profile)
+            now = timezone.now()
+            st = sub.start_time
+            if sub.get_end_time(st) < now:
+                update_sub_make_pay(sub)
+        except (Profile.DoesNotExist, Subscription.DoesNotExist):
+            pass
 
+        return Response(data=response_data, status=status.HTTP_200_OK)
 
 
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
