@@ -18,7 +18,6 @@ from datetime import timedelta
 from classes.views import drop_class_after
 from django.utils import timezone
 
-import schedule
 import time
 
 END_DELTA = timedelta(days=366)
