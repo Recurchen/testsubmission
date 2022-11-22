@@ -45,13 +45,17 @@ def search(by: str, value: str, studio_id: int) -> List[ClassInstance]:
 
 def search_by_coach(coach: str, studio_id: int) -> List[ClassInstance]:
     classes = list(Class.objects.filter(coach=coach, studio_id=studio_id))
-    class_instances = [ClassInstance.objects.get(belonged_class=c) for c in classes]
+    class_instances = []
+    for c in classes:
+        class_instances.extend(list(ClassInstance.objects.filter(belonged_class=c)))
     return future_instances(class_instances)
 
 
 def search_by_class_name(class_name: str, studio_id: int) -> List[ClassInstance]:
     classes = list(Class.objects.filter(name=class_name, studio_id=studio_id))
-    class_instances = [ClassInstance.objects.get(belonged_class=c) for c in classes]
+    class_instances = []
+    for c in classes:
+        class_instances.extend(list(ClassInstance.objects.filter(belonged_class=c)))
     return future_instances(class_instances)
 
 
@@ -234,8 +238,6 @@ class DropClassView(DestroyAPIView):
 
 class ClassInstancePagination(PageNumberPagination):
     page_size = 1
-    page_size_query_param = 'page_size'
-    max_page_size = 2
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
@@ -249,47 +251,94 @@ class UserEnrollmentHistoryListView(ListAPIView):
 
 
 class ClassInstancesListView(ListAPIView):
-    permission_classes = (IsAuthenticated,)
     serializer_class = ClassInstanceSerializer
     pagination_class = ClassInstancePagination
 
-
     def get_queryset(self):
-        if self.request.method == "GET":
-            if list(self.request.GET.keys()) == []:  # no search/filter
-                id = self.kwargs['studio_id']
-                studio = get_object_or_404(Studio, id=id)
-                classes = Class.objects.filter(studio_id=id)
-                classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
-                return future_instances(classes_instances)
-            else:
-                # we will get query parameters
-                # if any one isn't in allowed search/filter option, return invalid post request too
-                keys = list(self.request.GET.keys())
-                length = len(keys)
-                id = self.kwargs['studio_id']
-                if length == 1:  # search has only 1 query
-                    method = 'search'
-                else:  # filter has more than 1 query
-                    method = 'filter'
-                if method == 'search':
-                    by = keys[0]
-                    value = self.request.GET.get(by)
-                    by_list = ['class_name', 'coach', 'date', 'time_range']
+        keys = list(self.request.GET.keys())
+        if list(self.request.GET.keys()) == []:  # no search/filter
+            id = self.kwargs['studio_id']
+            studio = get_object_or_404(Studio, id=id)
+            classes = Class.objects.filter(studio_id=id)
+            classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
+            return future_instances(classes_instances)
+        # if len(keys) == []:  # no search/filter
+        #     classes_instances = ClassInstance.objects.filter(
+        #         belonged_class__in=Class.objects.filter(studio_id=self.kwargs['studio_id']),
+        #         start_time__gt=datetime.datetime.now(), is_cancelled=False).order_by(
+        #         'start_time')
+        #
+        #     return classes_instances
+        #     # return future_instances(classes_instances)
+        else:
+            # we will get query parameters
+            # if any one isn't in allowed search/filter option, return invalid post request too
+            length = len(keys)
+            id = self.kwargs['studio_id']
+            if length == 1:  # search has only 1 query
+                method = 'search'
+            else:  # filter has more than 1 query
+                method = 'filter'
+            if method == 'search':
+                by = keys[0]
+                value = self.request.GET.get(by)
+                by_list = ['class_name', 'coach', 'date', 'time_range']
+                if by in by_list:
+                    searched_instances = search(by, value, id)
+                    return searched_instances
+
+            elif method == 'filter':
+                bys = keys
+                by_list = ['class_name', 'coach', 'date', 'time_range']
+                potential_instances = []  # list of queryset
+                for by in bys:
                     if by in by_list:
-                        searched_instances = search(by, value, id)
-                        return searched_instances
-                elif method == 'filter':
-                    bys = keys
-                    by_list = ['class_name', 'coach', 'date', 'time_range']
-                    potential_instances = []  # list of queryset
-                    for by in bys:
-                        if by in by_list:
-                            value = self.request.GET.get(by)
-                            searched_instances = search(by, value, studio_id=id)
-                            potential_instances.append(searched_instances)
+                        value = self.request.GET.get(by)
+                        searched_instances = search(by, value, studio_id=id)
+                        potential_instances.append(searched_instances)
+                if potential_instances != []:
                     intersection_instances = potential_instances[0]
                     for i in range(1, len(potential_instances)):
                         q = potential_instances[i]
                         intersection_instances = intersection_instances.intersection(q)
                     return intersection_instances
+                return
+
+    # if self.request.method == "GET":
+    #     if list(self.request.GET.keys()) == []:  # no search/filter
+    #         id = self.kwargs['studio_id']
+    #         studio = get_object_or_404(Studio, id=id)
+    #         classes = Class.objects.filter(studio_id=id)
+    #         classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
+    #         return future_instances(classes_instances)
+    #     else:
+    #         # we will get query parameters
+    #         # if any one isn't in allowed search/filter option, return invalid post request too
+    #         keys = list(self.request.GET.keys())
+    #         length = len(keys)
+    #         id = self.kwargs['studio_id']
+    #         if length == 1:  # search has only 1 query
+    #             method = 'search'
+    #         else:  # filter has more than 1 query
+    #             method = 'filter'
+    #         if method == 'search':
+    #             by = keys[0]
+    #             value = self.request.GET.get(by)
+    #             by_list = ['class_name', 'coach', 'date', 'time_range']
+    #             if by in by_list:
+    #                 searched_instances = search(by, value, id)
+    #                 return searched_instances
+    #         elif method == 'filter':
+    #             bys = keys
+    #             by_list = ['class_name', 'coach', 'date', 'time_range']
+    #             potential_instances = []  # list of queryset
+    #             for by in bys:
+    #                 if by in by_list:
+    #                     value = self.request.GET.get(by)
+    #                     searched_instances = search(by, value, studio_id=id)
+    #                     potential_instances.append(searched_instances)
+    #             intersection_instances = potential_instances[0]
+    #             for i in range(1, len(potential_instances)):
+    #                 q = potential_instances[i]
+    #                 intersection_instances = intersection_instances.intersection(q)
+    #             return intersection_instances
