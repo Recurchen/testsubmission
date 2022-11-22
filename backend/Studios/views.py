@@ -1,33 +1,111 @@
 
 from datetime import timezone
+from pydoc import classname
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 
 from rest_framework.response import Response
+from functools import reduce
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters.rest_framework
+from django.db.models import Q
 from django.db.models import Prefetch
-
+from operator import and_, or_
 import requests
 import json
 
 from .serializers import StudioSerializer, UserLocationSerializer
 from .models import Amenity, Studio
 from classes.models import Class
+from rest_framework.pagination import PageNumberPagination
+
+
 
 # Create your views here.
+class StudioPagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 2
+
 
 class StudiosListView(generics.ListCreateAPIView):
+    pagination_class = StudioPagination
     serializer_class = UserLocationSerializer
 
     def get_queryset(self):
+        name = self.request.query_params.get('name') or ''
+        amenities = self.request.query_params.get('amenities') or ''
+        class_name = self.request.query_params.get('class') or ''
+        coach = self.request.query_params.get('coach') or ''
+
+        # 1 or more amenities searching and
+        # 1 or more classes searching at the same time
+        if (len(amenities) > 0 and ' ' in amenities) \
+            and (len(class_name) > 0 and ' ' in class_name):
+            amenities_list = amenities.split()
+            class_list = class_name.split()
+
+            # set the amenities condition check
+            condition1 = Q(amenities__type__contains=amenities_list[0])
+            if len(amenities_list) >= 1:
+                for amenity in amenities_list[1:]:
+                    condition1 |= Q(amenities__type__contains=amenity)
+
+            # set the classes condition check
+            condition2 = Q(classes__name__contains = class_list[0])
+            if len(class_list) >= 1:
+                for class_name in class_list[1:]:
+                    condition2 |= Q(classes__name__contains=class_name)
+
+            studios = Studio.objects.filter(
+                                        condition1,
+                                        condition2,
+                                        name__contains = name,
+                                        classes__coach__contains = coach
+                                        ).distinct()
         
-        studios = Studio.objects.all()
-        #studios = Studio.objects.filter(name__contains = 'gym')
-        #studios = Studio.objects.filter(amenities__type__contains = 'Pool')
-        #studios = Studio.objects.prefetch_related(Prefetch('amenities', queryset= Amenity.objects.filter(type__contains = "Court")))
-        #studios = studios.prefetch_related(Prefetch('classes', queryset= Class.objects.filter(name__contains = "Cardio"))).all()
+        # only 1 or more amenities search
+        elif len(amenities) > 0 and ' ' in amenities:
+            amenities_list = amenities.split()
+
+            # set the amenities condition check
+            condition1 = Q(amenities__type__contains=amenities_list[0])
+            if len(amenities_list) >= 1:
+                for amenity in amenities_list[1:]:
+                    condition1 |= Q(amenities__type__contains=amenity)
+
+            studios = Studio.objects.filter(
+                                        condition1,
+                                        classes__name__contains = class_name, \
+                                        name__contains = name,
+                                        classes__coach__contains = coach
+                                        ).distinct()
+
+        # only 1 or more classes search
+        elif (len(class_name) > 0 and ' ' in class_name):
+            class_list = class_name.split()
+
+            # set the classes condition check
+            condition2 = Q(classes__name__contains = class_list[0])
+            if len(class_list) >= 1:
+                for class_name in class_list[1:]:
+                    condition2 |= Q(classes__name__contains=class_name)
+
+            studios = Studio.objects.filter(condition2,
+                                        name__contains = name,
+                                        name__contains = name,
+                                        classes__coach__contains = coach
+                                        ).distinct()        
+
+        # general search, not multiple key words for classes and amenities
+        else:    
+            studios = Studio.objects.filter(name__contains = name, \
+                                        amenities__type__contains = amenities, \
+                                        classes__name__contains = class_name, \
+                                        classes__coach__contains = coach
+                                        ).distinct()
+
         return studios
 
     def get_queryset_sorted(self, origin, name, type, class_name, coach):
@@ -46,20 +124,15 @@ class StudiosListView(generics.ListCreateAPIView):
 
             return seconds
 
-        if name == None:
-            studios = Studio.objects.all()
-        else:
-            # studios = Studio.objects.prefetch_related(Prefetch('amenities', queryset= Amenity.objects.filter(type__contains = type))).all()
-            # Status.objects.prefetch_related(Prefetch('tasks', queryset = Task.objects.filter(contact=contactID))).all()
-            studios = Studio.objects.filter(name__contains = name, amenities__type__contains = type, classes__name__contains = class_name, classes__coach__contains = coach)
-            #studios = studios.filter(name__contains = name)
-            # studios = studios.prefetch_related(Prefetch('amenities', queryset= Amenity.objects.filter(type__contains = type))).all()
-            #studios = studios.prefetch_related(Prefetch('classes', queryset= Class.objects.filter(name__contains = class_name))).all()
-            #studios = studios.prefetch_related(Prefetch('amenities', queryset= Amenity.objects.filter(type__contains = type)), Prefetch('classes', queryset= Class.objects.filter(name__contains = class_name))).all()
+        studios = Studio.objects.filter(name__contains = name, \
+                                        amenities__type__contains = type, \
+                                        classes__name__contains = class_name, \
+                                        classes__coach__contains = coach)
         sorted_studios = sorted(studios, key = lambda studio: calculate_dist(origin, studio.address), reverse = False)
         return sorted_studios
 
     def list(self, request):
+        pagination_class = StudioPagination
         queryset = self.get_queryset()
         serializer = StudioSerializer(queryset, many=True)
 
@@ -76,10 +149,6 @@ class StudiosListView(generics.ListCreateAPIView):
             coach = serializer.data.get('coach')
         
         
-        if not filter:
-            queryset = self.get_queryset_sorted(origin_data, name_data, amenities)
-
-        else:
             queryset = self.get_queryset_sorted(origin_data, name_data, amenities, class_name, coach)
         serializer = StudioSerializer(queryset, many=True)
 
