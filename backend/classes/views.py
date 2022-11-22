@@ -37,9 +37,7 @@ def search(by: str, value: str, studio_id: int) -> List[ClassInstance]:
     elif by == 'date':
         return search_by_date(value, studio_id)
     elif by == 'time_range':
-        print(value)
         time = value.split(",")
-        print(time)
         start = time[0]
         end = time[1]
         return search_by_time_range(start, end, studio_id)
@@ -50,7 +48,7 @@ def search_by_coach(coach: str, studio_id: int) -> List[ClassInstance]:
     class_instances = []
     for c in classes:
         class_instances.extend(list(ClassInstance.objects.filter(belonged_class=c)))
-    return future_instances(class_instances)
+    return class_instances
 
 
 def search_by_class_name(class_name: str, studio_id: int) -> List[ClassInstance]:
@@ -58,7 +56,7 @@ def search_by_class_name(class_name: str, studio_id: int) -> List[ClassInstance]
     class_instances = []
     for c in classes:
         class_instances.extend(list(ClassInstance.objects.filter(belonged_class=c)))
-    return future_instances(class_instances)
+    return class_instances
 
 
 def search_by_date(date: str, studio_id: int) -> List[ClassInstance]:
@@ -66,7 +64,7 @@ def search_by_date(date: str, studio_id: int) -> List[ClassInstance]:
     date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
     class_instances = list(ClassInstance.objects.filter(
         belonged_class__in=classes, class_date=date))
-    return future_instances(class_instances)
+    return class_instances
 
 
 def search_by_time_range(start: str, end: str, studio_id: int) -> List[ClassInstance]:
@@ -77,7 +75,7 @@ def search_by_time_range(start: str, end: str, studio_id: int) -> List[ClassInst
     classes = list(Class.objects.filter(studio_id=studio_id))
     class_instances = list(ClassInstance.objects.filter(
         belonged_class__in=classes, start_time__range=(start, end)))
-    return future_instances(class_instances)
+    return class_instances
 
 
 class EnrollClassView(CreateAPIView):
@@ -254,56 +252,58 @@ class UserEnrollmentHistoryListView(ListAPIView):
 
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
+
     # pagination_class = ClassInstancePagination
 
     def get(self, request, *args, **kwargs):
-            keys = list(self.request.GET.keys())
-            data = []
-            if list(self.request.GET.keys()) == []:  # no search/filter
-                id = self.kwargs['studio_id']
-                studio = get_object_or_404(Studio, id=id)
-                classes = Class.objects.filter(studio_id=id)
-                classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
-                future_class_instances = future_instances(classes_instances)
-                for i in list(future_class_instances):
-                    serializer = ClassInstanceSerializer(i)
-                    data.append(serializer.data)
-            else:
-                # we will get query parameters
-                # if any one isn't in allowed search/filter option, return invalid post request too
-                length = len(keys)
-                id = self.kwargs['studio_id']
-                if length == 1:  # search has only 1 query
-                    method = 'search'
-                else:  # filter has more than 1 query
-                    method = 'filter'
-                if method == 'search':
-                    by = keys[0]
-                    value = self.request.GET.get(by)
-                    by_list = ['class_name', 'coach', 'date', 'time_range']
-                    if by in by_list:
-                        searched_instances = search(by, value, id)
-                        future_class_instances = searched_instances
-                        for i in list(future_class_instances):
-                            serializer = ClassInstanceSerializer(i)
-                            data.append(serializer.data)
+        keys = list(self.request.GET.keys())
+        data = []
+        if list(self.request.GET.keys()) == []:  # no search/filter
+            id = self.kwargs['studio_id']
+            studio = get_object_or_404(Studio, id=id)
+            classes = Class.objects.filter(studio_id=id)
+            classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
+            future_class_instances = future_instances(classes_instances)
+            for i in list(future_class_instances):
+                serializer = ClassInstanceSerializer(i)
+                data.append(serializer.data)
+        else:
+            # we will get query parameters
+            # if any one isn't in allowed search/filter option, return invalid post request too
+            length = len(keys)
+            id = self.kwargs['studio_id']
+            if length == 1:  # search has only 1 query
+                method = 'search'
+            else:  # filter has more than 1 query
+                method = 'filter'
+            if method == 'search':
+                by = keys[0]
+                value = self.request.GET.get(by)
+                by_list = ['class_name', 'coach', 'date', 'time_range']
+                if by in by_list:
+                    searched_instances = search(by, value, id)
+                    future_class_instances = searched_instances
+                    for i in list(future_class_instances):
+                        serializer = ClassInstanceSerializer(i)
+                        data.append(serializer.data)
 
-                elif method == 'filter':
-                    bys = keys
-                    by_list = ['class_name', 'coach', 'date', 'time_range']
-                    potential_instances = []  # list of queryset
-                    for by in bys:
-                        if by in by_list:
-                            value = self.request.GET.get(by)
-                            searched_instances = search(by, value, studio_id=id)
-                            potential_instances.append(searched_instances)
-                    if potential_instances != []:
-                        intersection_instances = potential_instances[0]
-                        for i in range(1, len(potential_instances)):
-                            q = potential_instances[i]
-                            intersection_instances = intersection_instances.intersection(q)
-                        future_class_instances = intersection_instances
-                        for i in list(future_class_instances):
-                            serializer = ClassInstanceSerializer(i)
-                            data.append(serializer.data)
-            return Response(data)
+            elif method == 'filter':
+                bys = keys
+                by_list = ['class_name', 'coach', 'date', 'time_range']
+                potential_instances = []  # list of queryset
+                for by in bys:
+                    if by in by_list:
+                        value = self.request.GET.get(by)
+                        searched_instances = search(by, value, studio_id=id)
+                        potential_instances.append(searched_instances)
+                if potential_instances != []:
+                    intersection_instances = potential_instances[0]
+                    for i in range(1, len(potential_instances)):
+                        q = potential_instances[i]
+                        intersection_instances = list(set(intersection_instances) & set(q))
+                        # intersection_instances = intersection_instances.intersection(q)
+                    future_class_instances = future_instances(intersection_instances)
+                    for i in list(future_class_instances):
+                        serializer = ClassInstanceSerializer(i)
+                        data.append(serializer.data)
+        return Response(data)
