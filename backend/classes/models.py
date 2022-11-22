@@ -106,6 +106,7 @@ class ClassInstance(models.Model):
             enrollments = list(Enrollment.objects.filter(class_instance=self))
             for e in enrollments:
                 e.is_cancelled = True
+                e.save()
         return super(ClassInstance, self).save(*args, **kwargs)
 
 
