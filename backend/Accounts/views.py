@@ -1,4 +1,6 @@
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,15 +19,25 @@ from Subscriptions.views import update_sub_make_pay
 from django.utils import timezone
 
 class RegisterView(APIView):
+    def get(self,request):
+        res = {"message":"to register, please enter username, password, password2, email, first_name, last_name, avatar(optional), phone_num(optional)"}
+        return Response(res, status=status.HTTP_200_OK)
+
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return HttpResponseRedirect(redirect_to='login')
+        # return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LogInView(APIView):
     permission_classes = []
+    
+    def get(self,request):
+        res = {"message":"to login please enter username and password"}
+        return Response(res, status=status.HTTP_200_OK)
+
     def post(self,request):
         username = request.data['username']
         password = request.data['password']
@@ -54,7 +66,7 @@ class LogInView(APIView):
                 update_sub_make_pay(sub)
         except (Profile.DoesNotExist, Subscription.DoesNotExist):
             pass
-
+        
         return Response(data=response_data, status=status.HTTP_200_OK)
 
 
@@ -103,7 +115,6 @@ class CreatePaymentMethodView(CreateAPIView):
         
         profile = Profile.objects.get(user=user)
         profile.payment_method = pm
-        print(profile.payment_method)
         profile.save()
         return response
     
