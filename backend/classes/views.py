@@ -237,7 +237,7 @@ class DropClassView(DestroyAPIView):
 
 
 class ClassInstancePagination(PageNumberPagination):
-    page_size = 1
+    page_size = 5
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
@@ -253,20 +253,21 @@ class UserEnrollmentHistoryListView(ListAPIView):
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
 
-    # pagination_class = ClassInstancePagination
+    pagination_class = ClassInstancePagination
 
-    def get(self, request, *args, **kwargs):
+    def get_queryset(self):
         keys = list(self.request.GET.keys())
-        data = []
+        # data = []
         if list(self.request.GET.keys()) == []:  # no search/filter
             id = self.kwargs['studio_id']
             studio = get_object_or_404(Studio, id=id)
             classes = Class.objects.filter(studio_id=id)
             classes_instances = ClassInstance.objects.filter(belonged_class__in=classes)
             future_class_instances = future_instances(classes_instances)
-            for i in list(future_class_instances):
-                serializer = ClassInstanceSerializer(i)
-                data.append(serializer.data)
+            return future_class_instances
+            # for i in list(future_class_instances):
+            #     serializer = ClassInstanceSerializer(i)
+            #     data.append(serializer.data)
         else:
             # we will get query parameters
             # if any one isn't in allowed search/filter option, return invalid post request too
@@ -282,10 +283,11 @@ class ClassInstancesListView(ListAPIView):
                 by_list = ['class_name', 'coach', 'date', 'time_range']
                 if by in by_list:
                     searched_instances = search(by, value, id)
-                    future_class_instances = searched_instances
-                    for i in list(future_class_instances):
-                        serializer = ClassInstanceSerializer(i)
-                        data.append(serializer.data)
+                    future_class_instances = future_instances(searched_instances)
+                    return future_class_instances
+                    # for i in list(future_class_instances):
+                    #     serializer = ClassInstanceSerializer(i)
+                    #     data.append(serializer.data)
 
             elif method == 'filter':
                 bys = keys
@@ -303,7 +305,8 @@ class ClassInstancesListView(ListAPIView):
                         intersection_instances = list(set(intersection_instances) & set(q))
                         # intersection_instances = intersection_instances.intersection(q)
                     future_class_instances = future_instances(intersection_instances)
-                    for i in list(future_class_instances):
-                        serializer = ClassInstanceSerializer(i)
-                        data.append(serializer.data)
-        return Response(data)
+                    return future_class_instances
+                    # for i in list(future_class_instances):
+                    #     serializer = ClassInstanceSerializer(i)
+                    #     data.append(serializer.data)
+        # return Response(data)
