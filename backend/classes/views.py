@@ -237,7 +237,7 @@ class DropClassView(DestroyAPIView):
 
 
 class ClassInstancePagination(PageNumberPagination):
-    page_size = 5
+    page_size = 3
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
@@ -258,7 +258,7 @@ class ClassInstancesListView(ListAPIView):
     def get_queryset(self):
         keys = list(self.request.GET.keys())
         # data = []
-        if list(self.request.GET.keys()) == []:  # no search/filter
+        if keys == [] or (len(keys) == 1 and keys[0] == 'page'):  # no search/filter
             id = self.kwargs['studio_id']
             studio = get_object_or_404(Studio, id=id)
             classes = Class.objects.filter(studio_id=id)
