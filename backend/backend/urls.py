@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.i18n import JavaScriptCatalog
 from django.urls import re_path
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 js_info_dict = {
     'packages': ('recurrence',),
 }
@@ -28,5 +32,4 @@ urlpatterns = [
     re_path(r'^jsi18n/$', JavaScriptCatalog.as_view(), js_info_dict),
     path('accounts/', include('Accounts.urls')),
     path('subscriptions/', include('Subscriptions.urls'))
-
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

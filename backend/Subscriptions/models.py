@@ -25,7 +25,6 @@ def _validate_time_range(range):
 class Plan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    studio = models.ForeignKey(to=Studio, on_delete=CASCADE, related_name='plans')
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[_validate_price])
     
     DAY = 'DAY'
@@ -53,7 +52,7 @@ class Plan(models.Model):
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICE, default=CAD)
 
     def __str__(self):
-        return f'{self.name} -- ${self.price} -- {self.time_unit} -- {self.time_range}'
+        return f'{self.name}'
 
 
 class Subscription(models.Model):

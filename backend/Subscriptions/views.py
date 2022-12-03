@@ -4,10 +4,11 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from .serializers import PlanSerializer, SubscriptionSerializer, PaymentSerializer
 from django.contrib.auth.models import User
@@ -52,6 +53,11 @@ def _make_payment(subscription):
         subscription.save()
         return False # declined as no payment method
     else:
+        dj_user = user.user
+        past_payment = Payment.objects.filter(user=dj_user)
+        for payment in past_payment: # skip if current month is already paid
+            if payment.datetime.year == datetime.now().year and payment.datetime.month == datetime.now().month:
+                return True
         Payment.objects.create(user=user.user, subscription=subscription, 
                                 payment_method=payment_method, datetime=datetime.now())
         return True
@@ -67,10 +73,13 @@ def _make_future_payment(subscription):
         payment.save()
         curr = subscription.get_end_time(curr)
 
+class PlansPagination(PageNumberPagination):
+    page_size = 3
 
 class PlansView(ListAPIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [AllowAny,]
     serializer_class = PlanSerializer
+    pagination_class = PlansPagination
 
     def get_queryset(self):
         return Plan.objects.all()
@@ -116,7 +125,9 @@ class CancelSubView(APIView):
         try:
             profile = Profile.objects.get(user=user)
             sub = Subscription.objects.get(user=profile)
+            current_end_time = sub.get_end_time(sub.start_time)
             sub.cancel()
+            sub.save()
             profile.is_subscribed = False
             profile.save()
 
@@ -128,7 +139,7 @@ class CancelSubView(APIView):
                 if payment.datetime > now:
                     payment.delete()
             
-            drop_class_after(now, user)
+            drop_class_after(current_end_time, user)
 
             res = {"message":"your subscription is canceled"}
             return Response(res, status=status.HTTP_200_OK)
@@ -137,9 +148,13 @@ class CancelSubView(APIView):
             res = {"message":"Sorry! some thing is wrong"}
             return Response(res, status=status.HTTP_404_NOT_FOUND)
 
-class PaymentHistoryView(ListAPIView):
+class PaymentPagination(PageNumberPagination):
+    page_size = 3
+
+class PastPaymentView(ListAPIView):
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
     serializer_class = PaymentSerializer
+    pagination_class = PaymentPagination
     model = Payment
     
     def get_queryset(self):
@@ -147,4 +162,19 @@ class PaymentHistoryView(ListAPIView):
         user = get_object_or_404(User, pk=user_id)
         self.check_object_permissions(self.request, user)
         queryset = self.model.objects.filter(user=user_id)
-        return queryset.order_by('datetime')
+        pastPayments = queryset.exclude(datetime__gte = datetime.now())
+        return pastPayments.order_by('datetime')
+
+class FuturePaymentView(ListAPIView):
+    permission_classes = [IsAuthenticated, IsSelfOrAdmin]
+    serializer_class = PaymentSerializer
+    pagination_class = PaymentPagination
+    model = Payment
+    
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(User, pk=user_id)
+        self.check_object_permissions(self.request, user)
+        queryset = self.model.objects.filter(user=user_id)
+        futurePayments = queryset.exclude(datetime__lte = datetime.now())
+        return futurePayments.order_by('datetime')

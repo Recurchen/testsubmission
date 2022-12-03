@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from phone_field import PhoneField
 from django.db.models import SET_NULL
+from django.core.validators import MinLengthValidator
 
 class PaymentMethod(models.Model):
     CREDIT = 'Credit Card'
@@ -12,10 +13,14 @@ class PaymentMethod(models.Model):
     ]
 
     card_type = models.CharField(max_length=20, choices=CARD_TYPE_CHOICE)
-    card_num = models.CharField(max_length=16)
+    card_num = models.CharField(max_length=16, validators=[MinLengthValidator(5)])
     expired_date = models.DateField(blank=True, null=True)
     cvv = models.CharField(max_length=4, blank=True, null=True)
     billing_address = models.CharField(max_length=1024, blank=True, null=True)
+
+    def __str__(self) -> str:
+        num = "card number is: " + self.card_num[:-4] + "****"
+        return num
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='userprofile', on_delete=models.CASCADE)

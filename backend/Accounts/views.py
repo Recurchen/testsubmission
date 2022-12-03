@@ -27,8 +27,8 @@ class RegisterView(APIView):
         serializer = SignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return HttpResponseRedirect(redirect_to='login')
-        # return Response(serializer.data, status=status.HTTP_200_OK)
+       # return HttpResponseRedirect(redirect_to='login')
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LogInView(APIView):
@@ -41,15 +41,12 @@ class LogInView(APIView):
     def post(self,request):
         username = request.data['username']
         password = request.data['password']
-
         user = authenticate(username=username, password=password)
-
         if user is None:
             raise AuthenticationFailed('Incorrent Username or Password')
         
         # token, created = Token.objects.get_or_create(user=user)
         tokens = create_jwt_pair_for_user(user)
-
         response_data = {
             "message": "Login Successfull",
             'username': user.username,
@@ -59,7 +56,7 @@ class LogInView(APIView):
 
         try:
             profile = Profile.objects.get(user=user)
-            sub = Subscription.objects.get(user=profile)
+            sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
             now = timezone.now()
             st = sub.start_time
             if sub.get_end_time(st) < now:

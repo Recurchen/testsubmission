@@ -2,12 +2,13 @@ from rest_framework import serializers
 from .models import Plan, Subscription, Payment
 from Studios.models import Studio
 from Accounts.models import Profile
+from Accounts.serializers import PaymentMethodSerializer
 
 class PlanSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Plan
-        fields = ['name', 'description', 'studio', 'price', 'time_unit', 'time_range','currency']
-        required = ['name', 'studio', 'price', 'time_unit',]
+        fields = ['name', 'description', 'price', 'time_unit', 'time_range','currency']
+        required = ['name', 'price', 'time_unit',]
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
@@ -33,6 +34,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     #     return sub
 
 class PaymentSerializer(serializers.ModelSerializer):
+    plan = serializers.CharField(source='subscription.plan')
+    price = serializers.DecimalField(source='subscription.plan.price', max_digits=5, decimal_places=2)
+    card_num = serializers.CharField(source='payment_method.card_num')
     class Meta:
         model = Payment
-        fields = ['user', 'subscription', 'payment_method', 'datetime']
+        fields = ['user', 'subscription', 'payment_method', 'datetime', 'plan', 'price', 'card_num']
