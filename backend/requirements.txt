@@ -2,6 +2,7 @@ asgiref==3.5.2
 certifi==2022.9.24
 charset-normalizer==2.1.1
 Django==4.0.1
+django-cors-headers==3.13.0
 django-filter==22.1
 django-phone-field==1.8.1
 django-recurrence==1.11.1
