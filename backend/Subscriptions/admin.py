@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import Plan, Subscription
 
 class PlanAdmin(admin.ModelAdmin):
-    fields = ['name', 'price']
     list_display = ['plan_ID','name', 'price']
 
     def plan_ID(self, obj):

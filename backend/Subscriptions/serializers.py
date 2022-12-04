@@ -7,7 +7,7 @@ from Accounts.serializers import PaymentMethodSerializer
 class PlanSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Plan
-        fields = ['name', 'description', 'price', 'time_unit', 'time_range','currency']
+        fields = ['id', 'name', 'description', 'price', 'time_unit', 'time_range','currency']
         required = ['name', 'price', 'time_unit',]
 
 
@@ -24,14 +24,14 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     def get_user(self,obj):
         user = Profile.objects.filter(user = serializers.CurrentUserDefault())
         return user
-    
-    # def create(self, validated_data):
-    #     # plan = Plan.objects.filter(val)
-    #     sub = Subscription.objects.create(
-    #         user = self.user, 
-    #         plan_id = validated_data.get("plan"))
 
-    #     return sub
+class ViewSubscriptionSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.user.username')
+    plan_name = serializers.CharField(source='plan.name')
+    class Meta:
+        model = Subscription
+        fields = ['username', 'plan_name', 'start_time', 'canceled', 'auto_pay',]
+
 
 class PaymentSerializer(serializers.ModelSerializer):
     plan = serializers.CharField(source='subscription.plan')
