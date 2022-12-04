@@ -252,13 +252,14 @@ class UserEnrollmentHistoryListView(ListAPIView):
 
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
-
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
         keys = list(self.request.GET.keys())
         # data = []
-        if keys == [] or (len(keys) == 1 and keys[0] == 'page'):  # no search/filter
+        if keys == [] or (len(keys) == 1 and keys[0] == 'page') \
+                or (len(keys) == 2 and 'page' in keys and 'per_page' in keys):
+            # no search/filter
             id = self.kwargs['studio_id']
             studio = get_object_or_404(Studio, id=id)
             classes = Class.objects.filter(studio_id=id)
