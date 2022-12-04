@@ -18,6 +18,8 @@ class ClassSerializer(serializers.ModelSerializer):
 
 class ClassInstanceSerializer(serializers.ModelSerializer):
     belonged_class = ClassSerializer()
+    start_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    end_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = ClassInstance
