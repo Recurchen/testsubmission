@@ -40,14 +40,15 @@ INSTALLED_APPS = [
     'Accounts',
     'classes',
     'Subscriptions',
-    
+
     ## third party package
     'rest_framework',
     'django_filters',
     'recurrence',
     'rest_framework.authtoken',
     'phone_field',
-    #'schedule',
+    # added for frontend
+    'corsheaders',
 
 
 ]
@@ -64,6 +65,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # added for frontend
+    'corsheaders.middleware.CorsMiddleware',
+]
+# added for frontend
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'backend.urls'
