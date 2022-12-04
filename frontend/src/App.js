@@ -1,25 +1,27 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import ClassInstances from "./Components/ClassInstances";
+import APIContext, {useAPIContext} from "./Contexts/ClassInstancesAPIContext";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+
 
 function App() {
+  const classInstances = (
+      <APIContext.Provider value={useAPIContext()}>
+        <ClassInstances />
+      </APIContext.Provider>
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route index element={<ClassInstances />} />
+            <Route path="/ClassInstances" element={classInstances} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+  )
 }
 
 export default App;
