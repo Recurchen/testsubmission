@@ -17,6 +17,9 @@ from .tokens import create_jwt_pair_for_user
 from Subscriptions.models import Subscription
 from Subscriptions.views import update_sub_make_pay
 from django.utils import timezone
+from Subscriptions.views import update_future_payments
+#from Subscriptions.views import cancel_future_payments
+from classes.views import drop_class_after
 
 class RegisterView(APIView):
     def get(self,request):
@@ -56,13 +59,21 @@ class LogInView(APIView):
 
         try:
             profile = Profile.objects.get(user=user)
-            sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
-            now = timezone.now()
-            st = sub.start_time
-            if sub.get_end_time(st) < now:
-                update_sub_make_pay(sub)
-        except (Profile.DoesNotExist, Subscription.DoesNotExist):
-            pass
+            if profile.is_subscribed:
+                sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
+                now = timezone.now()
+                st = sub.start_time
+                et = sub.get_end_time(st)
+                if et < now:
+                    res = update_sub_make_pay(sub)
+                if et >= now or not res: #subscription expired
+                    drop_class_after(et, user=user)
+                    profile.is_subscribed = False
+                    profile.save()
+                    sub.cancel()
+                    sub.save()
+        except (Profile.DoesNotExist):
+            response_data = {"message":"user doesn't exsit"}
         
         return Response(data=response_data, status=status.HTTP_200_OK)
 
@@ -104,13 +115,19 @@ class CreatePaymentMethodView(CreateAPIView):
         user = get_object_or_404(User, pk=kwargs['user_id'])
         self.check_object_permissions(request, user)
 
+        profile = Profile.objects.get(user=user)
+        
+        if profile.payment_method is not None:
+            msg = {"we've already have your payment method recorded. You can update it if you want :)"}
+            return Response(msg, status=status.HTTP_200_OK)
+        
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         pm = self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         response = Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         
-        profile = Profile.objects.get(user=user)
+        
         profile.payment_method = pm
         profile.save()
         return response
@@ -130,36 +147,55 @@ class RetriveUpdatePaymentMethodView(RetrieveUpdateAPIView):
         pay_method_serializer = self.get_serializer(profile.payment_method)
         return Response(pay_method_serializer.data, status=status.HTTP_200_OK)
     
-    def update(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs): #in fact it's create a new payment method
         user = get_object_or_404(User, pk=kwargs['user_id'])
         self.check_object_permissions(request, user)
         profile = Profile.objects.get(user=user)
-        serializer = self.get_serializer(profile.payment_method, data=request.data)
+        
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance = serializer.update(instance=profile.payment_method, validated_data=request.data)
-        serializer = self.get_serializer(instance)
+        pm = self.perform_create(serializer)
+
+        # if user is subscribed, update future payment:
+        if profile.is_subscribed:
+            sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
+            update_future_payments(subscription=sub, payment_method=pm)
+
+        profile.payment_method = pm
+        profile.save()
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def perform_create(self, serializer):
+        obj = serializer.save()
+        return obj
 
-class DeletePaymentMethodView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsSelf]
-    serializer_class = PaymentMethodSerializer
 
-    def destroy(self, request, *args, **kwargs):
-        user = get_object_or_404(User, pk=kwargs['user_id'])
-        self.check_object_permissions(request, user)
-        profile = Profile.objects.get(user=user)
-        pm = profile.payment_method
-        if pm is None:
-            res = {"message": "opps! you have no recorded payment method yet"}
-            return Response(res, status=status.HTTP_404_NOT_FOUND)
-        self.perform_destroy(pm)
-        profile.payment_method = None
-        profile.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# class DeletePaymentMethodView(DestroyAPIView):
+#     permission_classes = [IsAuthenticated, IsSelf]
+#     serializer_class = PaymentMethodSerializer
+
+#     def destroy(self, request, *args, **kwargs):
+#         user = get_object_or_404(User, pk=kwargs['user_id'])
+#         self.check_object_permissions(request, user)
+#         profile = Profile.objects.get(user=user)
+#         pm = profile.payment_method
+#         if pm is None:
+#             res = {"message": "opps! you have no recorded payment method yet"}
+#             return Response(res, status=status.HTTP_404_NOT_FOUND)
+#         self.perform_destroy(pm)
+#         profile.payment_method = None
+#         profile.save()
+
+#         # as no more payment method, future payments will be deleted:
+#         # if profile.is_subscribed:
+#         #     sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
+#         #     cancel_future_payments(sub)
+
+#         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+#     def delete(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
     
-    def perform_destroy(self, instance):
-        instance.delete()
+#     def perform_destroy(self, instance):
+#         instance.delete()
