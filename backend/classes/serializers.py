@@ -21,7 +21,7 @@ class ClassInstanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClassInstance
-        fields = ['belonged_class', 'is_full', 'is_cancelled', 'start_time',
+        fields = ['id', 'belonged_class', 'is_full', 'is_cancelled', 'start_time',
                   'end_time', 'class_date', 'capacity']
 
 
