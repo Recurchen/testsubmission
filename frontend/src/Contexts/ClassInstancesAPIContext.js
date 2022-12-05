@@ -9,8 +9,8 @@ export const useAPIContext = () => {
     }
 }
 
-const APIContext = createContext({
+const ClassInstancesAPIContext = createContext({
     ClassInstances: null, setClassInstances: () => {},
 })
 
-export default APIContext;
+export default ClassInstancesAPIContext;

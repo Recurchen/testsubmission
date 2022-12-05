@@ -3,6 +3,8 @@ import './App.css';
 import ClassInstances from "./Components/ClassInstances";
 import APIContext, {useAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import FilterClassInstances from "./Components/FilterClassInstances";
+import Layout from "./Components/Layout";
 
 
 function App() {
@@ -14,13 +16,16 @@ function App() {
 
   return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<ClassInstances />} />
-            <Route path="/ClassInstances" element={classInstances} />
-          </Route>
-        </Routes>
+          <Routes>
+              <Route path="/" element={<Layout />}>
+                  <Route index element={<ClassInstances />} />
+                  <Route path="/ClassInstances" element={classInstances} />
+                  <Route path="/ClassInstances/filter" element={<FilterClassInstances />}/>
+              </Route>
+          </Routes>
       </BrowserRouter>
+
+
   )
 }
 
