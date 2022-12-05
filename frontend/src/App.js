@@ -12,7 +12,7 @@ import EnrollmentHistory from "./Components/EnrollmentHistory";
 
 function App() {
     const enrollmentHistory = (
-        <EnrollmentHistoryAPIContext.Provider value={useEnrollmentHistoryAPIContext }>
+        <EnrollmentHistoryAPIContext.Provider value={useEnrollmentHistoryAPIContext() }>
             <EnrollmentHistory />
         </EnrollmentHistoryAPIContext.Provider>
     )

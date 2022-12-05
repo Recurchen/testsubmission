@@ -13,8 +13,7 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
             <th> Start Time </th>
             <th> End Time </th>
             <th> Date </th>
-            <th> Is Cancelled </th>
-            <th> <button> Drop </button> </th>
+            <th> Cancelled Or Not </th>
         </tr>
         </thead>
         <tbody>
@@ -23,10 +22,10 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                 <td>{ (params.page - 1) * perPage + index + 1 }</td>
                 <td>{ enrollment.class_instance['belonged_class']['name'] }</td>
                 <td>{ enrollment.class_instance['belonged_class']['coach'] }</td>
-                <td>{ enrollment.class_start_time.split(" ")[1]}</td>
-                <td>{ enrollment.class_instance['belonged_class']['end_time'].split(" ")[1] }</td>
-                <td>{ enrollment.class_start_time.split(" ")[0] }</td>
-                <td>{ enrollment.is_cancelled}</td>
+                <td>{ enrollment.class_start_time.split("T")[1].split('-')[0]}</td>
+                <td>{ enrollment.class_instance['belonged_class']['end_time'] }</td>
+                <td>{ enrollment.class_start_time.split("T")[0] }</td>
+                <td>{ enrollment.is_cancelled === true?'Cancelled':'Not cancelled'}</td>
                 <td> <button>
                     Drop
                 </button> </td>

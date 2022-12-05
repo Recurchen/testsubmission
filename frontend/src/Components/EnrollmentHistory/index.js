@@ -8,7 +8,7 @@ const EnrollmentHistory = () => {
     const { setEnrollmentHistory } = useContext(EnrollmentHistoryAPIContext);
     useEffect(() => {
         const { page } = params;
-        fetch(`http://localhost:8000/classes/enrollments?page=${page}&per_page=${perPage}`)
+        fetch(`http://localhost:8000/classes/enrollments/?page=${page}&per_page=${perPage}`)
             .then(res => res.json())
             .then(json => {
                 setEnrollmentHistory(json.results);

@@ -5,7 +5,8 @@ const Layout = () => {
     return (
         <>
             <nav>
-                <Link to="/ClassInstances">Class Instances </Link>
+                <Link to="/classes">Class Instances </Link>
+                <Link to="/enrollments"> Enrollment History </Link>
                 {/*<Link to="/ClassInstances/filter">Filter Class Instances</Link>*/}
             </nav>
             <Outlet />
