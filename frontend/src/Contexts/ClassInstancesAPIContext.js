@@ -1,6 +1,6 @@
 import {createContext, useState} from "react";
 
-export const useAPIContext = () => {
+export const useClassInstanceAPIContext = () => {
     const [ClassInstances, setClassInstances] = useState([]);
     return {
         ClassInstances,

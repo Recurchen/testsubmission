@@ -1,37 +1,42 @@
 import React from 'react';
 import './App.css';
 import ClassInstances from "./Components/ClassInstances";
-import ClassInstancesAPIContext, {useAPIContext} from "./Contexts/ClassInstancesAPIContext";
+import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import FilterClassInstances from "./Components/FilterClassInstances";
 import Layout from "./Components/Layout";
+import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
+import EnrollmentHistory from "./Components/EnrollmentHistory";
 
 
 
 function App() {
+    const enrollmentHistory = (
+        <EnrollmentHistoryAPIContext.Provider value={useEnrollmentHistoryAPIContext }>
+            <EnrollmentHistory />
+        </EnrollmentHistoryAPIContext.Provider>
+    )
     const filterClassInstances = (
-        <ClassInstancesAPIContext.Provider value={useAPIContext()}>
+        <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
             <FilterClassInstances />
         </ClassInstancesAPIContext.Provider>
     )
-  const classInstances = (
-      <ClassInstancesAPIContext.Provider value={useAPIContext()}>
+    const classInstances = (
+      <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
         <ClassInstances />
       </ClassInstancesAPIContext.Provider>
   )
-
-  return (
+    return (
       <BrowserRouter>
           <Routes>
               <Route path="/" element={<Layout />}>
                   <Route index element={<ClassInstances />} />
-                  <Route path="/ClassInstances" element={classInstances} />
-                  <Route path="/ClassInstances/filter" element={filterClassInstances}/>
+                  <Route path="/classes" element={classInstances} />
+                  <Route path="/classes/filter" element={filterClassInstances}/>
+                  <Route path="/enrollments" element={enrollmentHistory} />
               </Route>
           </Routes>
       </BrowserRouter>
-
-
   )
 }
 

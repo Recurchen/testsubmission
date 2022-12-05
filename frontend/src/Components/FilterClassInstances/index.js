@@ -39,7 +39,6 @@ const FilterClassInstances = () => {
                         setClassInstances(json.results)
                     })
             }
-
         }
         else{
             fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)

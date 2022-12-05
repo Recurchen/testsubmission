@@ -1,6 +1,6 @@
 import {createContext, useState} from "react";
 
-export const useAPIContext = () => {
+export const useEnrollmentHistoryAPIContext = () => {
     const [EnrollmentHistory, setEnrollmentHistory] = useState([]);
 
     return {
