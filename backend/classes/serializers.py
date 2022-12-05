@@ -8,7 +8,6 @@ class ClassSerializer(serializers.ModelSerializer):
     # categories = CategorySerializer(many=True)
     # category_ids = serializers.PrimaryKeyRelatedField(
     #     queryset=Category.objects.all(), many=True)
-
     class Meta:
         model = Class
         fields = ['name', 'id', 'studio', 'description', 'coach', 'capacity', 'recurrences',
@@ -19,7 +18,6 @@ class ClassSerializer(serializers.ModelSerializer):
 class ClassInstanceSerializer(serializers.ModelSerializer):
     belonged_class = ClassSerializer()
     start_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-
     end_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     class Meta:
         model = ClassInstance
@@ -31,4 +29,4 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class_instance = ClassInstanceSerializer()
     class Meta:
         model = Enrollment
-        fields = ['user', 'class_instance', 'is_cancelled', 'class_start_time']
+        fields = ['id', 'user', 'class_instance', 'is_cancelled', 'class_start_time']
