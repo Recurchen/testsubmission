@@ -1,17 +1,23 @@
 import React from 'react';
 import './App.css';
 import ClassInstances from "./Components/ClassInstances";
-import APIContext, {useAPIContext} from "./Contexts/ClassInstancesAPIContext";
+import ClassInstancesAPIContext, {useAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import FilterClassInstances from "./Components/FilterClassInstances";
 import Layout from "./Components/Layout";
 
 
+
 function App() {
+    const filterClassInstances = (
+        <ClassInstancesAPIContext.Provider value={useAPIContext()}>
+            <FilterClassInstances />
+        </ClassInstancesAPIContext.Provider>
+    )
   const classInstances = (
-      <APIContext.Provider value={useAPIContext()}>
+      <ClassInstancesAPIContext.Provider value={useAPIContext()}>
         <ClassInstances />
-      </APIContext.Provider>
+      </ClassInstancesAPIContext.Provider>
   )
 
   return (
@@ -20,7 +26,7 @@ function App() {
               <Route path="/" element={<Layout />}>
                   <Route index element={<ClassInstances />} />
                   <Route path="/ClassInstances" element={classInstances} />
-                  <Route path="/ClassInstances/filter" element={<FilterClassInstances />}/>
+                  <Route path="/ClassInstances/filter" element={filterClassInstances}/>
               </Route>
           </Routes>
       </BrowserRouter>

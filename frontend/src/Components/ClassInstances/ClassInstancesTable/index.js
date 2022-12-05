@@ -1,9 +1,9 @@
 import {useContext} from "react";
-import APIContext from "../../../Contexts/ClassInstancesAPIContext";
+import ClassInstancesAPIContext from "../../../Contexts/ClassInstancesAPIContext";
+
 
 const ClassInstancesTable = ({ perPage, params }) => {
-    const { ClassInstances } = useContext(APIContext);
-
+    const { ClassInstances } = useContext(ClassInstancesAPIContext);
     return <table>
             <thead>
             <tr>
@@ -19,7 +19,7 @@ const ClassInstancesTable = ({ perPage, params }) => {
             </thead>
             <tbody>
 
-            {ClassInstances && ClassInstances .map((ClassInstance, index) => (
+            {ClassInstances && ClassInstances.map((ClassInstance, index) => (
                 <tr key={ClassInstance.id}>
                     <td>{ (params.page - 1) * perPage + index + 1 }</td>
                     <td>{ ClassInstance.belonged_class['name'] }</td>

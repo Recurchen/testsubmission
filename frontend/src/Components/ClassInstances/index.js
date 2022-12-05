@@ -8,7 +8,6 @@ const ClassInstances = () => {
     const toFilter = (method)=>{
         navigate('/ClassInstances/filter', { state: { method:method } })
     }
-        // navigate('/ClassInstances/filter', { state: {method:method} }  )}
     const perPage = 10;
     const [params, setParams] = useState({page: 1})
     const { setClassInstances } = useContext(ClassInstancesAPIContext);
