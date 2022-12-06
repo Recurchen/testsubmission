@@ -8,7 +8,6 @@ const EnrollmentHistory = () => {
     const { setEnrollmentHistory } = useContext(EnrollmentHistoryAPIContext);
     const [hasNext, setHasNext] = useState(false)
     const [hasPrev, setHasPrev] = useState(false)
-
     useEffect(() => {
         const { page } = params;
         fetch(`http://localhost:8000/classes/enrollments/?page=${page}&per_page=${perPage}`)

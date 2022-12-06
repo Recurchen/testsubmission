@@ -38,7 +38,8 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                 <td>{ enrollment.class_start_time.split("T")[0] }</td>
                 <td>{ enrollment.is_cancelled === true?'Cancelled':'Not cancelled'}</td>
                 <td>
-                    <button onClick={(e) => {
+                    <button hidden={!enrollment.in_future}
+                        onClick={(e) => {
                     e.preventDefault();
                     const answer = window.confirm("" +
                         "Are you sure you want to drop this class occurrence?\n " +
@@ -52,7 +53,8 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                     Drop
                 </button> </td>
 
-                <td> <button onClick={(e) => {
+                <td> <button hidden={!enrollment.in_future}
+                    onClick={(e) => {
                     e.preventDefault();
                     const answer = window.confirm("" +
                         "Are you sure you want to drop all future class occurrences?\n " +
