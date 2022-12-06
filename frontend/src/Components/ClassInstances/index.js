@@ -15,7 +15,7 @@ const ClassInstances = () => {
     const { setClassInstances } = useContext(ClassInstancesAPIContext);
     useEffect(() => {
         const { page } = params;
-        fetch(`http://localhost:8000/classes/1/all?page=${page}&per_page=${perPage}`)
+        fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}`)
             .then(res => res.json())
             .then(json => {
                 setClassInstances(json.results);
