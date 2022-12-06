@@ -29,4 +29,4 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class_instance = ClassInstanceSerializer()
     class Meta:
         model = Enrollment
-        fields = ['id', 'user', 'class_instance', 'is_cancelled', 'class_start_time']
+        fields = ['id', 'user', 'class_instance', 'is_cancelled', 'class_start_time', 'in_future']
