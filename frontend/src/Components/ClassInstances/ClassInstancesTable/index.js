@@ -8,22 +8,6 @@ const ClassInstancesTable = ({ perPage, params }) => {
     const toEnroll = (id,date)=>{
         navigate('/enroll/', { state: { class_id:id, class_date:date } })
     }
-    // let checkEnrol = false;
-    // const [check, setCheck] = useState(false);
-    // const ids = [];
-    // useEffect(()=>{
-    //     if(checkEnrol === false){
-    //         fetch('http://localhost:8000/classes/enrollments/ids/')
-    //             .then(res=>res.json())
-    //             .then(json=>{
-    //                 for(let i = 0; i < json[0]['ids'].length; i++){
-    //                     ids.push(json[0]['ids'][i]);
-    //                 }
-    //             }).catch(e=>console.log(e))
-    //         setCheck(true);
-    //     }
-    //     checkEnrol = true;
-    // },[check])
     if (ClassInstances && ClassInstances.length > 0){
         return <table className={'ClassInstancesTable'}>
             <thead>
@@ -35,7 +19,6 @@ const ClassInstancesTable = ({ perPage, params }) => {
                 <th> End Time </th>
                 <th> Date </th>
                 <th> Capacity </th>
-
                 <th> Enroll class occurrence </th>
                 <th> Enroll all future class occurrences</th>
             </tr>
@@ -86,7 +69,7 @@ const ClassInstancesTable = ({ perPage, params }) => {
 
     }
     return(
-        <span style={{color:'red'}}> No matched Class </span>
+        <span className={'noMatchClass'}> No matched class yet </span>
     )
     }
 

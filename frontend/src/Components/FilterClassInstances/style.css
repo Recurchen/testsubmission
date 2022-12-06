@@ -1,0 +1,63 @@
+button.submitFilter {
+    background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+    border: 0;
+    border-radius: 20px;
+    color: #FFFFFF;
+    /*display: block;*/
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 2.5;
+    outline: transparent;
+    padding: 0 1rem;
+    text-align: center;
+    margin:2%;
+}
+button.submitFilter:not([disabled]):focus {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+button.submitFilter:not([disabled]):hover {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+input.search_bar{
+    border:solid 1px black;
+    border-radius: 20px;
+    margin: auto auto auto;
+    display: block;
+    font-size:2em;
+    line-height: 2;
+    outline: transparent;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+
+h1.filterTitle{
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 60px;
+    margin-bottom: 30px;
+}
+div.pickClassDate{
+     margin: 3% auto;
+     /*border: 2px dashed black;*/
+     text-align: center;
+     border-collapse: collapse;
+ }
+div.pickClassDate label{
+    font-family: 'Dancing Script', cursive;
+    font-size: 30px;
+}
+div.pickTimeRange{
+    margin: auto;
+    /*border: 2px dashed black;*/
+    text-align: center;
+    border-collapse: collapse;
+
+}
+div.pickTimeRange label{
+     font-family: 'Dancing Script', cursive;
+     font-size: 30px;
+ }

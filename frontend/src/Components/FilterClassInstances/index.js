@@ -5,6 +5,7 @@ import {useLocation} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from 'react-time-picker';
+import './style.css'
 const FilterClassInstances = () => {
     const { state } = useLocation();
     const { method } = state;
@@ -60,28 +61,37 @@ const FilterClassInstances = () => {
     if (method === 'date'){
         return (
             <>
-                Filter by class date
+                <h1 className={'filterTitle'}>Filter by Class Date</h1>
                 {/*Reference:https://reactdatepicker.com/*/}
-                <DatePicker dateFormat="yyyy-MM-dd"
-                            todayButton="Today"
-                            selected={startDate}
-                            onChange={(date:Date) => setStartDate(date)} />
-                <button
-                    onClick={()=>{
+                <div className={'pickClassDate'}>
+                    <label>Pick a class date</label>
+                    <DatePicker dateFormat="yyyy-MM-dd"
+                                todayButton="Today"
+                                selected={startDate}
+                                withPortal
+                                showYearDropdown
+                                showMonthDropdown
+                                dropdownMode="select"
+                                onChange={(date:Date) => setStartDate(date)} />
+                    <label>Click filter to apply filter</label>
+                    <button className={'submitFilter'}
+                            onClick={()=>{
+                                //startDate.toJSON().split('T')[0]
+                                let [month, day, year] = startDate.toLocaleDateString().split('/')
+                                if (month.length < 2){
+                                    month = 0 + month
+                                }
+                                if(day.length < 2){
+                                    day = 0 + day
+                                }
+                                setParams({...params, input:[year, month, day].join('-')});
+                            }
+                            }>
+                        Filter
+                    </button>
 
-                        //startDate.toJSON().split('T')[0]
-                        let [month, day, year] = startDate.toLocaleDateString().split('/')
-                        if (month.length < 2){
-                            month = 0 + month
-                        }
-                        if(day.length < 2){
-                            day = 0 + day
-                        }
-                        setParams({...params, input:[year, month, day].join('-')});
-                    }
-                       }>
-                    Submit
-                </button>
+                </div>
+
 
                 <ClassInstancesTable perPage={perPage} params={params} />
 
@@ -106,56 +116,74 @@ const FilterClassInstances = () => {
     if (method === 'time_range'){
         return (
             <>
-                Filter by range of class's start time
+                <h1 className={'filterTitle'}>Filter by Range of Class's Start Time</h1>
+
                 <br/>
-                Time range start time
-                <DatePicker dateFormat="yyyy-MM-dd"
-                            todayButton="Today"
-                            selected={startDay}
-                            onChange={(date:Date) => setStartDay(date)} />
-                <TimePicker onChange={setStartTime}
-                            clockIcon = {false}
-                            disableClock={true}
-                            value={startTime} />
-                <br/>
-                Time range end time
-                <DatePicker dateFormat="yyyy-MM-dd"
-                            todayButton="Today"
-                            selected={endDay}
-                            onChange={(date:Date) => setEndDay(date)} />
-                <TimePicker onChange={setEndTime}
-                            clockIcon = {false} //remove clock icon
-                            disableClock={true} //don't show clock when select value
-                            value={endTime} />
-                <button
-                    onClick={()=>{
-                        let time1;
-                        let date1;
-                        let time2;
-                        let date2;
-                        let [month, day, year] = startDay.toLocaleDateString().split('/')
-                        if (month.length < 2){
-                            month = 0 + month
-                        }
-                        if(day.length < 2){
-                            day = 0 + day
-                        }
-                        date1 = [year, month, day].join('-');
-                        time1 = startTime
-                        let [month2, day2, year2] = endDay.toLocaleDateString().split('/')
-                        if (month2.length < 2){
-                            month2 = 0 + month2
-                        }
-                        if(day2.length < 2){
-                            day2 = 0 + day2
-                        }
-                        date2 = [year2, month2, day2].join('-');
-                        time2 = endTime;
-                        setParams({...params, input:date1+'-'+time1+','+date2+'-'+time2});
-                    }}
-                >
-                    Submit
-                </button>
+                <div className={'pickTimeRange'}>
+                    <label> Start time</label>
+                    <DatePicker dateFormat="yyyy-MM-dd"
+                                todayButton="Today"
+                                withPortal
+                                showYearDropdown
+                                showMonthDropdown
+                                dropdownMode="select"
+                                selected={startDay}
+                                onChange={(date:Date) => setStartDay(date)} />
+                    <br/>
+                    <TimePicker onChange={setStartTime}
+                                clockIcon = {false}
+                                disableClock={true}
+                                value={startTime} />
+                    <br/>
+                    <label> End time</label>
+                    <DatePicker dateFormat="yyyy-MM-dd"
+                                todayButton="Today"
+                                withPortal
+                                showYearDropdown
+                                showMonthDropdown
+                                dropdownMode="select"
+                                selected={endDay}
+                                onChange={(date:Date) => setEndDay(date)} />
+                    <br/>
+                    <TimePicker onChange={setEndTime}
+                                clockIcon = {false} //remove clock icon
+                                disableClock={true} //don't show clock when select value
+                                value={endTime} />
+                    <br/>
+                    <label>Click filter to apply filter</label>
+
+                    <button className={'submitFilter'}
+                            onClick={()=>{
+                                let time1;
+                                let date1;
+                                let time2;
+                                let date2;
+                                let [month, day, year] = startDay.toLocaleDateString().split('/')
+                                if (month.length < 2){
+                                    month = 0 + month
+                                }
+                                if(day.length < 2){
+                                    day = 0 + day
+                                }
+                                date1 = [year, month, day].join('-');
+                                time1 = startTime
+                                let [month2, day2, year2] = endDay.toLocaleDateString().split('/')
+                                if (month2.length < 2){
+                                    month2 = 0 + month2
+                                }
+                                if(day2.length < 2){
+                                    day2 = 0 + day2
+                                }
+                                date2 = [year2, month2, day2].join('-');
+                                time2 = endTime;
+                                setParams({...params, input:date1+'-'+time1+','+date2+'-'+time2});
+                            }}
+                    >
+                        Filter
+                    </button>
+
+                </div>
+
 
                 <ClassInstancesTable perPage={perPage} params={params} />
 
@@ -180,18 +208,18 @@ const FilterClassInstances = () => {
     //filter by coach or class name
     return (
         <>
-            Filter by {method}
-            <input
-                style={{width: 300, height: 20, fontSize: 18, margin: 4}}
-                value={params.input}
-                onChange={(event) => {
-                    setParams({
-                        input: event.target.value,
-                        page: 1,
-                    })
-                }}
-            />
-
+            <h1 className={'filterTitle'}>Filter by {method==='class_name'?'Class Name':'Coach'}</h1>
+            <input className={'search_bar'}
+                   type="text"
+                   placeholder="Search ..."
+                   value={params.input}
+                   onChange={(event) => {
+                       setParams({
+                           input: event.target.value,
+                           page: 1,
+                       })
+                   }}
+            /><br/>
             <ClassInstancesTable perPage={perPage} params={params} />
 
             <button hidden={!hasPrev}
