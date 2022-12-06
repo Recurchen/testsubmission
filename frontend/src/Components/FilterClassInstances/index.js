@@ -2,10 +2,8 @@ import {useContext, useEffect, useState} from "react";
 import ClassInstancesAPIContext from "../../Contexts/ClassInstancesAPIContext";
 import ClassInstancesTable from "../ClassInstances/ClassInstancesTable";
 import {useLocation} from "react-router-dom";
-//import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// import DateTimePicker from 'react-datetime-picker';
 import TimePicker from 'react-time-picker';
 const FilterClassInstances = () => {
     const { state } = useLocation();
@@ -59,7 +57,6 @@ const FilterClassInstances = () => {
         }
         }, [params])
 
-
     if (method === 'date'){
         return (
             <>
@@ -71,6 +68,7 @@ const FilterClassInstances = () => {
                             onChange={(date:Date) => setStartDate(date)} />
                 <button
                     onClick={()=>{
+
                         //startDate.toJSON().split('T')[0]
                         let [month, day, year] = startDate.toLocaleDateString().split('/')
                         if (month.length < 2){

@@ -1,0 +1,21 @@
+.confirmation {
+    background-color: whitesmoke;
+    text-align: center;
+
+}
+
+.error{
+    color: red;
+    font-size:40px;
+}
+.classDates{
+    text-align: center;
+
+}
+.success{
+     color: red;
+ }
+ul{
+    display: inline-block;
+    text-align: left;
+}

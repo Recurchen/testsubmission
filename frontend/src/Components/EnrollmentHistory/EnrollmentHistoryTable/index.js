@@ -1,7 +1,7 @@
 import {useContext} from "react";
 import EnrollmentHistoryAPIContext from "../../../Contexts/EnrollmentHistoryAPIContext";
 import {useNavigate} from "react-router-dom";
-
+import './style.css'
 
 const EnrollmentHistoryTable = ({ perPage, params }) => {
     const { EnrollmentHistory } = useContext(EnrollmentHistoryAPIContext);
@@ -13,7 +13,7 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
         return(<span style={{color:'red'}}> No enrollment history </span>)
     }
 
-    return <table>
+    return <table className={'EnrollmentHistoryTable'}>
         <thead>
         <tr>
             <th> # </th>
@@ -38,7 +38,8 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                 <td>{ enrollment.class_start_time.split("T")[0] }</td>
                 <td>{ enrollment.is_cancelled === true?'Cancelled':'Not cancelled'}</td>
                 <td>
-                    <button hidden={!enrollment.in_future}
+                    <button className={'drop'}
+                        hidden={!enrollment.in_future}
                         onClick={(e) => {
                     e.preventDefault();
                     const answer = window.confirm("" +
@@ -53,7 +54,8 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                     Drop
                 </button> </td>
 
-                <td> <button hidden={!enrollment.in_future}
+                <td> <button className={'drop'}
+                    hidden={!enrollment.in_future}
                     onClick={(e) => {
                     e.preventDefault();
                     const answer = window.confirm("" +
