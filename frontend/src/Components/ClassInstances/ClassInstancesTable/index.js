@@ -8,6 +8,7 @@ const ClassInstancesTable = ({ perPage, params }) => {
     const toEnroll = (id,date)=>{
         navigate('/enroll/', { state: { class_id:id, class_date:date } })
     }
+
     return <table>
             <thead>
             <tr>
@@ -18,7 +19,8 @@ const ClassInstancesTable = ({ perPage, params }) => {
                 <th> End Time </th>
                 <th> Date </th>
                 <th> Capacity </th>
-                <th> </th>
+                <th> Enroll class occurrence </th>
+                <th> Enroll all future class occurrences</th>
             </tr>
             </thead>
             <tbody>
@@ -32,9 +34,31 @@ const ClassInstancesTable = ({ perPage, params }) => {
                     <td>{ ClassInstance.end_time.split(" ")[1] }</td>
                     <td>{ ClassInstance.class_date }</td>
                     <td>{ ClassInstance.capacity }</td>
-                    <td> <button onClick={() =>
-                        toEnroll(ClassInstance.belonged_class['id'],ClassInstance.class_date)}>
+                    <td> <button onClick={(e) => {
+                        e.preventDefault();
+                        const answer = window.confirm("" +
+                            "Are you sure you want to enrol in this class occurrence?\n " +
+                            "Click OK to enrol, Cancel to stop.");
+                        if (answer) {
+                            console.log("Enrolled");
+                            toEnroll(ClassInstance.belonged_class['id'], ClassInstance.class_date);
+                        } else {console.log("Not enrolled");}
+                    }}>
                         Enroll
+                    </button> </td>
+
+                    <td> <button onClick={(e) =>{
+                            e.preventDefault();
+                            const answer = window.confirm("" +
+                                "Are you sure you want to enrol in all future class occurrence?\n " +
+                                "Click OK to enrol all, Cancel to stop.");
+                            if (answer) {
+                                console.log("Enrolled All");
+                                toEnroll(ClassInstance.belonged_class['id'],'all');
+                            }else {console.log("Not enrolled all");}
+                        }
+                    }>
+                        Enroll All
                     </button> </td>
                 </tr>
             ))}

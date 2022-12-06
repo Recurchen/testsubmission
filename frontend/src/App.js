@@ -8,6 +8,7 @@ import Layout from "./Components/Layout";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
 import EnrollmentHistory from "./Components/EnrollmentHistory";
 import EnrollClass from "./Components/EnrollClass";
+import DropClass from "./Components/DropClass";
 
 
 
@@ -36,6 +37,7 @@ function App() {
                   <Route path="classes/filter/" element={filterClassInstances}/>
                   <Route path="enrollments/" element={enrollmentHistory} />
                   <Route path="enroll/" element={<EnrollClass/>} />
+                  <Route path="drop/" element={<DropClass/>} />
 
               </Route>
           </Routes>

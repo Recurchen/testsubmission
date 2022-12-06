@@ -10,7 +10,6 @@ const EnrollClass = () =>{
     const [errorMsg, setErrorMsg] = useState('');
     const [sent, setSent] = useState(false);
     useEffect(()=>{
-
         if (sent === false){
             fetch(`http://localhost:8000/classes/enroll/?class_id=${class_id}&class_date=${class_date}`,
                 {method:'post',
