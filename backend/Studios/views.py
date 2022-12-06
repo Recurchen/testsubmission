@@ -14,19 +14,17 @@ from django.db.models import Prefetch
 from operator import and_, or_
 import requests
 import json
+from rest_framework.pagination import PageNumberPagination
 
 from .serializers import StudioSerializer, UserLocationSerializer
 from .models import Amenity, Studio
 from classes.models import Class
 from rest_framework.pagination import PageNumberPagination
 
-
+class StudioPagination(PageNumberPagination):
+    page_size = 2
 
 # Create your views here.
-class StudioPagination(PageNumberPagination):
-    page_size = 1
-    page_size_query_param = 'page_size'
-    max_page_size = 2
 
 
 class StudiosListView(generics.ListCreateAPIView):
