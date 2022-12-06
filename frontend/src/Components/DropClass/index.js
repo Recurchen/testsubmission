@@ -6,9 +6,13 @@ const DropClass = () =>{
     const { state } = useLocation();
     const { class_id, class_date } = state;
     const [numDropped, setNumDropped] = useState(0);
+    const [className, setClassName] = useState('');
+    const [coach, setCoach] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
     const [classDateList, setClassDateList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
-    const [sent, setSent] = useState(false);
+    let sent = false;
     useEffect(()=>{
             if (sent === false){
                 fetch(`http://localhost:8000/classes/drop/?class_id=${class_id}&class_date=${class_date}`,
@@ -18,14 +22,23 @@ const DropClass = () =>{
                     .then(json => {
                         if(json.length === 1){
                             setErrorMsg(json);
-                        }else if(json.length === 3){
+                        }else if(json.length === 7){
                             setNumDropped(json[0]['dropped']);
-                            setClassDateList(json[2]['class_dates']);
+                            setClassName(json[2]['class_name']);
+                            setCoach(json[3]['coach']);
+                            setStartTime(json[4]['start_time']);
+                            setEndTime(json[5]['end_time']);
+                            let arr =[];
+                            for(let i = 0; i < json[6]['class_dates'].length; i++){
+                                arr.push(json[6]['class_dates'][i]);
+                            }
+                            setClassDateList(arr);
+
                         }
                     });
-                setSent(true);
+                sent = true;
             }
-        },[sent]
+        },[state]
     )
     return (
         <>
@@ -35,10 +48,20 @@ const DropClass = () =>{
                 <div>
                     <h1> Successful!</h1>
                     <br/>
-                    <h3> You have dropped {numDropped} class occurrence with class dates:</h3>
-                    <br/>
-                    <h5>{classDateList}</h5>
-                </div>}
+                    <p> You have enrolled in {numDropped} occurrence of.</p>
+                    <h3> Class Name: {className}
+                        <br/> Coach: {coach}
+                        <br/> Start time: {startTime}
+                        <br/> End time: {endTime}
+                    </h3>
+                    <h4> Class dates:</h4>
+                </div>
+            }
+            {classDateList &&
+                <ul>
+                    {classDateList.map((d, index) => (<li>{d}</li>))}
+                </ul>
+            }
         </>
     )
 }
