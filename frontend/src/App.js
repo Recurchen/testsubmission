@@ -12,8 +12,31 @@ import DropClass from "./Components/DropClass";
 
 
 
+import Header from './components/header'
+import Main_View from './components/main_view';
+import Top_Nav_Menu from './components/top_nav_menu';
+import Footer from './components/footer';
+
+import React from 'react';
+
+import Login from "./components/Login";
+import Register from './components/Register';
+import Plans from './components/Plans';
+import PlansAPIContext, {usePlansAPIContext} from './Context/PlansAPIContext';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+
 function App() {
-    const enrollmentHistory = (
+  
+  const plans = (
+    <div>
+    <Header />
+    <PlansAPIContext.Provider value={usePlansAPIContext()}>
+      < Plans />
+    </PlansAPIContext.Provider>)
+    <Footer />
+    </div>)
+   
+   const enrollmentHistory = (
         <EnrollmentHistoryAPIContext.Provider value={useEnrollmentHistoryAPIContext() }>
             <EnrollmentHistory />
         </EnrollmentHistoryAPIContext.Provider>
@@ -28,21 +51,40 @@ function App() {
         <ClassInstances />
       </ClassInstancesAPIContext.Provider>
   )
-    return (
-      <BrowserRouter>
-          <Routes>
-              <Route path="/" element={<Layout />}>
-                  <Route index element={<ClassInstances />} />
-                  <Route path="classes/" element={classInstances} />
-                  <Route path="classes/filter/" element={filterClassInstances}/>
-                  <Route path="enrollments/" element={enrollmentHistory} />
-                  <Route path="enroll/" element={<EnrollClass/>} />
-                  <Route path="drop/" element={<DropClass/>} />
+   
+  const main = (
+    <div className="MainDiv">
+      
+      {/* Header: the top most section */}
+      <Header />
 
-              </Route>
-          </Routes>
+      <Top_Nav_Menu />
+
+      <Main_View />
+      
+      <Footer />
+    </div>)
+      
+    return(
+      <BrowserRouter>
+        <Routes>
+            {/* <Route path="/" element={<Layout />}> */}
+                <Route index element={main} />
+                <Route path="plans" element={plans} />
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                
+                <Route path="classes/" element={classInstances} />
+                <Route path="classes/filter/" element={filterClassInstances}/>
+                <Route path="enrollments/" element={enrollmentHistory} />
+                <Route path="enroll/" element={<EnrollClass/>} />
+                <Route path="drop/" element={<DropClass/>} />
+                {/* <Route path="players" element={players} /> */}
+            {/* </Route> */}
+        </Routes>
       </BrowserRouter>
-  )
+  );
+
 }
 
 export default App;

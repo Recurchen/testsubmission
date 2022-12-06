@@ -58,7 +58,8 @@ class Plan(models.Model):
 class Subscription(models.Model):
     user = models.ForeignKey(to=Profile, on_delete=CASCADE, related_name='subscriptions')
     plan = models.ForeignKey(to=Plan, on_delete=SET_NULL, related_name='subscriptions', null=True)
-    start_time = models.DateTimeField(blank = True, auto_now_add=True)
+    # start_time = models.DateTimeField(blank = True, auto_now_add=True)
+    start_time = models.DateTimeField(blank = True)
     canceled = models.BooleanField(blank = True, default=False)
     auto_pay = models.BooleanField(blank = True, default=True)
 

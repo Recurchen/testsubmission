@@ -1,0 +1,26 @@
+.modal {
+    /* display: none; */
+    /* position: fixed; */
+    border-radius: 1rem;
+    padding: 3rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    background: #F97136;
+    border: 5px solid #ffffff;
+  }
+
+  /* .modal_content {
+    background-color: white;
+    /* position: absolute; */
+  /* } */ 
+  #text {
+    font-size: large;
+    color: black;
+    font-weight: bold;
+  }
+  #popup_rdir {
+    font-size: medium;
+    color: white;
+    font-weight: bold;
+  }
