@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import './style.css';
 import {Link, Outlet} from "react-router-dom";
 import PopUp from '../Popup'; 
+import Header from '../header';
+import Footer from '../footer';
 
 const Register = (props) => {
     const [username, setUsername] = useState('');
@@ -52,8 +54,10 @@ const Register = (props) => {
     }
 
     return (
+       <div>
+       < Header />
         <div className="auth-form-container">
-            <h2>Register</h2>
+            <h2 className="log-reg-title" >Register</h2>
             <div>
               {success ? <PopUp /> : null}
               </div>
@@ -112,9 +116,11 @@ const Register = (props) => {
                    placeholder="confirm your password" 
                    id="pass2" 
                    name="pass2" />
-            <button id="submit" type="submit">Sign Up</button>
+            <button className="reg-log-btn" id="submit" type="submit">Sign Up</button>
         </form>
         <Link to="/login" className="link-btn">Already have an account? Login here.</Link>
+    </div>
+    <Footer />
     </div>
     )
 }

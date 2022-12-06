@@ -8,25 +8,49 @@ import Footer from './components/footer';
 
 import React from 'react';
 
-class App extends React.Component {
+import Login from "./components/Login";
+import Register from './components/Register';
+import Plans from './components/Plans';
+import PlansAPIContext, {usePlansAPIContext} from './Context/PlansAPIContext';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+
+function App() {
   
-  render() {
+  const plans = (
+    <div>
+    <Header />
+    <PlansAPIContext.Provider value={usePlansAPIContext()}>
+      < Plans />
+    </PlansAPIContext.Provider>)
+    <Footer />
+    </div>)
    
-    return (
-    
-      <div className="MainDiv">
-        
-        {/* Header: the top most section */}
-        <Header />
+  const main = (
+    <div className="MainDiv">
+      
+      {/* Header: the top most section */}
+      <Header />
 
-        <Top_Nav_Menu />
+      <Top_Nav_Menu />
 
-        <Main_View />
-        
-        <Footer />
-
-      </div>
-)
-};
+      <Main_View />
+      
+      <Footer />
+    </div>)
+      
+    return(
+      <BrowserRouter>
+        <Routes>
+            {/* <Route path="/" element={<Layout />}> */}
+                <Route index element={main} />
+                <Route path="plans" element={plans} />
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                {/* <Route path="players" element={players} /> */}
+            {/* </Route> */}
+        </Routes>
+      </BrowserRouter>
+  );
+}
 
 export default App;
