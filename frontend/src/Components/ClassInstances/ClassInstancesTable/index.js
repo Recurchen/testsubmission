@@ -8,8 +8,8 @@ const ClassInstancesTable = ({ perPage, params }) => {
     const toEnroll = (id,date)=>{
         navigate('/enroll/', { state: { class_id:id, class_date:date } })
     }
-
-    return <table>
+    if (ClassInstances && ClassInstances.length > 0){
+        return <table>
             <thead>
             <tr>
                 <th> # </th>
@@ -48,15 +48,15 @@ const ClassInstancesTable = ({ perPage, params }) => {
                     </button> </td>
 
                     <td> <button onClick={(e) =>{
-                            e.preventDefault();
-                            const answer = window.confirm("" +
-                                "Are you sure you want to enrol in all future class occurrence?\n " +
-                                "Click OK to enrol all, Cancel to stop.");
-                            if (answer) {
-                                console.log("Enrolled All");
-                                toEnroll(ClassInstance.belonged_class['id'],'all');
-                            }else {console.log("Not enrolled all");}
-                        }
+                        e.preventDefault();
+                        const answer = window.confirm("" +
+                            "Are you sure you want to enrol in all future class occurrence?\n " +
+                            "Click OK to enrol all, Cancel to stop.");
+                        if (answer) {
+                            console.log("Enrolled All");
+                            toEnroll(ClassInstance.belonged_class['id'],'all');
+                        }else {console.log("Not enrolled all");}
+                    }
                     }>
                         Enroll All
                     </button> </td>
@@ -65,6 +65,12 @@ const ClassInstancesTable = ({ perPage, params }) => {
             </tbody>
         </table>
 
-}
+    }
+    return(
+        <span style={{color:'red'}}> No matched Class </span>
+    )
+
+    }
+
 
 export default ClassInstancesTable;

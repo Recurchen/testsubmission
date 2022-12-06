@@ -9,7 +9,9 @@ const ClassInstances = () => {
         navigate('/classes/filter', { state: { method:method } })
     }
     const perPage = 10;
-    const [params, setParams] = useState({page: 1})
+    const [params, setParams] = useState({page: 1});
+    const [hasNext, setHasNext] = useState(false);
+    const [hasPrev, setHasPrev] = useState(false);
     const { setClassInstances } = useContext(ClassInstancesAPIContext);
     useEffect(() => {
         const { page } = params;
@@ -17,6 +19,8 @@ const ClassInstances = () => {
             .then(res => res.json())
             .then(json => {
                 setClassInstances(json.results);
+                json.next?setHasNext(true):setHasNext(false);
+                json.previous?setHasPrev(true):setHasPrev(false);
             })
     }, [params])
 
@@ -27,13 +31,15 @@ const ClassInstances = () => {
             <button onClick={() => toFilter('date')}> filter by class date </button>
             <button onClick={() => toFilter('time_range')}> filter by range of class start time </button>
             <ClassInstancesTable perPage={perPage} params={params} />
-            <button onClick={() => setParams({
+            <button hidden={!hasPrev}
+                onClick={() => setParams({
                 ...params,
                 page: Math.max(1, params.page - 1)
             })}>
                 prev
             </button>
-            <button onClick={() => setParams({
+            <button hidden={!hasNext}
+                onClick={() => setParams({
                 ...params,
                 page: params.page + 1
             })}>

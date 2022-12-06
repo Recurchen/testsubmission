@@ -9,6 +9,10 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
     const toDrop = (id,date)=>{
         navigate('/drop/', { state: { class_id:id, class_date:date } })
     }
+    if (!(EnrollmentHistory && EnrollmentHistory.length > 0)){
+        return(<span style={{color:'red'}}> No enrollment history </span>)
+    }
+
     return <table>
         <thead>
         <tr>
@@ -19,12 +23,12 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
             <th> End Time </th>
             <th> Date </th>
             <th> Cancelled Or Not </th>
-            <th> Drop this class occurrence </th>
+            <th> Drop class occurrence </th>
             <th> Drop all future class occurrences</th>
         </tr>
         </thead>
         <tbody>
-        {EnrollmentHistory && EnrollmentHistory .map((enrollment, index) => (
+        {EnrollmentHistory && EnrollmentHistory.map((enrollment, index) => (
             <tr key={enrollment.id}>
                 <td>{ (params.page - 1) * perPage + index + 1 }</td>
                 <td>{ enrollment.class_instance['belonged_class']['name'] }</td>

@@ -10,6 +10,8 @@ import TimePicker from 'react-time-picker';
 const FilterClassInstances = () => {
     const { state } = useLocation();
     const { method } = state;
+    const [hasNext, setHasNext] = useState(false);
+    const [hasPrev, setHasPrev] = useState(false);
     const perPage = 10;
     // for class date
     const [startDate, setStartDate] = useState(new Date());
@@ -29,6 +31,8 @@ const FilterClassInstances = () => {
                     .then(res => res.json())
                     .then(json => {
                         setClassInstances(json.results)
+                        json.next?setHasNext(true):setHasNext(false);
+                        json.previous?setHasPrev(true):setHasPrev(false);
                     })
             }
         }
@@ -37,7 +41,9 @@ const FilterClassInstances = () => {
                 fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                     .then(res => res.json())
                     .then(json => {
-                        setClassInstances(json.results)
+                        setClassInstances(json.results);
+                        json.next?setHasNext(true):setHasNext(false);
+                        json.previous?setHasPrev(true):setHasPrev(false);
                     })
             }
         }
@@ -46,8 +52,9 @@ const FilterClassInstances = () => {
             fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                 .then(res => res.json())
                 .then(json => {
-                    console.log(json)
-                    setClassInstances(json.results)
+                    setClassInstances(json.results);
+                    json.next?setHasNext(true):setHasNext(false);
+                    json.previous?setHasPrev(true):setHasPrev(false);
                 })
         }
         }, [params])
@@ -80,14 +87,16 @@ const FilterClassInstances = () => {
 
                 <ClassInstancesTable perPage={perPage} params={params} />
 
-                <button onClick={() => setParams({
+                <button  hidden={!hasPrev}
+                    onClick={() => setParams({
                     ...params,
                     page: Math.max(1, params.page - 1)
                 })}>
                     prev
                 </button>
 
-                <button onClick={() => setParams({
+                <button  hidden={!hasNext}
+                    onClick={() => setParams({
                     ...params,
                     page: params.page + 1
                 })}>
@@ -145,60 +154,23 @@ const FilterClassInstances = () => {
                         date2 = [year2, month2, day2].join('-');
                         time2 = endTime;
                         setParams({...params, input:date1+'-'+time1+','+date2+'-'+time2});
-
-
                     }}
-
                 >
                     Submit
                 </button>
 
-                {/*<DateTimePicker*/}
-                {/*    amPmAriaLabel="Select AM/PM"*/}
-                {/*    calendarAriaLabel="Toggle calendar"*/}
-                {/*    clearAriaLabel="Clear value"*/}
-                {/*    dayAriaLabel="Day"*/}
-                {/*    hourAriaLabel="Hour"*/}
-                {/*    maxDetail="second"*/}
-                {/*    minuteAriaLabel="Minute"*/}
-                {/*    monthAriaLabel="Month"*/}
-                {/*    nativeInputAriaLabel="Date and time"*/}
-                {/*    secondAriaLabel="Second"*/}
-                {/*    yearAriaLabel="Year"*/}
-                {/*    value={startTime1}*/}
-                {/*    onChange={setStartTime1}*/}
-                {/*/>*/}
-                {/*<br/>*/}
-                {/*Time range end time*/}
-                {/*<DateTimePicker*/}
-                {/*    amPmAriaLabel="Select AM/PM"*/}
-                {/*    calendarAriaLabel="Toggle calendar"*/}
-                {/*    clearAriaLabel="Clear value"*/}
-                {/*    dayAriaLabel="Day"*/}
-                {/*    hourAriaLabel="Hour"*/}
-                {/*    maxDetail="second"*/}
-                {/*    minuteAriaLabel="Minute"*/}
-                {/*    monthAriaLabel="Month"*/}
-                {/*    nativeInputAriaLabel="Date and time"*/}
-                {/*    secondAriaLabel="Second"*/}
-                {/*    yearAriaLabel="Year"*/}
-                {/*    value={startTime2}*/}
-                {/*    onChange={setStartTime2}*/}
-                {/*    // format = "y-MM-dd-h:mm"*/}
-                {/*/>*/}
-                {/*<br/>*/}
-
-
                 <ClassInstancesTable perPage={perPage} params={params} />
 
-                <button onClick={() => setParams({
+                <button hidden={!hasPrev}
+                    onClick={() => setParams({
                     ...params,
                     page: Math.max(1, params.page - 1)
                 })}>
                     prev
                 </button>
 
-                <button onClick={() => setParams({
+                <button hidden={!hasNext}
+                    onClick={() => setParams({
                     ...params,
                     page: params.page + 1
                 })}>
@@ -224,14 +196,16 @@ const FilterClassInstances = () => {
 
             <ClassInstancesTable perPage={perPage} params={params} />
 
-            <button onClick={() => setParams({
+            <button hidden={!hasPrev}
+                onClick={() => setParams({
                 ...params,
                 page: Math.max(1, params.page - 1)
             })}>
                 prev
             </button>
 
-            <button onClick={() => setParams({
+            <button hidden={!hasNext}
+                onClick={() => setParams({
                 ...params,
                 page: params.page + 1
             })}>
