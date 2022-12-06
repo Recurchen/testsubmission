@@ -106,16 +106,17 @@ const ClassInstances = () => {
             {/*    Search by class date*/}
             {/*</button>*/}
             {/*<br/> <br/>*/}
+            <div className={'filterButtons'}>
+                <button className={'filter'}
+                        onClick={() => toFilter('coach')}> filter by coach </button>
+                <button className={'filter'}
+                        onClick={() => toFilter('class_name')}> filter by class name </button>
+                <button className={'filter'}
+                        onClick={() => toFilter('date')}> filter by class date </button>
+                <button className={'filter'}
+                        onClick={() => toFilter('time_range')}> filter by range of class start time </button>
+            </div>
 
-            <button className={'filter'}
-                onClick={() => toFilter('coach')}> filter by coach </button>
-            <button className={'filter'}
-                    onClick={() => toFilter('class_name')}> filter by class name </button>
-            <button className={'filter'}
-                    onClick={() => toFilter('date')}> filter by class date </button>
-            <button className={'filter'}
-                    onClick={() => toFilter('time_range')}> filter by range of class start time </button>
-            <br/><br/>
             <ClassInstancesTable perPage={perPage} params={params} />
             <button hidden={!hasPrev} className={'prev'}
                 onClick={() => setParams({

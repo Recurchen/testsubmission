@@ -1,6 +1,6 @@
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-
+import '../EnrollClass/style.css'
 
 const DropClass = () =>{
     const { state } = useLocation();
@@ -13,6 +13,10 @@ const DropClass = () =>{
     const [classDateList, setClassDateList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
     let sent = false;
+    const navigate = useNavigate();
+    const Back = ()=>{
+        navigate('/classes/')
+    }
     useEffect(()=>{
             if (sent === false){
                 fetch(`http://localhost:8000/classes/drop/?class_id=${class_id}&class_date=${class_date}`,
@@ -41,28 +45,40 @@ const DropClass = () =>{
         },[state]
     )
     return (
-        <>
+        <div className='confirmation'>
             { errorMsg &&
-                <span className="error"> { errorMsg } </span> }
+                <span className="error">
+                    { errorMsg }
+                    <br/>
+                    <button className={'back'} onClick={Back}
+                    >
+                        Back</button>
+                    <br/>
+
+                </span> }
             { !errorMsg &&
                 <div>
-                    <h1> Successful!</h1>
+                    <h1 className={"success"}> Successful!</h1>
                     <br/>
-                    <p> You have enrolled in {numDropped} occurrence of.</p>
-                    <h3> Class Name: {className}
-                        <br/> Coach: {coach}
-                        <br/> Start time: {startTime}
-                        <br/> End time: {endTime}
+                    <p> You have dropped <b>{numDropped}</b> occurrence of:</p>
+                    <h3>
+                        Class Name: {className} <br/>
+                        Coach: {coach}<br/>
+                        Start time: {startTime}<br/>
+                        End time: {endTime}<br/>
                     </h3>
-                    <h4> Class dates:</h4>
+                    {classDateList &&
+                        <div className={'classDatesList'}>
+                            <h3> Class dates:</h3>
+                            <ul className={'classDates'}>
+                                {classDateList.map((d, index) => (<li>{d}</li>))}
+                            </ul>
+                        </div>
+                    }
                 </div>
             }
-            {classDateList &&
-                <ul>
-                    {classDateList.map((d, index) => (<li>{d}</li>))}
-                </ul>
-            }
-        </>
+
+        </div>
     )
 }
 export default DropClass;

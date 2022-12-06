@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-// import './style.css';
+import './style.css';
 
 const EnrollClass = () =>{
     const { state } = useLocation();
@@ -45,14 +45,15 @@ const EnrollClass = () =>{
     },[state]
     )
     return (
-        <div className={'confirmation'}>
+        <div className='confirmation'>
             { errorMsg &&
                 <span className="error">
+                    { errorMsg }  <br/>
                     <button className={'back'} onClick={Back}
                     >
                         Back</button>
                     <br/>
-                    { errorMsg }
+
                 </span> }
             { !errorMsg &&
                 <div>
@@ -65,18 +66,17 @@ const EnrollClass = () =>{
                         Start time: {startTime}<br/>
                         End time: {endTime}<br/>
                     </h3>
+                    {classDateList &&
+                        <div className={'classDatesList'}>
+                            <h3> Class dates:</h3>
+                            <ul className={'classDates'}>
+                                {classDateList.map((d, index) => (<li>{d}</li>))}
+                            </ul>
+                        </div>
+                    }
                 </div>
             }
-            {classDateList &&
-                <div className={'classDatesList'}>
-                    <h3> Class dates:</h3>
-                    <ul className={'classDates'}>
-                        {classDateList.map((d, index) => (<li>{d}</li>))}
-                    </ul>
-                </div>
 
-
-            }
         </div>
 
     )

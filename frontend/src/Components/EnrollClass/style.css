@@ -1,21 +1,39 @@
 .confirmation {
-    background-color: whitesmoke;
     text-align: center;
-
-}
-
-.error{
-    color: red;
-    font-size:40px;
+    border-collapse: collapse;
+    border: dashed 1px red;
+    padding:2%;
+    font-family: "Libre Baskerville", serif;
+    border-radius: 20px;
+    margin: 5% 10%;
+    font-size: 1rem;
+    font-weight: bold;
 }
 .classDates{
     text-align: center;
-
 }
-.success{
-     color: red;
+.success,.error{
+    color: red;
+    font-size: 45px;
+    font-weight: normal;
+    line-height: 48px;
  }
-ul{
+.confirmation ul{
     display: inline-block;
     text-align: left;
+}
+
+button.back {
+    background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+    border: 0;
+    border-radius: 20px;
+    color: #FFFFFF;
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 2.5;
+    outline: transparent;
+    padding: 0 1rem;
+    text-align: center;
+    margin:2%;
 }
