@@ -1,29 +1,24 @@
 import React from 'react';
 import './App.css';
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Layout from "./Components/Layout";
 import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import FilterClassInstances from "./Components/FilterClassInstances";
-import Layout from "./Components/Layout";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
 import EnrollmentHistory from "./Components/EnrollmentHistory";
 import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
+import FilterClassInstances from "./Components/FilterClassInstances";
 
+import Header from './Components/header'
+import Main_View from './Components/main_view';
+import Top_Nav_Menu from './Components/top_nav_menu';
+import Footer from './Components/footer';
 
-
-import Header from './components/header'
-import Main_View from './components/main_view';
-import Top_Nav_Menu from './components/top_nav_menu';
-import Footer from './components/footer';
-
-import React from 'react';
-
-import Login from "./components/Login";
-import Register from './components/Register';
-import Plans from './components/Plans';
+import Login from "./Components/Login";
+import Register from './Components/Register';
+import Plans from './Components/Plans';
 import PlansAPIContext, {usePlansAPIContext} from './Context/PlansAPIContext';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 function App() {
   
