@@ -1,22 +1,32 @@
 import logo from './logo.svg';
 import './App.css';
-import Login from "./components/Login";
-import Register from './components/Register';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-function App() {
-  return (
-<BrowserRouter>
-        <Routes>
-            {/* <Route path="/" element={<Layout />}> */}
-                {/* <Route index element={<Calculator />} /> */}
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                {/* <Route path="players" element={players} /> */}
-            {/* </Route> */}
-        </Routes>
-    </BrowserRouter>
-  );
-}
+import Header from './components/header'
+import Main_View from './components/main_view';
+import Top_Nav_Menu from './components/top_nav_menu';
+import Footer from './components/footer';
+
+import React from 'react';
+
+class App extends React.Component {
+  
+  render() {
+   
+    return (
+    
+      <div className="MainDiv">
+        
+        {/* Header: the top most section */}
+        <Header />
+
+        <Top_Nav_Menu />
+
+        <Main_View />
+        
+        <Footer />
+
+      </div>
+)
+};
 
 export default App;
