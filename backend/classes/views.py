@@ -144,7 +144,8 @@ class EnrollClassView(CreateAPIView):
         enrols = 0
         class_dates = []
         for i in future_class_instances:
-            if not i.is_full and not Enrollment.objects.filter(class_instance=i, user=user):
+            if not i.is_full \
+                    and len(list(Enrollment.objects.filter(class_instance=i, user=user))) == 0:
                 enrollment = Enrollment(class_instance=i, user=user,
                                         class_start_time=i.start_time)
                 enrollment.save()
