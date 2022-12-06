@@ -1,5 +1,5 @@
 import {useLocation} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 const EnrollClass = () =>{
@@ -9,25 +9,25 @@ const EnrollClass = () =>{
     const [classDateList, setClassDateList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
     const [sent, setSent] = useState(false);
-    if (sent === false){
-        fetch(`http://localhost:8000/classes/enroll/?class_id=${class_id}&class_date=${class_date}`,
-            {method:'post',
-                 })
-            .then(res => res.json())
-            .then(json => {
-                if(json.length === 1){
-                    setErrorMsg(json)
-                }else if(json.length === 3){
-                    setNumEnrolled(json[0]['enroll'])
-                    setClassDateList(json[2]['class_dates'])
-                }
-                // console.log(json.length)
-                // console.log(json)
+    useEffect(()=>{
 
-            });
-        setSent(true);
-    }
-
+        if (sent === false){
+            fetch(`http://localhost:8000/classes/enroll/?class_id=${class_id}&class_date=${class_date}`,
+                {method:'post',
+                })
+                .then(res => res.json())
+                .then(json => {
+                    if(json.length === 1){
+                        setErrorMsg(json);
+                    }else if(json.length === 3){
+                        setNumEnrolled(json[0]['enroll']);
+                        setClassDateList(json[2]['class_dates']);
+                    }
+                });
+            setSent(true);
+        }
+    },[sent]
+    )
     return (
         <>
             { errorMsg &&
@@ -40,10 +40,7 @@ const EnrollClass = () =>{
                 <br/>
                 <h5>{classDateList}</h5>
             </div>}
-
         </>
     )
-
-
 }
 export default EnrollClass;

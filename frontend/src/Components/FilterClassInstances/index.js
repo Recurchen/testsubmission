@@ -18,7 +18,6 @@ const FilterClassInstances = () => {
     const [startDay, setStartDay] = useState(new Date());
     const [endTime, setEndTime] = useState('00:00');
     const [endDay, setEndDay] = useState(new Date());
-
     const [params, setParams] = useState({page: 1, input: ""})
     const { setClassInstances } = useContext(ClassInstancesAPIContext);
     useEffect(() => {

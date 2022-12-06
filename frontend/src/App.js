@@ -35,7 +35,7 @@ function App() {
                   <Route path="classes/" element={classInstances} />
                   <Route path="classes/filter/" element={filterClassInstances}/>
                   <Route path="enrollments/" element={enrollmentHistory} />
-                  <Route path="enroll/" element={EnrollClass} />
+                  <Route path="enroll/" element={<EnrollClass/>} />
 
               </Route>
           </Routes>
