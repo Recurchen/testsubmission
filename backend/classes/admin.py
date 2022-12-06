@@ -4,9 +4,9 @@ from classes.models import Class, ClassInstance, Enrollment
 
 
 class EnrollmentAdmin(admin.ModelAdmin):
-    fields = ['class_instance', 'user', 'is_cancelled', 'class_start_time']
+    fields = ['class_instance', 'user', 'is_cancelled', 'class_start_time', 'in_future']
     list_display = ['class_ID', 'studio_name', 'class_instance', 'user', 'is_cancelled',
-                    'class_start_time']
+                    'class_start_time', 'in_future']
 
     def studio_name(self, obj):
         return obj.class_instance.belonged_class.studio.name

@@ -8,7 +8,6 @@ class ClassSerializer(serializers.ModelSerializer):
     # categories = CategorySerializer(many=True)
     # category_ids = serializers.PrimaryKeyRelatedField(
     #     queryset=Category.objects.all(), many=True)
-
     class Meta:
         model = Class
         fields = ['name', 'id', 'studio', 'description', 'coach', 'capacity', 'recurrences',
@@ -31,4 +30,4 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class_instance = ClassInstanceSerializer()
     class Meta:
         model = Enrollment
-        fields = ['user', 'class_instance', 'is_cancelled', 'class_start_time']
+        fields = ['id', 'user', 'class_instance', 'is_cancelled', 'class_start_time', 'in_future']
