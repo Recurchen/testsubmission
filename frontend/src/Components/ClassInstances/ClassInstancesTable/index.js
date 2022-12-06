@@ -1,9 +1,13 @@
 import {useContext} from "react";
 import ClassInstancesAPIContext from "../../../Contexts/ClassInstancesAPIContext";
-
+import { useNavigate } from "react-router-dom";
 
 const ClassInstancesTable = ({ perPage, params }) => {
     const { ClassInstances } = useContext(ClassInstancesAPIContext);
+    const navigate = useNavigate();
+    const toEnroll = (id,date)=>{
+        navigate('/enroll/', { state: { class_id:id, class_date:date } })
+    }
     return <table>
             <thead>
             <tr>
@@ -28,15 +32,14 @@ const ClassInstancesTable = ({ perPage, params }) => {
                     <td>{ ClassInstance.end_time.split(" ")[1] }</td>
                     <td>{ ClassInstance.class_date }</td>
                     <td>{ ClassInstance.capacity }</td>
-                    <td> <button>
+                    <td> <button onClick={() =>
+                        toEnroll(ClassInstance.belonged_class['id'],ClassInstance.class_date)}>
                         Enroll
                     </button> </td>
                 </tr>
             ))}
             </tbody>
         </table>
-
-
 
 }
 

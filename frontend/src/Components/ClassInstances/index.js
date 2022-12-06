@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const ClassInstances = () => {
     const navigate = useNavigate();
     const toFilter = (method)=>{
-        navigate('/ClassInstances/filter', { state: { method:method } })
+        navigate('/classes/filter', { state: { method:method } })
     }
     const perPage = 10;
     const [params, setParams] = useState({page: 1})

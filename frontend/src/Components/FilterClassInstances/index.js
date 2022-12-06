@@ -19,20 +19,13 @@ const FilterClassInstances = () => {
     const [endTime, setEndTime] = useState('00:00');
     const [endDay, setEndDay] = useState(new Date());
 
-    const [params, setParams] = useState({page: 1, input: " "})
+    const [params, setParams] = useState({page: 1, input: ""})
     const { setClassInstances } = useContext(ClassInstancesAPIContext);
     useEffect(() => {
         const { page, input } = params;
         if(method === 'date'){
-            if(input !== ' '){
-                fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
-                    .then(res => res.json())
-                    .then(json => {
-                        setClassInstances(json.results)
-                    })
-            }
-        }else if (method === 'time_range'){
-            if(input !== ' '){
+            if(input !== ''){
+                console.log('by date')
                 fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                     .then(res => res.json())
                     .then(json => {
@@ -40,12 +33,21 @@ const FilterClassInstances = () => {
                     })
             }
         }
-        else{
+        if (method === 'time_range'){
+            if(input !== ''){
+                fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
+                    .then(res => res.json())
+                    .then(json => {
+                        setClassInstances(json.results)
+                    })
+            }
+        }
+        if(method === 'coach' || method === 'class_name'){
+            console.log(method)
             fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                 .then(res => res.json())
                 .then(json => {
-                    console.log(method+" : "+ input)
-                    console.log(json.results)
+                    console.log(json)
                     setClassInstances(json.results)
                 })
         }
@@ -64,15 +66,14 @@ const FilterClassInstances = () => {
                 <button
                     onClick={()=>{
                         //startDate.toJSON().split('T')[0]
-                        let [month, day, year] = startDay.toLocaleDateString().split('/')
+                        let [month, day, year] = startDate.toLocaleDateString().split('/')
                         if (month.length < 2){
                             month = 0 + month
                         }
                         if(day.length < 2){
                             day = 0 + day
                         }
-                        let date = [year, month, day].join('-');
-                        setParams({...params, input:date});
+                        setParams({...params, input:[year, month, day].join('-')});
                     }
                        }>
                     Submit
@@ -143,9 +144,10 @@ const FilterClassInstances = () => {
                             day2 = 0 + day2
                         }
                         date2 = [year2, month2, day2].join('-');
-                        time2 = endTime
-                        let input = date1+'-'+time1+','+date2+'-'+time2
-                        setParams({...params, input:input});
+                        time2 = endTime;
+                        setParams({...params, input:date1+'-'+time1+','+date2+'-'+time2});
+
+
                     }}
 
                 >
