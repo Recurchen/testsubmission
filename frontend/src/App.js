@@ -18,7 +18,7 @@ import Footer from './Components/footer';
 import Login from "./Components/Login";
 import Register from './Components/Register';
 import Plans from './Components/Plans';
-import PlansAPIContext, {usePlansAPIContext} from './Context/PlansAPIContext';
+import PlansAPIContext, {usePlansAPIContext} from './Contexts/PlansAPIContext';
 
 function App() {
   
