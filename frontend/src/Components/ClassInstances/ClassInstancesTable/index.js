@@ -35,8 +35,7 @@ const ClassInstancesTable = ({ perPage, params }) => {
                     <td>{ ClassInstance.capacity }</td>
 
                     <td> <button className={'enroll'}
-                        onClick={(e) => {
-                            e.preventDefault();
+                        onClick={(e) => {e.preventDefault();
                         const answer = window.confirm("" +
                             "Are you sure you want to enrol in this class occurrence?\n " +
                             "Click OK to enrol, Cancel to stop.");
@@ -68,9 +67,9 @@ const ClassInstancesTable = ({ perPage, params }) => {
         </table>
 
     }
-    return(
-        <span className={'noMatchClass'}> No matched class yet </span>
-    )
+    // return(
+    //     <span className={'noMatchClass'}> No matched class yet </span>
+    // )
     }
 
 export default ClassInstancesTable;
