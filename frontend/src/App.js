@@ -1,17 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
 
-import Header from './components/header'
-import Main_View from './components/main_view';
-import Top_Nav_Menu from './components/top_nav_menu';
-import Footer from './components/footer';
+import Header from './Components/header'
+import Main_View from './Components/main_view';
+import Top_Nav_Menu from './Components/top_nav_menu';
+import Footer from './Components/footer';
 
 import React from 'react';
 
-import Login from "./components/Login";
-import Register from './components/Register';
-import Plans from './components/Plans';
-import PlansAPIContext, {usePlansAPIContext} from './Context/PlansAPIContext';
+import Login from "./Components/Login";
+import Register from './Components/Register';
+import Plans from './Components/Plans';
+import PlansAPIContext, {usePlansAPIContext} from './Contexts/PlansAPIContext';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
