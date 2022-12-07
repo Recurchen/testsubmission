@@ -80,7 +80,8 @@ def search_by_time_range(start: str, end: str, studio_id: int) -> List[ClassInst
 
 class EnrollClassView(CreateAPIView):
     serializer_class = EnrollmentSerializer
-  #  permission_classes = (IsAuthenticated,)
+
+    #  permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         if request.GET.get('class_id', '') == '':
@@ -89,12 +90,13 @@ class EnrollClassView(CreateAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        user=User.objects.get(username='a')
+        user = User.objects.get(username='a')
         # user = Profile.objects.get(user=self.request.user).user
         # profile = Profile.objects.get(user=self.request.user)
-        # if user and not profile.is_subscribed:
-        #     return Response({"details: user isn't an active subscriber"},
-        #                     status=status.HTTP_401_UNAUTHORIZED)
+        profile = Profile.objects.get(user=user)
+        if user and not profile.is_subscribed:
+            return Response({"details: user isn't an active subscriber"},
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -163,6 +165,7 @@ class EnrollClassView(CreateAPIView):
 
 class DropClassView(DestroyAPIView):
     serializer_class = EnrollmentSerializer
+
     # permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -175,10 +178,12 @@ class DropClassView(DestroyAPIView):
 
         # user = Profile.objects.get(user=self.request.user).user
         # profile = Profile.objects.get(user=self.request.user)
-        # if user and not profile.is_subscribed:
-        #     return Response({"details: user isn't an active subscriber"},
-        #                     status=status.HTTP_401_UNAUTHORIZED)
-        user=User.objects.get(username='a')
+        user = User.objects.get(username='a')
+        profile = Profile.objects.get(user=user)
+
+        if user and not profile.is_subscribed:
+            return Response({"details: user isn't an active subscriber"},
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -250,20 +255,19 @@ class ClassInstancePagination(PageNumberPagination):
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
-    #permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = EnrollmentSerializer
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
-        user=User.objects.get(username='a')
-        #user = Profile.objects.get(user=self.request.user).user
+        user = User.objects.get(username='a')
+        # user = Profile.objects.get(user=self.request.user).user
         return Enrollment.objects.filter(user=user).order_by('class_start_time')
 
 
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
     pagination_class = ClassInstancePagination
-
 
     def get_queryset(self):
         keys = list(self.request.GET.keys())
@@ -318,4 +322,3 @@ class ClassInstancesListView(ListAPIView):
                         # intersection_instances = intersection_instances.intersection(q)
                     future_class_instances = future_instances(intersection_instances)
                     return future_class_instances
-
