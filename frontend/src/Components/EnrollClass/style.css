@@ -1,26 +1,36 @@
 .confirmation {
     text-align: center;
     border-collapse: collapse;
-    border: dashed 1px red;
+    border: dashed 3px white;
+    color: white;
     padding:2%;
     font-family: "Libre Baskerville", serif;
     border-radius: 20px;
     margin: 5% 10%;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
 }
 .classDates{
     text-align: center;
 }
 .success,.error{
-    color: red;
+    color: white;
     font-size: 45px;
     font-weight: normal;
-    line-height: 48px;
+    line-height: 40px;
+    width: 30%;
+    display: inline-block;
+    justify-content: center;
  }
 .confirmation ul{
     display: inline-block;
     text-align: left;
+    margin: 0 0;
+}
+.confirmation ul li{
+
+    text-align: left;
+    margin: 10px 0;
 }
 
 button.back {
@@ -36,4 +46,7 @@ button.back {
     padding: 0 1rem;
     text-align: center;
     margin:2%;
+}
+.confirmation{
+    color: white;
 }

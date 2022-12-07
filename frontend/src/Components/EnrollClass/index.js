@@ -59,7 +59,7 @@ const EnrollClass = () =>{
                 <div>
                     <h1 className={"success"}> Successful!</h1>
                     <br/>
-                    <p> You have enrolled in <b>{numEnrolled}</b> occurrence of:</p>
+                    <h2> You have enrolled in <b>{numEnrolled}</b> occurrence of:</h2>
                     <h3>
                         Class Name: {className} <br/>
                         Coach: {coach}<br/>
@@ -74,8 +74,10 @@ const EnrollClass = () =>{
                             </ul>
                         </div>
                     }
+                    <button className={'back'} onClick={Back}>Back</button>
                 </div>
             }
+
 
         </div>
 

@@ -15,7 +15,7 @@ const DropClass = () =>{
     let sent = false;
     const navigate = useNavigate();
     const Back = ()=>{
-        navigate('/classes/')
+        navigate('/enrollments/')
     }
     useEffect(()=>{
             if (sent === false){
@@ -50,9 +50,9 @@ const DropClass = () =>{
                 <span className="error">
                     { errorMsg }
                     <br/>
-                    <button className={'back'} onClick={Back}
-                    >
-                        Back</button>
+                    <button className={'back'} onClick={Back}>
+                        Back
+                    </button>
                     <br/>
 
                 </span> }
@@ -60,7 +60,7 @@ const DropClass = () =>{
                 <div>
                     <h1 className={"success"}> Successful!</h1>
                     <br/>
-                    <p> You have dropped <b>{numDropped}</b> occurrence of:</p>
+                    <h2> You have dropped <b>{numDropped}</b> occurrence of:</h2>
                     <h3>
                         Class Name: {className} <br/>
                         Coach: {coach}<br/>
@@ -73,6 +73,10 @@ const DropClass = () =>{
                             <ul className={'classDates'}>
                                 {classDateList.map((d, index) => (<li>{d}</li>))}
                             </ul>
+                            <br/>
+                            <button className={'back'} onClick={Back}>
+                                Back
+                            </button>
                         </div>
                     }
                 </div>
