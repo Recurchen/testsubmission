@@ -8,7 +8,7 @@ const Footer = () => {
                       <div class="col-lg-3 col-md-6 col-sm-6">
                           <div class="footer__about">
                               <div class="footer__about__logo">
-                                  <a href="#" class="logo">Toroto Fitness Center</a>
+                                  <a href="src/Components/footer/index#" class="logo">Toroto Fitness Center</a>
                               </div>
                               <ul>
                                   <li>10+ Branches in GTA</li>

@@ -6,17 +6,17 @@ const Top_Nav_Menu = () => {
                   <div class="row">
                       <div class="col-lg-3">
                           <div class="header__logo">
-                              <a href="#" class="logo">Toronto Fitness Center</a>
+                              <a href="src/Components/top_nav_menu/index#" class="logo">Toronto Fitness Center</a>
                           </div>
                       </div>
                       <div class="col-lg-6">
                           <nav class="header__menu" >
                               <ul>
-                                  <li class="active"><a href="#">Home</a></li>
-                                  <li><a href="#">Studios</a></li>
-                                  <li><a href="#">Classes</a></li>
-                                  <li><a href="#">Membership Plans</a></li>
-                                  <li><a href="#">User Center</a></li>
+                                  <li class="active"><a href="src/Components/top_nav_menu/index#">Home</a></li>
+                                  <li><a href="src/Components/top_nav_menu/index#">Studios</a></li>
+                                  <li><a href="src/Components/top_nav_menu/index#">Classes</a></li>
+                                  <li><a href="src/Components/top_nav_menu/index#">Membership Plans</a></li>
+                                  <li><a href="src/Components/top_nav_menu/index#">User Center</a></li>
                               </ul>
                           </nav>
                       </div>

@@ -12,11 +12,11 @@ const Main_View = () => {
                                   <span>Check out 👇</span>
                               </div>
                               <ul>
-                                  <li><a href="#">Studios</a></li>
-                                  <li><a href="#">Classes</a></li>
-                                  <li><a href="#">Memberships</a></li>
-                                  <li><a href="#">User Center</a></li>
-                                  <li><a href="#">About TFC</a></li>
+                                  <li><a href="src/Components/main_view/index#">Studios</a></li>
+                                  <li><a href="src/Components/main_view/index#">Classes</a></li>
+                                  <li><a href="src/Components/main_view/index#">Memberships</a></li>
+                                  <li><a href="src/Components/main_view/index#">User Center</a></li>
+                                  <li><a href="src/Components/main_view/index#">About TFC</a></li>
 
                               </ul>
                           </div>

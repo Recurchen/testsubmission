@@ -5,6 +5,7 @@ from Studios.models import Studio
 import datetime
 from django.contrib.auth.models import User
 
+
 class Class(models.Model):
     studio = models.ForeignKey(Studio, on_delete=models.CASCADE, related_name='classes')
     name = models.CharField(null=False, max_length=100)
@@ -116,8 +117,13 @@ class Enrollment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
     class_start_time = models.DateTimeField(null=False)
     is_cancelled = models.BooleanField(default=False)
+    in_future = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         self.class_start_time = self.class_instance.start_time
+        now = datetime.datetime.now()
+        if len(list(
+                ClassInstance.objects.filter(start_time__gt=now, id=self.class_instance.id))) < 1:
+            self.in_future = False
         self.is_cancelled = self.class_instance.is_cancelled
         return super(Enrollment, self).save(*args, **kwargs)

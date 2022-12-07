@@ -6,13 +6,21 @@ import Main_View from './components/main_view';
 import Top_Nav_Menu from './components/top_nav_menu';
 import Footer from './components/footer';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import Login from "./components/Login";
 import Register from './components/Register';
 import Plans from './components/Plans';
 import PlansAPIContext, {usePlansAPIContext} from './Context/PlansAPIContext';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import ClassInstances from "./Components/ClassInstances";
+import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
+import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
+import EnrollmentHistory from "./Components/EnrollmentHistory";
+import EnrollClass from "./Components/EnrollClass";
+import DropClass from "./Components/DropClass";
+import FilterClassInstances from "./Components/FilterClassInstances";
+
 import useToken from './useToken';
 
 function App() {
@@ -27,8 +35,24 @@ function App() {
     </PlansAPIContext.Provider>)
     <Footer />
     </div>)
-  
-  const main = (  
+   
+   const enrollmentHistory = (
+        <EnrollmentHistoryAPIContext.Provider value={useEnrollmentHistoryAPIContext() }>
+            <EnrollmentHistory />
+        </EnrollmentHistoryAPIContext.Provider>
+    )
+    const filterClassInstances = (
+        <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
+            <FilterClassInstances />
+        </ClassInstancesAPIContext.Provider>
+    )
+    const classInstances = (
+      <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
+        <ClassInstances />
+      </ClassInstancesAPIContext.Provider>
+  )
+   
+  const main = (
     <div className="MainDiv">
       
       {/* Header: the top most section */}
@@ -49,10 +73,18 @@ function App() {
                 <Route path="plans" element={plans} />
                 <Route path="login" element={<Login setToken={setToken} />} />
                 <Route path="register" element={<Register />} />
+                
+                <Route path="classes/" element={classInstances} />
+                <Route path="classes/filter/" element={filterClassInstances}/>
+                <Route path="enrollments/" element={enrollmentHistory} />
+                <Route path="enroll/" element={<EnrollClass/>} />
+                <Route path="drop/" element={<DropClass/>} />
                 {/* <Route path="players" element={players} /> */}
             {/* </Route> */}
         </Routes>
       </BrowserRouter>
-  );}
+  );
+
+}
 
 export default App;
