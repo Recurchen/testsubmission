@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Layout from "./Components/Layout";
 import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
