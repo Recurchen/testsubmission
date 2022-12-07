@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import PlansTable from "./PlansTable";
-import PlansAPIContext from "../../Context/PlansAPIContext";
+import PlansAPIContext from "../../Contexts/PlansAPIContext";
 import { useNavigate } from "react-router-dom";
 import './style.css';
 

@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import PlansAPIContext from "../../../Context/PlansAPIContext";
+import PlansAPIContext from "../../../Contexts/PlansAPIContext";
 import './style.css';
 import { useNavigate } from "react-router-dom";
 
