@@ -31,7 +31,8 @@ const EnrollmentHistory = () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token.token}`
                     })}).then(res=>{
-                        if(res.status ==='301'){toLogin();}
+                        if(res.status ==='403'){
+                            toLogin();}
                         return res;
             })
             .then(res => res.json())

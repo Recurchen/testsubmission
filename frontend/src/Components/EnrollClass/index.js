@@ -33,14 +33,12 @@ const EnrollClass = () =>{
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token.token}`
                     })
-                }).then(res=>{
-                    if (res.status === '301'){
-                        console.log('Forbidden 301')
+                })
+                .then(res=>{
+                    if (res.status==='301'){
+                        console.log(res.status);
                         toLogin();
-                    }else{
-                        return res;
-                    }
-            }) .then(res=>{if (res.status==='301'){toLogin();} return res;
+                    } else{return res;}
             })
                 .then(res => res.json())
                 .then(json => {
