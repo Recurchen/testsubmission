@@ -10,6 +10,11 @@ const EnrollmentHistory = () => {
     const toLogin = ()=>{
         navigate('/login');
     }
+
+    //TODO: later change this to user center that it should be linked to
+    const Back = ()=>{
+        navigate('/classes/')
+    }
     const perPage = 10;
     const [params, setParams] = useState({page: 1})
     const { setEnrollmentHistory } = useContext(EnrollmentHistoryAPIContext);
@@ -26,7 +31,8 @@ const EnrollmentHistory = () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token.token}`
                     })}).then(res=>{
-                        if(res.status ==='301'){toLogin();}
+                        if(res.status ==='403'){
+                            toLogin();}
                         return res;
             })
             .then(res => res.json())
@@ -40,6 +46,13 @@ const EnrollmentHistory = () => {
 
     return (
         <>
+            <button className={'back'} onClick={Back}>
+                Back
+            </button>
+
+            <h1 className={'filterTitle'}>Enrollment History</h1>
+
+
             <EnrollmentHistoryTable perPage={perPage} params={params} />
             <button hidden={!hasPrev}
                 onClick={() => setParams({
