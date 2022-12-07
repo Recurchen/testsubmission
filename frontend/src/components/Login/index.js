@@ -1,25 +1,42 @@
 import React, { useState } from "react";
 import Header from '../header';
 import Footer from '../footer';
-import {Link, Outlet} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import PropTypes from 'prop-types';
 import './style.css';
 
-const Login = (props) => {
+async function loginUser(credentials) {
+    return fetch('http://127.0.0.1:8000/accounts/login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        body: JSON.stringify(credentials)})
+        .then(data => data.json())
+}
+
+export default function Login({ setToken }) {
     const [username, setUsername] = useState('');
     const [pass, setPass] = useState('');
+    const [userId, setUserId] = useState('')
+    // const [token, setToken] = useState();
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+    const navToMain = ()=>{
+        navigate('/', {});
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const b = {"username": `${username}`,
+        const body = {"username": `${username}`,
                     "password":`${pass}`};
-        fetch('http://127.0.0.1:8000/accounts/login/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-              },
-            body: JSON.stringify(b),})
-            .then(res=>res.json())
-            .then(json => console.log(json))
+        const response = await loginUser(body);
+        console.log(response);
+        setUserId(response.id);
+        const token = response.tokens.access;
+        // console.log(token);
+        setToken(token);
+        navToMain();
             // TODO: redirect
     }
 
@@ -44,4 +61,6 @@ const Login = (props) => {
     )
 }
 
-export default Login;
+Login.propTypes = {
+    setToken: PropTypes.func.isRequired
+  };
