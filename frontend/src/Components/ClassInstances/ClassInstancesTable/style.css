@@ -91,13 +91,13 @@ button.enroll:not([disabled]):hover {
     box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
 }
 
-span.noMatchClass{
-    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    font-size: 50px;
-    font-weight: 500;
-    color: red;
-    display: table;
-    margin: 1% auto;
-    border: 2px dashed red;
+/*span.noMatchClass{*/
+/*    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;*/
+/*    font-size: 50px;*/
+/*    font-weight: 500;*/
+/*    color: white;*/
+/*    display: table;*/
+/*    margin: 1% auto;*/
+/*    border: 2px dashed red;*/
 
-}
+/*}*/
