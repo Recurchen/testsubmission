@@ -1,7 +1,8 @@
 import {useContext} from "react";
-import PlansAPIContext from "../../../../../../Desktop/TFCGymWeb/frontend/src/Contexts/PlansAPIContext";
+
 import './style.css';
 import { useNavigate } from "react-router-dom";
+import PlansAPIContext from "../../../Contexts/PlansAPIContext";
 
 const PlansTable = ({ perPage, params }) => {
     const { Plans } = useContext(PlansAPIContext);

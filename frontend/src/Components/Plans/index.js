@@ -1,8 +1,9 @@
 import {useContext, useEffect, useState} from "react";
 import PlansTable from "./PlansTable";
-import PlansAPIContext from "../../../../../Desktop/TFCGymWeb/frontend/src/Contexts/PlansAPIContext";
+
 import { useNavigate } from "react-router-dom";
 import './style.css';
+import PlansAPIContext from "../../Contexts/PlansAPIContext";
 
 const Plans = () => {
     // const navigate = useNavigate();
