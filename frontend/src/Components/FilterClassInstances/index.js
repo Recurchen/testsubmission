@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import ClassInstancesAPIContext from "../../Contexts/ClassInstancesAPIContext";
 import ClassInstancesTable from "../ClassInstances/ClassInstancesTable";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from 'react-time-picker';
@@ -12,6 +12,10 @@ const FilterClassInstances = () => {
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
     const perPage = 10;
+    const navigate = useNavigate();
+    const Back = ()=>{
+        navigate('/classes/')
+    }
     // for class date
     const [startDate, setStartDate] = useState(new Date());
     // for time range
@@ -61,7 +65,12 @@ const FilterClassInstances = () => {
     if (method === 'date'){
         return (
             <>
+                <button className={'back'} onClick={Back}>
+                Back
+                </button>
+
                 <h1 className={'filterTitle'}>Filter by Class Date</h1>
+
                 {/*Reference:https://reactdatepicker.com/*/}
                 <div className={'pickClassDate'}>
                     <label>Pick a class date</label>
@@ -115,7 +124,9 @@ const FilterClassInstances = () => {
     }
     if (method === 'time_range'){
         return (
-            <>
+            <> <button className={'back'} onClick={Back}>
+                Back
+            </button>
                 <h1 className={'filterTitle'}>Filter by Range of Class's Start Time</h1>
 
                 <br/>
@@ -134,7 +145,7 @@ const FilterClassInstances = () => {
                                 clockIcon = {false}
                                 disableClock={true}
                                 value={startTime} />
-                    <br/>
+                    <br/><br/>
                     <label> End time</label>
                     <DatePicker dateFormat="yyyy-MM-dd"
                                 todayButton="Today"
@@ -149,9 +160,8 @@ const FilterClassInstances = () => {
                                 clockIcon = {false} //remove clock icon
                                 disableClock={true} //don't show clock when select value
                                 value={endTime} />
-                    <br/>
+                    <br/> <br/> <br/>
                     <label>Click filter to apply filter</label>
-
                     <button className={'submitFilter'}
                             onClick={()=>{
                                 let time1;
@@ -207,7 +217,9 @@ const FilterClassInstances = () => {
     }
     //filter by coach or class name
     return (
-        <>
+        <> <button className={'back'} onClick={Back}>
+            Back
+        </button>
             <h1 className={'filterTitle'}>Filter by {method==='class_name'?'Class Name':'Coach'}</h1>
             <input className={'search_bar'}
                    type="text"
