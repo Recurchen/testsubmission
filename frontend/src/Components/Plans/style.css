@@ -8,7 +8,7 @@
         justify-content: center;
         color: white;
         background-size: 50%;
-        background-image: linear-gradient(to right, rgba(249, 113, 54, .8), rgba(0, 0, 0, .8)), url("../../../../../Desktop/TFCGymWeb/frontend/public/assets/img/bg_plan.jpg");
+        background-image: linear-gradient(to right, rgba(249, 113, 54, .8), rgba(0, 0, 0, .8)), url("../../../public/assets/img/bg_plan.jpg");
         background-size: cover, contain;
         background-position: center, left top;
         background-repeat: no-repeat, repeat;

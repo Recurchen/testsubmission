@@ -1,5 +1,17 @@
-import React from 'react';
+import logo from './logo.svg';
 import './App.css';
+
+import Header from './Components/header'
+import Main_View from './Components/main_view';
+import Top_Nav_Menu from './Components/top_nav_menu';
+import Footer from './Components/footer';
+
+import React from 'react';
+
+import Login from "./Components/Login";
+import Register from './Components/Register';
+import Plans from './Components/Plans';
+import PlansAPIContext, {usePlansAPIContext} from './Contexts/PlansAPIContext';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
@@ -9,18 +21,12 @@ import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
 import FilterClassInstances from "./Components/FilterClassInstances";
 
-import Header from './Components/header'
-import Main_View from './Components/main_view';
-import Top_Nav_Menu from './Components/top_nav_menu';
-import Footer from './Components/footer';
-
-import Login from "./Components/Login";
-import Register from './Components/Register';
-import Plans from './Components/Plans';
-import PlansAPIContext, {usePlansAPIContext} from './Contexts/PlansAPIContext';
+import useToken from './useToken';
 
 function App() {
-  
+
+  const { token, setToken } = useToken();
+
   const plans = (
     <div>
     <Header />
@@ -50,7 +56,7 @@ function App() {
     <div className="MainDiv">
       
       {/* Header: the top most section */}
-      <Header />
+      <Header/>
 
       <Top_Nav_Menu />
 
@@ -58,14 +64,14 @@ function App() {
       
       <Footer />
     </div>)
-      
-    return(
+   
+      return(
       <BrowserRouter>
         <Routes>
             {/* <Route path="/" element={<Layout />}> */}
-                <Route index element={main} />
+                <Route index element={ main } />
                 <Route path="plans" element={plans} />
-                <Route path="login" element={<Login />} />
+                <Route path="login" element={<Login setToken={setToken} />} />
                 <Route path="register" element={<Register />} />
                 
                 <Route path="classes/" element={classInstances} />
