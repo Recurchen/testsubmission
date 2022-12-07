@@ -1,6 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import '../EnrollClass/style.css'
+import useToken from "../../useToken";
 
 const DropClass = () =>{
     const { state } = useLocation();
@@ -13,14 +14,27 @@ const DropClass = () =>{
     const [classDateList, setClassDateList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
     let sent = false;
+    const token = useToken();
     const navigate = useNavigate();
     const Back = ()=>{
         navigate('/enrollments/')
     }
+    const toLogin = ()=>{
+        navigate('/login');
+    }
     useEffect(()=>{
+        if(token.token === null){
+            toLogin();
+        }
+        else{
             if (sent === false){
                 fetch(`http://localhost:8000/classes/drop/?class_id=${class_id}&class_date=${class_date}`,
-                    {method:'post',
+                    {method:'post',headers: new Headers({
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token.token}`
+                        })
+                    })
+                    .then(res=>{if (res.status==='301'){toLogin();} return res;
                     })
                     .then(res => res.json())
                     .then(json => {
@@ -42,6 +56,9 @@ const DropClass = () =>{
                     });
                 sent = true;
             }
+
+        }
+
         },[state]
     )
     return (
@@ -71,7 +88,7 @@ const DropClass = () =>{
                         <div className={'classDatesList'}>
                             <h3> Class dates:</h3>
                             <ul className={'classDates'}>
-                                {classDateList.map((d, index) => (<li>{d}</li>))}
+                                {classDateList.map((d, index) => (<li key={index}>{d}</li>))}
                             </ul>
                             <br/>
                             <button className={'back'} onClick={Back}>

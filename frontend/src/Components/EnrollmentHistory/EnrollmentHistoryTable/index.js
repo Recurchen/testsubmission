@@ -13,6 +13,7 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
     const Back = ()=>{
         navigate('/classes/')
     }
+
     if (!(EnrollmentHistory && EnrollmentHistory.length > 0)){
         return(
             <>
