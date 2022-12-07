@@ -9,17 +9,10 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
     const toDrop = (id,date)=>{
         navigate('/drop/', { state: { class_id:id, class_date:date } })
     }
-    // TODO: change path to user center later
-    const Back = ()=>{
-        navigate('/classes/')
-    }
 
     if (!(EnrollmentHistory && EnrollmentHistory.length > 0)){
         return(
-            <>
-                <span className={'EmptyEnrollmentHistory'}> You have no enrollment history. </span>
-                <button className={'back'} onClick={Back}> Back </button>
-            </>
+            <span className={'EmptyEnrollmentHistory'}> You have no enrollment history. </span>
         )
     }
 
