@@ -72,7 +72,7 @@ const edituserinfo = (
     )
     const classInstances = (
       <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
-        <ClassInstances />
+        <ClassInstances studio_id={3}/>
       </ClassInstancesAPIContext.Provider>
   )
     const aboutUs=(

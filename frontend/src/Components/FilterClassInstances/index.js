@@ -8,7 +8,8 @@ import TimePicker from 'react-time-picker';
 import './style.css'
 const FilterClassInstances = () => {
     const { state } = useLocation();
-    const { method } = state;
+    const { method, studio_id } = state;
+    const studioid = studio_id['studio_id']['studio_id']
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
     const perPage = 10;
@@ -32,8 +33,7 @@ const FilterClassInstances = () => {
         const { page, input } = params;
         if(method === 'date'){
             if(input !== ''){
-                console.log('by date')
-                fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
+                fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                     .then(res => res.json())
                     .then(json => {
                         setClassInstances(json.results)
@@ -44,7 +44,7 @@ const FilterClassInstances = () => {
         }
         if (method === 'time_range'){
             if(input !== ''){
-                fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
+                fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                     .then(res => res.json())
                     .then(json => {
                         setClassInstances(json.results);
@@ -54,8 +54,7 @@ const FilterClassInstances = () => {
             }
         }
         if(method === 'coach' || method === 'class_name'){
-            console.log(method)
-            fetch(`http://localhost:8000/classes/3/all?page=${page}&per_page=${perPage}&${method}=${input}`)
+            fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                 .then(res => res.json())
                 .then(json => {
                     setClassInstances(json.results);
