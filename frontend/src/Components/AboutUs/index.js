@@ -71,7 +71,7 @@ const AboutUs = () => {
                         <div className="classType-column">
                             <div className="classType-card">
                                 <div className="classType-container">
-                                    <h2 style={{color:"white"}}>CARDIO</h2>
+                                    <h2 style={{color:"white"}}>Cardio</h2>
                                     <p style={{color:"white"}}>Get your heart pumping. <br/> Boost your immune system.</p>
                                 </div>
                             </div>
