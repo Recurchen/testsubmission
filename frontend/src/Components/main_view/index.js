@@ -15,7 +15,7 @@ const Main_View = () => {
                                   <li><a href="src/Components/main_view/index#">Studios</a></li>
                                   <li><a href="src/Components/main_view/index#">Classes</a></li>
                                   <li><a href="src/Components/main_view/index#">Memberships</a></li>
-                                  <li><a href="src/Components/main_view/index#">User Center</a></li>
+                                  {/*<li><a href="src/Components/main_view/index#">User Center</a></li>*/}
                                   <li><a href="src/Components/main_view/index#">About TFC</a></li>
 
                               </ul>
