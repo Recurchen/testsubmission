@@ -23,11 +23,20 @@ html {
     color: black;
 }
 
-.buttons {
+.buttons{
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 20rem;
     flex-direction: column;
+}
+.uc-btn{
+    border: none;
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #eb6a32;
 }

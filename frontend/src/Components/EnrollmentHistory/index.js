@@ -10,10 +10,8 @@ const EnrollmentHistory = () => {
     const toLogin = ()=>{
         navigate('/login');
     }
-
-    //TODO: later change this to user center that it should be linked to
-    const Back = ()=>{
-        navigate('/classes/')
+    const toUserCenter = ()=>{
+        navigate('/usercenter')
     }
     const perPage = 10;
     const [params, setParams] = useState({page: 1})
@@ -46,7 +44,7 @@ const EnrollmentHistory = () => {
 
     return (
         <>
-            <button className={'back'} onClick={Back}>
+            <button className={'back'} onClick={toUserCenter}>
                 Back
             </button>
 
