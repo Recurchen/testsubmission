@@ -12,7 +12,8 @@ const Top_Nav_Menu = () => {
                       <div class="col-lg-6">
                           <nav class="header__menu" >
                               <ul>
-                                  <li class="active"><a href="src/Components/top_nav_menu/index#">Home</a></li>
+                                  {/*<li class="active"><a href="src/Components/top_nav_menu/index#">Home</a></li>*/}
+                                  <li className="active"><a href="/">Home</a></li>
                                   <li><a href="src/Components/top_nav_menu/index#">Studios</a></li>
                                   <li><a href="src/Components/top_nav_menu/index#">Classes</a></li>
                                   {/*<li><a href="src/Components/top_nav_menu/index#">Membership Plans</a></li>*/}
