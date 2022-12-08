@@ -89,7 +89,6 @@ const edituserinfo = (
       return(
       <BrowserRouter>
         <Routes>
-            {/* <Route path="/" element={<Layout />}> */}
                 <Route index element={ main } />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
@@ -104,8 +103,7 @@ const edituserinfo = (
                 <Route path="enrollments/" element={enrollmentHistory} />
                 <Route path="enroll/" element={<EnrollClass/>} />
                 <Route path="drop/" element={<DropClass/>} />
-                {/* <Route path="players" element={players} /> */}
-            {/* </Route> */}
+
         </Routes>
       </BrowserRouter>
   );

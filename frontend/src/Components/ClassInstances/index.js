@@ -9,6 +9,10 @@ const ClassInstances = () => {
     const toFilter = (method)=>{
         navigate('/classes/filter', { state: { method:method } })
     }
+    // TODO: change this to studioinfor page
+    const toStudioInfoPage = ()=>{
+        navigate('/classes/')
+    }
     const perPage = 10;
     const [params, setParams] = useState({page: 1});
     const [hasNext, setHasNext] = useState(false);
@@ -106,6 +110,10 @@ const ClassInstances = () => {
             {/*    Search by class date*/}
             {/*</button>*/}
             {/*<br/> <br/>*/}
+            <button className={'back'} onClick={toStudioInfoPage}>
+                Back
+            </button>
+            <h1 className={'filterTitle'}>Class Schedule</h1>
             <div className={'filterButtons'}>
                 <button className={'filter'}
                         onClick={() => toFilter('coach')}> filter by coach </button>

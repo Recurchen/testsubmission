@@ -25,7 +25,10 @@ const FilterClassInstances = () => {
     const [endDay, setEndDay] = useState(new Date());
     const [params, setParams] = useState({page: 1, input: ""})
     const { setClassInstances } = useContext(ClassInstancesAPIContext);
+
     useEffect(() => {
+        // clear previous class table
+        setClassInstances('');
         const { page, input } = params;
         if(method === 'date'){
             if(input !== ''){

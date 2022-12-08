@@ -67,9 +67,9 @@ const ClassInstancesTable = ({ perPage, params }) => {
         </table>
 
     }
-    // return(
-    //     <span className={'noMatchClass'}> No matched class yet </span>
-    // )
+    return(
+        <span className={'noMatchClass'}> No matched class </span>
+    )
     }
 
 export default ClassInstancesTable;

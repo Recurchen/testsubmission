@@ -1,6 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import './style.css';
+import useToken from "../../useToken";
 
 const EnrollClass = () =>{
     const { state } = useLocation();
@@ -13,15 +14,32 @@ const EnrollClass = () =>{
     const [classDateList, setClassDateList] = useState([]);
     const [errorMsg, setErrorMsg] = useState();
     let sent = false;
+    const token = useToken();
     const navigate = useNavigate();
     const Back = ()=>{
         navigate('/classes/')
     }
+    const toLogin = ()=>{
+        navigate('/login');
+    }
     useEffect(()=>{
-        if (sent === false){
+        if(token.token === null){
+            toLogin();
+        }
+        else{
+            if (sent === false){
             fetch(`http://localhost:8000/classes/enroll/?class_id=${class_id}&class_date=${class_date}`,
-                {method:'post',
+                {method:'post',headers: new Headers({
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token.token}`
+                    })
                 })
+                .then(res=>{
+                    if (res.status==='301'){
+                        console.log(res.status);
+                        toLogin();
+                    } else{return res;}
+            })
                 .then(res => res.json())
                 .then(json => {
                     if(json.length === 1){
@@ -41,7 +59,8 @@ const EnrollClass = () =>{
                     }
                 });
             sent = true;
-        }
+        }}
+
     },[state]
     )
     return (
@@ -70,7 +89,7 @@ const EnrollClass = () =>{
                         <div className={'classDatesList'}>
                             <h3> Class dates:</h3>
                             <ul className={'classDates'}>
-                                {classDateList.map((d, index) => (<li>{d}</li>))}
+                                {classDateList.map((d, index) => (<li key={index}>{d}</li>))}
                             </ul>
                         </div>
                     }

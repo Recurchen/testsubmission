@@ -80,7 +80,7 @@ def search_by_time_range(start: str, end: str, studio_id: int) -> List[ClassInst
 
 class EnrollClassView(CreateAPIView):
     serializer_class = EnrollmentSerializer
-  #  permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         if request.GET.get('class_id', '') == '':
@@ -89,12 +89,15 @@ class EnrollClassView(CreateAPIView):
         if request.GET.get('class_date', '') == '':
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
-        user=User.objects.get(username='a')
-        # user = Profile.objects.get(user=self.request.user).user
-        # profile = Profile.objects.get(user=self.request.user)
-        # if user and not profile.is_subscribed:
-        #     return Response({"details: user isn't an active subscriber"},
-        #                     status=status.HTTP_401_UNAUTHORIZED)
+
+        user = Profile.objects.get(user=self.request.user).user
+        profile = Profile.objects.get(user=self.request.user)
+        # user = User.objects.get(username='a')
+        # profile = Profile.objects.get(user=user)
+        if user and not profile.is_subscribed:
+            return Response({"details: Sorry! You are not an active subscriber, "
+                             "so you can't enroll."},
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -116,7 +119,7 @@ class EnrollClassView(CreateAPIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
             if class_date < datetime.datetime.now().date():
-                return Response({"details: This class_date is not in the future"},
+                return Response({"details: This class date is not in the future"},
                                 status=status.HTTP_404_NOT_FOUND)
 
             class_instances = list(ClassInstance.objects.filter(belonged_class=class_obj,
@@ -163,7 +166,7 @@ class EnrollClassView(CreateAPIView):
 
 class DropClassView(DestroyAPIView):
     serializer_class = EnrollmentSerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         if request.GET.get('class_id', '') == '':
@@ -173,12 +176,15 @@ class DropClassView(DestroyAPIView):
             return Response({"details: no class_date para in the request"},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # user = Profile.objects.get(user=self.request.user).user
-        # profile = Profile.objects.get(user=self.request.user)
-        # if user and not profile.is_subscribed:
-        #     return Response({"details: user isn't an active subscriber"},
-        #                     status=status.HTTP_401_UNAUTHORIZED)
-        user=User.objects.get(username='a')
+        user = Profile.objects.get(user=self.request.user).user
+        profile = Profile.objects.get(user=self.request.user)
+        # user = User.objects.get(username='a')
+        # profile = Profile.objects.get(user=user)
+
+        if user and not profile.is_subscribed:
+            return Response({"details: Sorry! You are not an active subscriber, "
+                             "so you can't drop a class."},
+                            status=status.HTTP_401_UNAUTHORIZED)
         class_date = request.GET.get('class_date')
         class_obj = Class.objects.filter(id=request.GET.get('class_id'))
         if not class_obj:
@@ -186,7 +192,7 @@ class DropClassView(DestroyAPIView):
                             status=status.HTTP_404_NOT_FOUND)
         class_obj = list(class_obj)[0]
         if not Enrollment.objects.filter(user=user):
-            return Response({"details: user has no future enrollment"},
+            return Response({"details: You have no future enrollment"},
                             status=status.HTTP_404_NOT_FOUND)
         user_enrollments = list(Enrollment.objects.filter(user=user))
         class_enrollments = []
@@ -194,7 +200,7 @@ class DropClassView(DestroyAPIView):
             if e.class_instance.belonged_class == class_obj:
                 class_enrollments.append(e)
         if class_enrollments == []:
-            return Response({"details: user has no future enrollment for this class"},
+            return Response({"details: You have no future enrollment for this class"},
                             status=status.HTTP_404_NOT_FOUND)
 
         if class_date == 'all':  # cancel each enrollment in future
@@ -224,7 +230,7 @@ class DropClassView(DestroyAPIView):
             class_enrollments = Enrollment.objects.filter(
                 class_instance__in=future_class_instances)
             if not class_enrollments:
-                return Response({"details: user has no future enrollment for this class on this "
+                return Response({"details: You have no future enrollment for this class on this "
                                  "date"},
                                 status=status.HTTP_404_NOT_FOUND)
             dropped = 0
@@ -250,20 +256,19 @@ class ClassInstancePagination(PageNumberPagination):
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = EnrollmentSerializer
     pagination_class = ClassInstancePagination
 
     def get_queryset(self):
-        user=User.objects.get(username='a')
-        #user = Profile.objects.get(user=self.request.user).user
+        #user = User.objects.get(username='a')
+        user = Profile.objects.get(user=self.request.user).user
         return Enrollment.objects.filter(user=user).order_by('class_start_time')
 
 
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
     pagination_class = ClassInstancePagination
-
 
     def get_queryset(self):
         keys = list(self.request.GET.keys())
@@ -318,4 +323,3 @@ class ClassInstancesListView(ListAPIView):
                         # intersection_instances = intersection_instances.intersection(q)
                     future_class_instances = future_instances(intersection_instances)
                     return future_class_instances
-

@@ -35,14 +35,15 @@ const UserCenter = () => {
 
     const navigate = useNavigate();
     const navToEditInfo = ()=>{
-        navigate('usercenter/edit')
+        navigate('/usercenter/edit')
     }
     const navToAddPay = ()=>{
-        navigate('payment/method/add')
+        navigate('/payment/method/add')
     }
+    const navToEnrollmentHistory = ()=>navigate('/enrollments/')
 
     const navToEditPay = ()=>{
-        navigate('payment/method/edit')
+        navigate('/payment/method/edit')
     }
 
     const sub = (userInfo) => {
@@ -80,8 +81,10 @@ const UserCenter = () => {
         </div>
         <div className="buttons">
             <button className="uc-btn" onClick={navToEditInfo}> Edit Personal Info</button>
-                <button className="uc-btn" onClick={navToAddPay}> Add Payment Method</button>
-                <button className="uc-btn" onClick={navToEditPay}> View/Edit Payment Method</button>
+            <button className="uc-btn" onClick={navToAddPay}> Add Payment Method</button>
+            <button className="uc-btn" onClick={navToEditPay}> View/Edit Payment Method</button>
+            <button className="uc-btn" onClick={navToEnrollmentHistory}> View Enrollment History</button>
+
         </div>
         </div>
     )
