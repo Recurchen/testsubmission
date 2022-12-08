@@ -1,11 +1,16 @@
-.about-column {
+.AboutUs{
+    font-size:30px;
+    color: white;
+}
+.about-column,.classType-column {
     float: left;
     width: 33.3%;
     margin-bottom: 16px;
     padding: 0 8px;
 }
 
-.about-card {
+
+.about-card,.classType-card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     margin: 8px;
 }
@@ -16,11 +21,11 @@
     color: white;
 }
 
-.about-container {
+.about-container,.classType-container {
     padding: 0 16px;
 }
 
-.about-container::after, .row::after {
+.about-container::after, .about-row::after {
     content: "";
     clear: both;
     display: table;
@@ -31,6 +36,11 @@
 }
 .about-container p,h2{
     color: white;
+}
+
+.ourFitnessClass-section{
+    color: white;
+    text-align: center;
 }
 /*.button {*/
 /*    border: none;*/
