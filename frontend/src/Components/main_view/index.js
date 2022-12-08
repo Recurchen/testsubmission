@@ -17,7 +17,7 @@ const Main_View = () => {
                                   <li><a href="./plans">Membership Plans</a></li>
                                   {/*<li><a href="src/Components/main_view/index#">Membership Plans</a></li>*/}
                                   {/*<li><a href="src/Components/main_view/index#">User Center</a></li>*/}
-                                  <li><a href="src/Components/main_view/index#">About TFC</a></li>
+                                  <li><a href="./aboutus">About Us</a></li>
 
                               </ul>
                           </div>

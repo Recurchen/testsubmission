@@ -28,6 +28,7 @@ import EditPaymentMethod from './Components/EditPaymentMethod';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
+import AboutUs from "./Components/AboutUs";
 
 function App() {
 
@@ -46,7 +47,7 @@ function App() {
   const usercenter = (
     <div>
     <Header />
-    < UserCenter />
+    <UserCenter />
     <Footer />
     </div>)
 
@@ -90,6 +91,7 @@ const edituserinfo = (
       <BrowserRouter>
         <Routes>
                 <Route index element={ main } />
+                <Route path="aboutus" element={<AboutUs />} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
@@ -97,7 +99,6 @@ const edituserinfo = (
                 <Route path="usercenter/edit" element={edituserinfo} />
                 <Route path="payment/method/add" element={<AddPaymentMethod />} />
                 <Route path="payment/method/edit" element={<EditPaymentMethod />} />
-
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
                 <Route path="enrollments/" element={enrollmentHistory} />
