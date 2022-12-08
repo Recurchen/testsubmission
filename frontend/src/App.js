@@ -24,6 +24,7 @@ import FilterClassInstances from "./Components/FilterClassInstances";
 import UserCenter from './Components/UserCenter';
 import EditUserInfo from './Components/EditUserInfo';
 import AddPaymentMethod from './Components/AddPaymentMethod';
+import EditPaymentMethod from './Components/EditPaymentMethod';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
@@ -96,6 +97,7 @@ const edituserinfo = (
                 <Route path="register" element={<Register />} />
                 <Route path="usercenter/edit" element={edituserinfo} />
                 <Route path="payment/method/add" element={<AddPaymentMethod />} />
+                <Route path="payment/method/edit" element={<EditPaymentMethod />} />
 
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
