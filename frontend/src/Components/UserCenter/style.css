@@ -1,0 +1,12 @@
+.user_center{
+    text-align: center;
+    display: flex;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.detailed{
+    color: black;
+}

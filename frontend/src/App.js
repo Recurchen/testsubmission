@@ -21,11 +21,15 @@ import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
 import FilterClassInstances from "./Components/FilterClassInstances";
 
+import UserCenter from './Components/UserCenter';
+
 import useToken from './useToken';
+import useUserId from './useUserId';
 
 function App() {
 
   const { token, setToken } = useToken();
+  const {userId, setUserId} = useUserId();
 
   const plans = (
     <div>
@@ -33,6 +37,13 @@ function App() {
     <PlansAPIContext.Provider value={usePlansAPIContext()}>
       < Plans />
     </PlansAPIContext.Provider>)
+    <Footer />
+    </div>)
+
+  const usercenter = (
+    <div>
+    <Header />
+    < UserCenter />
     <Footer />
     </div>)
    
@@ -71,7 +82,8 @@ function App() {
             {/* <Route path="/" element={<Layout />}> */}
                 <Route index element={ main } />
                 <Route path="plans" element={plans} />
-                <Route path="login" element={<Login setToken={setToken} />} />
+                <Route path="usercenter" element={usercenter} />
+                <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
                 <Route path="register" element={<Register />} />
                 
                 <Route path="classes/" element={classInstances} />
