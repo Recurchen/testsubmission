@@ -33,6 +33,18 @@ const UserCenter = () => {
         })
     }, [params])
 
+    const navigate = useNavigate();
+    const navToEditInfo = ()=>{
+        navigate('usercenter/edit')
+    }
+    const navToAddPay = ()=>{
+        navigate('payment/method/add')
+    }
+
+    const navToEditPay = ()=>{
+        navigate('payment/method/edit')
+    }
+
     const sub = (userInfo) => {
         if(userInfo.is_subscribed){
             return (
@@ -51,8 +63,8 @@ const UserCenter = () => {
     }
 
     return (
-        
         <div className="user_center">
+        <div className="info">
             <Avatar size="48" 
                         name= {userInfo.username}
                         src= {userInfo.avatar} />
@@ -65,6 +77,12 @@ const UserCenter = () => {
                 <p className="detailed">Last Name: {userInfo.last_name}</p>
                 {sub(userInfo)}
             </div>
+        </div>
+        <div className="buttons">
+            <button className="uc-btn" onClick={navToEditInfo}> Edit Personal Info</button>
+                <button className="uc-btn" onClick={navToAddPay}> Add Payment Method</button>
+                <button className="uc-btn" onClick={navToEditPay}> View/Edit Payment Method</button>
+        </div>
         </div>
     )
 }

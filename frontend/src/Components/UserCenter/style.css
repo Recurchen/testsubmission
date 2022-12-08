@@ -1,4 +1,16 @@
-.user_center{
+html {
+    background: linear-gradient(180deg, #EE8A5E 0%, #595959 100%);
+  }
+
+.user_center {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.info{
     text-align: center;
     display: flex;
     min-height: 80vh;
@@ -9,4 +21,13 @@
 
 .detailed{
     color: black;
+}
+
+.buttons {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20rem;
+    flex-direction: column;
 }

@@ -10,9 +10,8 @@ class PopUp extends Component {
     // };
     render() {
         return (
-        <div className="modal">
+        <div className="pop_window">
             <div className="modal_content">
-            {/* <span id = "close" className="close" onClick={this.handleClick}>&times;   </span> */}
             <p id="text">Welcome to TFC! Your registeration is completed!</p>
             <Link id="popup_rdir" to="/login" className="link-btn">Click to log in</Link>
             </div>

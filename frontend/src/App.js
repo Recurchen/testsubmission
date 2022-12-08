@@ -22,6 +22,9 @@ import DropClass from "./Components/DropClass";
 import FilterClassInstances from "./Components/FilterClassInstances";
 
 import UserCenter from './Components/UserCenter';
+import EditUserInfo from './Components/EditUserInfo';
+import AddPaymentMethod from './Components/AddPaymentMethod';
+import EditPaymentMethod from './Components/EditPaymentMethod';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
@@ -46,6 +49,13 @@ function App() {
     < UserCenter />
     <Footer />
     </div>)
+
+const edituserinfo = (
+  <div>
+  <Header />
+  < EditUserInfo />
+  <Footer />
+  </div>)
    
    const enrollmentHistory = (
         <EnrollmentHistoryAPIContext.Provider value={useEnrollmentHistoryAPIContext() }>
@@ -85,7 +95,10 @@ function App() {
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
                 <Route path="register" element={<Register />} />
-                
+                <Route path="usercenter/edit" element={edituserinfo} />
+                <Route path="payment/method/add" element={<AddPaymentMethod />} />
+                <Route path="payment/method/edit" element={<EditPaymentMethod />} />
+
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
                 <Route path="enrollments/" element={enrollmentHistory} />
