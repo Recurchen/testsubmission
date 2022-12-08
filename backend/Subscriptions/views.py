@@ -119,7 +119,7 @@ class CreateSubView(CreateAPIView):
         past_sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
         if past_sub is not None:
             if past_sub.start_time.year == datetime.now().year and past_sub.start_time.month == datetime.now().month:
-                    dt = (dt.replace(day=1) + datetime.timedelta(days=32)).replace(day=1)
+                    dt = (dt.replace(day=1) + timedelta(days=32)).replace(day=1)
         sub = Subscription.objects.create(user=profile, plan = plan, start_time = dt)
         paid = _make_payment(sub)
 

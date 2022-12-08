@@ -25,6 +25,7 @@ import UserCenter from './Components/UserCenter';
 import EditUserInfo from './Components/EditUserInfo';
 import AddPaymentMethod from './Components/AddPaymentMethod';
 import EditPaymentMethod from './Components/EditPaymentMethod';
+import MakeSub from './Components/MakeSub';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
@@ -97,6 +98,7 @@ const edituserinfo = (
                 <Route path="usercenter/edit" element={edituserinfo} />
                 <Route path="payment/method/add" element={<AddPaymentMethod />} />
                 <Route path="payment/method/edit" element={<EditPaymentMethod />} />
+                <Route path="/plans/subscribe" element={<MakeSub/> } />
 
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
