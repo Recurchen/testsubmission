@@ -8,7 +8,7 @@ const Header = () => {
         redirect = (<a href="/login"><i className="fa fa-user"></i>Login </a>);
     }
     else {
-        redirect = (<a href="/"><i className="fa fa-user"></i> User Center</a>);
+        redirect = (<a href="/usercenter"><i className="fa fa-user"></i> User Center</a>);
         // TODO: redirect to user center
     }
     return (

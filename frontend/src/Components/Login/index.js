@@ -15,10 +15,10 @@ async function loginUser(credentials) {
         .then(data => data.json())
 }
 
-export default function Login({ setToken }) {
+export default function Login({ setToken, setUserId }) {
     const [username, setUsername] = useState('');
     const [pass, setPass] = useState('');
-    const [userId, setUserId] = useState('')
+    // const [userId, setUserId] = useState('')
     // const [token, setToken] = useState();
 
     const navigate = useNavigate();
@@ -32,9 +32,9 @@ export default function Login({ setToken }) {
                     "password":`${pass}`};
         const response = await loginUser(body);
         console.log(response);
-        setUserId(response.id);
         const token = response.tokens.access;
         // console.log(token);
+        setUserId(response.id);
         setToken(token);
         navToMain();
             // TODO: redirect
@@ -62,5 +62,6 @@ export default function Login({ setToken }) {
 }
 
 Login.propTypes = {
-    setToken: PropTypes.func.isRequired
+    setToken: PropTypes.func.isRequired, 
+    setUserid: PropTypes.func.isRequired
   };
