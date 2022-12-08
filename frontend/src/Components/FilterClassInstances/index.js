@@ -31,7 +31,7 @@ const FilterClassInstances = () => {
         // clear previous class table
         setClassInstances('');
         const { page, input } = params;
-        if(method === 'date'){
+        if(method === 'date'||method === 'coach'||method === 'class_name'||method === 'time_range'){
             if(input !== ''){
                 fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
                     .then(res => res.json())
@@ -42,26 +42,26 @@ const FilterClassInstances = () => {
                     })
             }
         }
-        if (method === 'time_range'){
-            if(input !== ''){
-                fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
-                    .then(res => res.json())
-                    .then(json => {
-                        setClassInstances(json.results);
-                        json.next?setHasNext(true):setHasNext(false);
-                        json.previous?setHasPrev(true):setHasPrev(false);
-                    })
-            }
-        }
-        if(method === 'coach' || method === 'class_name'){
-            fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
-                .then(res => res.json())
-                .then(json => {
-                    setClassInstances(json.results);
-                    json.next?setHasNext(true):setHasNext(false);
-                    json.previous?setHasPrev(true):setHasPrev(false);
-                })
-        }
+        // if (method === 'time_range'){
+        //     if(input !== ''){
+        //         fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
+        //             .then(res => res.json())
+        //             .then(json => {
+        //                 setClassInstances(json.results);
+        //                 json.next?setHasNext(true):setHasNext(false);
+        //                 json.previous?setHasPrev(true):setHasPrev(false);
+        //             })
+        //     }
+        // }
+        // if(method === 'coach' || method === 'class_name'){
+        //     fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
+        //         .then(res => res.json())
+        //         .then(json => {
+        //             setClassInstances(json.results);
+        //             json.next?setHasNext(true):setHasNext(false);
+        //             json.previous?setHasPrev(true):setHasPrev(false);
+        //         })
+        // }
         }, [params])
 
     if (method === 'date'){
