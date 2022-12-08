@@ -14,7 +14,7 @@ const Top_Nav_Menu = () => {
                               <ul>
                                   <li className="active"><a href="/">Home</a></li>
                                   <li><a href="/studios">Studios</a></li>
-                                  <li><a href="classes">Classes</a></li>
+                                  <li><a href="/classes">Classes</a></li>
                                   <li><a href="/plans">Membership Plans</a></li>
                                   <li><a href="/aboutus">About Us</a></li>
                               </ul>
