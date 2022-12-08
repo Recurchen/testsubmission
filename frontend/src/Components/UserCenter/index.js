@@ -35,14 +35,14 @@ const UserCenter = () => {
 
     const navigate = useNavigate();
     const navToEditInfo = ()=>{
-        navigate('usercenter/edit')
+        navigate('/usercenter/edit')
     }
     const navToAddPay = ()=>{
-        navigate('payment/method/add')
+        navigate('/payment/method/add')
     }
 
     const navToEditPay = ()=>{
-        navigate('payment/method/edit')
+        navigate('/payment/method/edit')
     }
 
     const sub = (userInfo) => {
