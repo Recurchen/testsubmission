@@ -34,7 +34,9 @@ const DropClass = () =>{
                             'Authorization': `Bearer ${token.token}`
                         })
                     })
-                    .then(res=>{if (res.status==='403'){toLogin();} return res;
+                    .then(res=>{if (res.status==='403'){
+                        alert('Not login. Please login to drop.');
+                        toLogin();} return res;
                     })
                     .then(res => res.json())
                     .then(json => {
