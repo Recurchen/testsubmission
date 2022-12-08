@@ -1,3 +1,7 @@
+  html {
+    background: linear-gradient(180deg, #EE8A5E 0%, #595959 100%);
+  }
+  
   .auth-form-container {
     text-align: center;
     display: flex;
@@ -5,7 +9,6 @@
     align-items: center;
     justify-content: center;
     color: white;
-    background: linear-gradient(180deg, #EE8A5E 0%, #595959 100%);
   }
 
   .log-reg-title {
