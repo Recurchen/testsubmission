@@ -33,7 +33,11 @@ const EditUserInfo = (props) => {
         formData.append("last_name", `${lastname}`);
         formData.append("email", `${email}`);
         formData.append("phone_number", `${phone}`);
-        formData.append('avatar', avatar);
+        // formData.append("first_name", firstname);
+        // formData.append("last_name", lastname);
+        // formData.append("email", email);
+        // formData.append("phone_number", phone);
+        // formData.append('avatar', avatar);
 
        console.log(formData.values());
 
