@@ -30,7 +30,7 @@ import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
-import Classes from './Components/Classes';
+// import Classes from './Components/Classes';
 
 function App() {
 
@@ -96,13 +96,7 @@ const edituserinfo = (
       <Footer />
   </div>)    
   
-  const classes = (
-      <div>
-      <Header />
-      <Top_Nav_Menu />
-      <Classes />
-      <Footer />
-  </div>)
+
  
   const main = (
     <div className="MainDiv">
@@ -123,7 +117,6 @@ const edituserinfo = (
                 <Route index element={ main } />
                 <Route path="aboutus" element={aboutUs} />
                 <Route path="studios" element={studios} />
-                <Route path="classes" element={classes} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
