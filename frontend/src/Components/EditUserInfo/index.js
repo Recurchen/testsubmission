@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import './style.css';
 import {Link, Outlet} from "react-router-dom";
-import PopUp from "../Popup";
+import PopUp from '../Popup'; 
 import Header from '../header';
 import Footer from '../footer';
 
-
-
-
-const Register = (props) => {
+const EditUserInfo = (props) => {
     const [username, setUsername] = useState('');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -16,8 +13,7 @@ const Register = (props) => {
     const [phone, setPhone] = useState('');
     const [avatar, setAvatar] = useState(null);
     const [pass1, setPass1] = useState('');
-    const [pass2, setPass2] = useState('');
-    const [success, setSuccess] = useState();
+    const [success, setSuccess] = useState(false);
 
     function showSuccess(){
        setSuccess(!success);
@@ -49,7 +45,6 @@ const Register = (props) => {
             .then(res=>{
               if(res.status === 200){
                      showSuccess();
-                     console.log("here");
               }
             })
        //      .then(res=>res.json())
@@ -124,9 +119,9 @@ const Register = (props) => {
         </form>
         <Link to="/login" className="link-btn">Already have an account? Login here.</Link>
     </div>
-     <Footer />
+    <Footer />
     </div>
     )
 }
 
-export default Register;
+export default EditUserInfo;

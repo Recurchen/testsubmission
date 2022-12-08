@@ -1,10 +1,10 @@
-.modal {
+.pop_window {
     /* display: none; */
     /* position: fixed; */
     border-radius: 1rem;
     padding: 3rem;
     margin-bottom: 1rem;
-    position: relative;
+    /* position: relative; */
     z-index: 1;
     background: #F97136;
     border: 5px solid #ffffff;
