@@ -17,7 +17,7 @@ const AboutUs = () => {
                             {/*<img src="/w3images/team1.jpg" alt="Jane" style="width:100%">*/}
                             <div className="about-container">
                                 <h2 style={{color:"white"}}>Runxin Zhuang</h2>
-                                <p style={{color:"white"}}>UofT 3rd CS student</p>
+                                <p style={{color:"white"}}>UofT 3rd year CS student</p>
                                 <p style={{color:"white"}}>jasmine.zhuang@mail.utoronto.ca</p>
                             </div>
                         </div>
@@ -27,7 +27,7 @@ const AboutUs = () => {
                         <div className="about-card">
                             <div className="about-container">
                                 <h2>Ruofan Chen</h2>
-                                <p className="about-title">UofT 4th CS student</p>
+                                <p className="about-title">UofT 4th year CS student</p>
                                 <p>ruofan.chen@mail.utoronto.ca</p>
                             </div>
                         </div>
@@ -37,7 +37,7 @@ const AboutUs = () => {
                         <div className="about-card">
                             <div className="about-container">
                                 <h2>Nora Xu</h2>
-                                <p className="about-title">UofT 3rd CS student</p>
+                                <p className="about-title">UofT 3rd year CS student</p>
                                 <p>nnuo.xu@mail.utoronto.ca</p>
                             </div>
                         </div>
