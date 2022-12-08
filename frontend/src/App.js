@@ -29,6 +29,7 @@ import EditPaymentMethod from './Components/EditPaymentMethod';
 import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
+import Studios from './Components/Studios';
 
 function App() {
 
@@ -85,7 +86,15 @@ const edituserinfo = (
 
         </div>
     )
-   
+
+    const studios = (
+      <div>
+      <Header />
+      <Top_Nav_Menu />
+      <Studios />
+      <Footer />
+  </div>)
+ 
   const main = (
     <div className="MainDiv">
       
@@ -104,6 +113,7 @@ const edituserinfo = (
         <Routes>
                 <Route index element={ main } />
                 <Route path="aboutus" element={aboutUs} />
+                <Route path="studios" element={studios} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
