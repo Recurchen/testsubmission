@@ -2,7 +2,6 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import './style.css';
 import useToken from "../../useToken";
-
 const EnrollClass = () =>{
     const { state } = useLocation();
     const { class_id, class_date } = state;
@@ -35,8 +34,9 @@ const EnrollClass = () =>{
                     })
                 })
                 .then(res=>{
-                    if (res.status==='301'){
+                    if (res.status==='403'){
                         console.log(res.status);
+                        alert('Not login yet. Please login to enrol.')
                         toLogin();
                     } else{return res;}
             })
@@ -63,17 +63,29 @@ const EnrollClass = () =>{
 
     },[state]
     )
-    return (
-        <div className='confirmation'>
-            { errorMsg &&
-                <span className="error">
+    if (errorMsg){
+        return (
+            <span className="error">
                     { errorMsg }  <br/>
                     <button className={'back'} onClick={Back}
                     >
                         Back</button>
                     <br/>
 
-                </span> }
+            </span>
+        )
+    }
+    return (
+        <div className='confirmation'>
+            {/*{ errorMsg &&*/}
+            {/*    <span className="error">*/}
+            {/*        { errorMsg }  <br/>*/}
+            {/*        <button className={'back'} onClick={Back}*/}
+            {/*        >*/}
+            {/*            Back</button>*/}
+            {/*        <br/>*/}
+
+            {/*    </span> }*/}
             { !errorMsg &&
                 <div>
                     <h1 className={"success"}> Successful!</h1>

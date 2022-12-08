@@ -18,6 +18,7 @@ const Top_Nav_Menu = () => {
                                   <li><a href="src/Components/top_nav_menu/index#">Classes</a></li>
                                   {/*<li><a href="src/Components/top_nav_menu/index#">Membership Plans</a></li>*/}
                                   <li><a href="/plans">Membership Plans</a></li>
+                                  <li><a href="/aboutus">About Us</a></li>
                                   {/*<li><a href="src/Components/top_nav_menu/index#">User Center</a></li>*/}
                               </ul>
                           </nav>

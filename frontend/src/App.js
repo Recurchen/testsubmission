@@ -29,6 +29,7 @@ import MakeSub from './Components/MakeSub';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
+import AboutUs from "./Components/AboutUs";
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
   const plans = (
     <div>
     <Header />
+    <Top_Nav_Menu />
     <PlansAPIContext.Provider value={usePlansAPIContext()}>
       < Plans />
     </PlansAPIContext.Provider>)
@@ -47,7 +49,8 @@ function App() {
   const usercenter = (
     <div>
     <Header />
-    < UserCenter />
+    <Top_Nav_Menu />
+    <UserCenter />
     <Footer />
     </div>)
 
@@ -70,9 +73,19 @@ const edituserinfo = (
     )
     const classInstances = (
       <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
-        <ClassInstances />
+        <ClassInstances studio_id={3}/>
       </ClassInstancesAPIContext.Provider>
   )
+    const aboutUs=(
+        <div><div>
+            <Header />
+            <Top_Nav_Menu />
+            <AboutUs />
+            <Footer />
+        </div>)
+
+        </div>
+    )
    
   const main = (
     <div className="MainDiv">
@@ -91,6 +104,7 @@ const edituserinfo = (
       <BrowserRouter>
         <Routes>
                 <Route index element={ main } />
+                <Route path="aboutus" element={aboutUs} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
@@ -99,7 +113,6 @@ const edituserinfo = (
                 <Route path="payment/method/add" element={<AddPaymentMethod />} />
                 <Route path="payment/method/edit" element={<EditPaymentMethod />} />
                 <Route path="/plans/subscribe" element={<MakeSub/> } />
-
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
                 <Route path="enrollments/" element={enrollmentHistory} />

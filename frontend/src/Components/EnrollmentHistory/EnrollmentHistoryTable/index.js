@@ -2,13 +2,25 @@ import {useContext} from "react";
 import EnrollmentHistoryAPIContext from "../../../Contexts/EnrollmentHistoryAPIContext";
 import {useNavigate} from "react-router-dom";
 import './style.css'
+import useToken from "../../../useToken";
 
 const EnrollmentHistoryTable = ({ perPage, params }) => {
+
     const { EnrollmentHistory } = useContext(EnrollmentHistoryAPIContext);
     const navigate = useNavigate();
     const toDrop = (id,date)=>{
         navigate('/drop/', { state: { class_id:id, class_date:date } })
     }
+    const toLogin = ()=>{
+        navigate('/login');
+    }
+    const toMain = ()=>{
+        navigate('/');
+    }
+    // const toEnrollmentHistory= ()=>{
+    //     navigate('/enrollments');
+    // }
+    const token = useToken();
 
     if (!(EnrollmentHistory && EnrollmentHistory.length > 0)){
         return(
@@ -49,6 +61,17 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                                     "Are you sure you want to drop this class occurrence?\n " +
                                     "Click OK to drop, Cancel to stop.");
                                 if (answer) {
+                                    if(token.token === null){
+                                        alert('Forbidden to drop class. Please login.');
+                                        const ans = window.confirm("" +
+                                            "Login now?\n " +
+                                            "Click OK to login, Cancel to go to main page.");
+                                        if(ans){
+                                            toLogin();
+                                        }else{
+                                            toMain();
+                                        }
+                                    }
                                     console.log("Dropped");
                                     toDrop(enrollment.class_instance['belonged_class']['id'],
                                         enrollment.class_instance['class_date']);
@@ -65,6 +88,17 @@ const EnrollmentHistoryTable = ({ perPage, params }) => {
                                      "Are you sure you want to drop all future class occurrences?\n " +
                                      "Click OK to drop, Cancel to stop.");
                                  if (answer) {
+                                     if(token.token === null){
+                                         alert('Forbidden to drop class. Please login.');
+                                         const ans = window.confirm("" +
+                                             "Login now?\n " +
+                                             "Click OK to login, Cancel to go to main page.");
+                                         if(ans){
+                                             toLogin();
+                                         }else{
+                                             toMain();
+                                         }
+                                     }
                                      console.log("Dropped all");
                                      toDrop(enrollment.class_instance['belonged_class']['id'], 'all');
                                  } else {console.log("Not drop all");}
