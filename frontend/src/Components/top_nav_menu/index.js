@@ -6,7 +6,7 @@ const Top_Nav_Menu = () => {
                   <div className="row">
                       <div className="col-lg-3">
                           <div className="header__logo">
-                              <a href="src/Components/top_nav_menu/index#" className="logo">Toronto Fitness Center</a>
+                              <a href="/" className="logo">Toronto Fitness Center</a>
                           </div>
                       </div>
                       <div className="col-lg-6">

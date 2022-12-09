@@ -13,7 +13,6 @@ const ClassInstances = () => {
     const toFilter = (method, studio_id)=>{
         navigate('/classes/filter', { state: { method:method, studio_id:studio_id} })
     }
-    // TODO: change this to studioinfor page
     const toStudioInfoPage = (studio_id)=>{
         navigate('/studio/detail',{state:{studio_id:studio_id}})
     }
