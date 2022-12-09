@@ -16,6 +16,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
+import StudiosAPIContext, {useStudiosAPIContext} from './Contexts/StudiosAPIContext';
 import EnrollmentHistory from "./Components/EnrollmentHistory";
 import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
@@ -92,7 +93,9 @@ const edituserinfo = (
       <div>
       <Header />
       <Top_Nav_Menu />
+      <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
       <Studios />
+    </StudiosAPIContext.Provider>
       <Footer />
   </div>)    
   
