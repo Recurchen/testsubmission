@@ -14,15 +14,61 @@ const FiltedStudios = () => {
     useEffect(() => {
         const { input } = params;
 
+        if (keyword === 'name'){
+            console.log('search name')
             fetch(`http://localhost:8000/studio/all/?name=${input}`)
             .then(res => res.json())
             .then(json => {
-                console.log(json);
                 setStudios(json);
-                console.log(json.name);
                 // json.next?setHasNext(true):setHasNext(false);
                 // json.previous?setHasPrev(true):setHasPrev(false);
             })
+        }
+
+        if (keyword === 'amenities'){
+            console.log('search amenities')
+            fetch(`http://localhost:8000/studio/all/?amenities=${input}`)
+            .then(res => res.json())
+            .then(json => {
+                setStudios(json);
+                // json.next?setHasNext(true):setHasNext(false);
+                // json.previous?setHasPrev(true):setHasPrev(false);
+            })
+        }
+
+        if (keyword === 'class'){
+            console.log('search amenities')
+            fetch(`http://localhost:8000/studio/all/?class=${input}`)
+            .then(res => res.json())
+            .then(json => {
+                setStudios(json);
+                // json.next?setHasNext(true):setHasNext(false);
+                // json.previous?setHasPrev(true):setHasPrev(false);
+            })
+        }
+
+        if (keyword === 'coach'){
+            console.log('search amenities')
+            fetch(`http://localhost:8000/studio/all/?coach=${input}`)
+            .then(res => res.json())
+            .then(json => {
+                setStudios(json);
+                // json.next?setHasNext(true):setHasNext(false);
+                // json.previous?setHasPrev(true):setHasPrev(false);
+            })
+        }
+
+
+
+            // fetch(`http://localhost:8000/studio/all/?name=${input}`)
+            // .then(res => res.json())
+            // .then(json => {
+            //     console.log(json);
+            //     setStudios(json);
+            //     console.log(json.name);
+            //     // json.next?setHasNext(true):setHasNext(false);
+            //     // json.previous?setHasPrev(true):setHasPrev(false);
+            // })
     })
 
 
