@@ -10,8 +10,8 @@ const Studios = () => {
     const perPage = 5;
     const [params, setParams] = useState({page: 1});
     const navigate = useNavigate();
-    const toFilter = (method, studio_id)=>{
-        navigate('/classes/filter', { state: { method:method, studio_id:{studio_id}} })
+    const toFilter = (keyword)=>{
+        navigate('/studios/filter', {state: {keyword:keyword}})
     }
 
     // const [hasNext, setHasNext] = useState(false);
@@ -33,6 +33,7 @@ const Studios = () => {
     return (
         <>
         <div className="plan">
+            <button onClick={() => toFilter('name')}> Search by Studio Name </button>
             {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
             <StudiosTable id="plans-table"/>
             {/* <div>

@@ -31,6 +31,7 @@ const StudioInfo = () => {
     <>
         <div>
             <h1>{studioName}</h1>
+            <button> Check Classes Happening Now!</button>
         </div>
     </>
     )
