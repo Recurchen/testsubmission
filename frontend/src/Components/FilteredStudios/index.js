@@ -47,6 +47,17 @@ const FiltedStudios = () => {
             })
         }
 
+        if (keyword === 'coach'){
+            console.log('search amenities')
+            fetch(`http://localhost:8000/studio/all/?coach=${input}`)
+            .then(res => res.json())
+            .then(json => {
+                setStudios(json);
+                // json.next?setHasNext(true):setHasNext(false);
+                // json.previous?setHasPrev(true):setHasPrev(false);
+            })
+        }
+
 
 
             // fetch(`http://localhost:8000/studio/all/?name=${input}`)
