@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import PaymentHistoryTable from "./PaymentHistoryTable";
 import { useNavigate } from "react-router-dom";
-// import './style.css';
+import './style.css';
 import PaymentHistoryAPIContext from "../../Contexts/PaymentHistoryAPIContext";
 import useToken from "../../useToken";
 import useUserId from "../../useUserId";
@@ -41,7 +41,7 @@ const ViewPaymentHistory = () => {
             .then(res => res.json())
             .then(json => {
                 console.log(json);
-                console.log(json.results); // console里面的东西是对的
+                console.log(json.results);
                 console.log("okk");
                 setPaymentHistory(json.results);
                 json.next?setHasNext(true):setHasNext(false);
@@ -50,7 +50,7 @@ const ViewPaymentHistory = () => {
     }, [params])
 
     return (
-        <div className="payment history">
+        <div className="payment_history">
             <label>Select to check past or future payments</label>
             <select name="slt_payments" 
                     id="slt_payments" 
@@ -58,11 +58,6 @@ const ViewPaymentHistory = () => {
                     defaultValue = "past">
                 <option value="past">Past Payments</option>
                 <option value="future">Future Payments</option>
-                    {/* {options.map((option, index) => {
-                        return <option key={index} >
-                            {option}
-                        </option>
-                })} */}
             </select>           
             <PaymentHistoryTable id="payment-table" perPage={perPage} params={params} />
             <div>

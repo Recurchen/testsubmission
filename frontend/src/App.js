@@ -53,12 +53,12 @@ function App() {
   
   const payments_history = (
     <div>
-    {/* <Header />
-    <Top_Nav_Menu /> */}
+    <Header />
+    <Top_Nav_Menu />
     <PaymentHistoryAPIContext.Provider value={usePaymentHistoryAPIContext()}>
       < ViewPaymentHistory />
     </PaymentHistoryAPIContext.Provider>)
-    {/* <Footer /> */}
+    <Footer />
     </div>)
 
   const usercenter = (
