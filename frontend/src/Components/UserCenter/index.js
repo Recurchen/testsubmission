@@ -60,7 +60,8 @@ const UserCenter = () => {
                 const temp = (
                     <div>
                     <p className="detailed">Subscribed Plan: {info_json.plan_name}</p >
-                    <p className="detailed">Plan Start Time: {info_json.start_time}</p >
+                    <p className="detailed">Plan Start Time: {info_json.start_time.split('T')[0]+'  '+
+                        info_json.start_time.split('T')[1].split('-')[0].split('.')[0] }</p >
                     </div>
                 )
                 setSubInfo(temp);
