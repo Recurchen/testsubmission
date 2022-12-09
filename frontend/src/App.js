@@ -34,6 +34,8 @@ import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
+import StudioInfo from './Components/StudioInfo';
+import FiltedStudios from './Components/FilteredStudios';
 // import Classes from './Components/Classes';
 
 function App() {
@@ -83,12 +85,12 @@ const edituserinfo = (
     )
     const filterClassInstances = (
         <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
-            <FilterClassInstances />
+            <FilterClassInstances/>
         </ClassInstancesAPIContext.Provider>
     )
     const classInstances = (
       <ClassInstancesAPIContext.Provider value={useClassInstanceAPIContext()}>
-        <ClassInstances studio_id={3}/>
+        <ClassInstances/>
       </ClassInstancesAPIContext.Provider>
   )
     const aboutUs=(
@@ -111,6 +113,37 @@ const edituserinfo = (
     </StudiosAPIContext.Provider>
       <Footer />
   </div>)    
+
+  const StudioInfoPage = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    <StudioInfo />
+    <h1>hello</h1>
+    <Footer />
+  </div>)
+
+  const FiltedStudioPage = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
+    <FiltedStudios />
+    </StudiosAPIContext.Provider>
+    <Footer />
+  </div>)
+
+  const GeneralClassesPage = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    {/* <StudiosAPIContext.Provider value={useStudiosAPIContext()}> */}
+    {/* <FiltedStudios />
+    </StudiosAPIContext.Provider> */}
+    <Footer />
+  </div>
+  )
+
   
 
  
@@ -133,6 +166,9 @@ const edituserinfo = (
                 <Route index element={ main } />
                 <Route path="aboutus" element={aboutUs} />
                 <Route path="studios" element={studios} />
+                <Route path="studios/filter" element={FiltedStudioPage} />
+                <Route path="studio/detail"  element={StudioInfoPage}/>
+                <Route path="allclasses" element={GeneralClassesPage} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
@@ -147,6 +183,7 @@ const edituserinfo = (
                 <Route path="enrollments/" element={enrollmentHistory} />
                 <Route path="enroll/" element={<EnrollClass/>} />
                 <Route path="drop/" element={<DropClass/>} />
+
 
         </Routes>
       </BrowserRouter>

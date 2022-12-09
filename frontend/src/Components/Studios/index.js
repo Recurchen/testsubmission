@@ -1,13 +1,18 @@
 import './style.css'
 import {useContext, useEffect, useState} from "react";
 import StudiosTable from "./StudiosTable";
+import { useNavigate } from "react-router-dom";
 
 import './style.css';
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
 
 const Studios = () => {
-    const perPage = 5;
+    // const perPage = 5;
     const [params, setParams] = useState({page: 1});
+    const navigate = useNavigate();
+    const toFilter = (keyword)=>{
+        navigate('/studios/filter', {state: {keyword:keyword}})
+    }
 
     // const [hasNext, setHasNext] = useState(false);
     // const [hasPrev, setHasPrev] = useState(false);
@@ -15,7 +20,7 @@ const Studios = () => {
     const { setStudios } = useContext(StudiosAPIContext);
     useEffect(() => {
         // const { page } = params;
-        fetch(`http://127.0.0.1:8000/studio/all/`)
+        fetch(`http://localhost:8000/studio/all/`)
             .then(res => res.json())
             .then(json => {
                 console.log(json);
@@ -28,6 +33,10 @@ const Studios = () => {
     return (
         <>
         <div className="plan">
+            <button onClick={() => toFilter('name')}> Search by Studio Name </button>
+            <button onClick={() => toFilter('amenities')}> Search by Amenities </button>
+            <button onClick={() => toFilter('class')}> Search by Classess </button>
+            <button onClick={() => toFilter('coach')}> Search by Coaches </button>
             {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
             <StudiosTable id="plans-table"/>
             {/* <div>

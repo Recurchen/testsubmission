@@ -13,7 +13,7 @@ const EnrollmentHistory = () => {
     const toUserCenter = ()=>{
         navigate('/usercenter')
     }
-    const perPage = 10;
+    const perPage = 5;
     const [params, setParams] = useState({page: 1})
     const { setEnrollmentHistory } = useContext(EnrollmentHistoryAPIContext);
     const [hasNext, setHasNext] = useState(false)

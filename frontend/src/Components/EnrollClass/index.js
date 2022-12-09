@@ -4,7 +4,7 @@ import './style.css';
 import useToken from "../../useToken";
 const EnrollClass = () =>{
     const { state } = useLocation();
-    const { class_id, class_date } = state;
+    const { class_id, class_date, studio_id } = state;
     const [className, setClassName] = useState('');
     const [coach, setCoach] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -15,8 +15,8 @@ const EnrollClass = () =>{
     let sent = false;
     const token = useToken();
     const navigate = useNavigate();
-    const Back = ()=>{
-        navigate('/classes/')
+    const toClassSchedule = (studio_id)=>{
+        navigate('/classes/',{state:{studio_id:studio_id}})
     }
     const toLogin = ()=>{
         navigate('/login');
@@ -67,7 +67,7 @@ const EnrollClass = () =>{
         return (
             <span className="error">
                     { errorMsg }  <br/>
-                    <button className={'back'} onClick={Back}
+                    <button className={'back'} onClick={()=> toClassSchedule(studio_id)}
                     >
                         Back</button>
                     <br/>
@@ -105,7 +105,7 @@ const EnrollClass = () =>{
                             </ul>
                         </div>
                     }
-                    <button className={'back'} onClick={Back}>Back</button>
+                    <button className={'back'} onClick={() => toClassSchedule(studio_id)}>Back</button>
                 </div>
             }
 
