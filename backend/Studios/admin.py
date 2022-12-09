@@ -14,7 +14,19 @@ class StudioAdmin(admin.ModelAdmin):
     def number(self, obj):
         return obj.phone_number
 
+class AmenityAdmin(admin.ModelAdmin):
+    list_display = ['Type', 'Quantity', 'Belong_To']
+
+    def Type(self, obj):
+        return obj.type
+
+    def Quantity(self, obj):
+        return obj.quantity
+
+    def Belong_To(self, obj):
+        return obj.studio.name
+
 # Register your models here.
 admin.site.register(Studio, StudioAdmin)
-admin.site.register(Amenity)
+admin.site.register(Amenity, AmenityAdmin)
 admin.site.register(Image)
