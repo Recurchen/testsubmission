@@ -28,7 +28,7 @@ class StudioPagination(PageNumberPagination):
 
 
 class StudiosListView(generics.ListCreateAPIView):
-    pagination_class = StudioPagination
+    # pagination_class = StudioPagination
     serializer_class = UserLocationSerializer
 
     def get_queryset(self):
@@ -96,6 +96,9 @@ class StudiosListView(generics.ListCreateAPIView):
                                         name__contains = name,
                                         classes__coach__contains = coach
                                         ).distinct()        
+
+        elif name=='' and amenities=='' and class_name==''and coach=='':
+            return Studio.objects.all()
 
         # general search, not multiple key words for classes and amenities
         else:    
