@@ -32,6 +32,7 @@ import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
+import StudioInfo from './Components/StudioInfo';
 // import Classes from './Components/Classes';
 
 function App() {
@@ -99,6 +100,16 @@ const edituserinfo = (
     </StudiosAPIContext.Provider>
       <Footer />
   </div>)    
+
+  const StudioInfoPage = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    <StudioInfo />
+    <h1>hello</h1>
+    <Footer />
+  </div>)
+
   
 
  
@@ -121,6 +132,10 @@ const edituserinfo = (
                 <Route index element={ main } />
                 <Route path="aboutus" element={aboutUs} />
                 <Route path="studios" element={studios} />
+                {/* <Route exact path="studio/:studio_id" component={StudioInfo}/> */}
+                <Route path="studio/detail"  element={StudioInfoPage}/>
+                {/* <Route path="studio/:studio_id" render={(props) => <StudioInfo {...props} />}/ */}
+                {/* <Route path="/studiodetail" render={({match}) => (<StudioInfo id={match.params.id}/> )}/> */}
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
@@ -134,6 +149,7 @@ const edituserinfo = (
                 <Route path="enrollments/" element={enrollmentHistory} />
                 <Route path="enroll/" element={<EnrollClass/>} />
                 <Route path="drop/" element={<DropClass/>} />
+
 
         </Routes>
       </BrowserRouter>
