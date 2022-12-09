@@ -27,6 +27,8 @@ import EditUserInfo from './Components/EditUserInfo';
 import AddPaymentMethod from './Components/AddPaymentMethod';
 import EditPaymentMethod from './Components/EditPaymentMethod';
 import MakeSub from './Components/MakeSub';
+import ViewPaymentHistory from './Components/ViewPaymentHistory';
+import PaymentHistoryAPIContext, { usePaymentHistoryAPIContext } from './Contexts/PaymentHistoryAPIContext';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
@@ -47,6 +49,16 @@ function App() {
       < Plans />
     </PlansAPIContext.Provider>)
     <Footer />
+    </div>)
+  
+  const payments_history = (
+    <div>
+    {/* <Header />
+    <Top_Nav_Menu /> */}
+    <PaymentHistoryAPIContext.Provider value={usePaymentHistoryAPIContext()}>
+      < ViewPaymentHistory />
+    </PaymentHistoryAPIContext.Provider>)
+    {/* <Footer /> */}
     </div>)
 
   const usercenter = (
@@ -128,6 +140,7 @@ const edituserinfo = (
                 <Route path="usercenter/edit" element={edituserinfo} />
                 <Route path="payment/method/add" element={<AddPaymentMethod />} />
                 <Route path="payment/method/edit" element={<EditPaymentMethod />} />
+                <Route path="payment/history" element={payments_history} />
                 <Route path="/plans/subscribe" element={<MakeSub/> } />
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
