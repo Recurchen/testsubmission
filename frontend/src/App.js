@@ -115,8 +115,9 @@ const edituserinfo = (
     <div>
     <Header />
     <Top_Nav_Menu />
+    <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
     <FiltedStudios />
-    <Footer />
+    </StudiosAPIContext.Provider>
   </div>)
 
   
