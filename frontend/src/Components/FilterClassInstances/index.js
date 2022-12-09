@@ -14,7 +14,7 @@ const FilterClassInstances = () => {
     console.log(studioid)
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
-    const perPage = 10;
+    const perPage = 4;
     const navigate = useNavigate();
     const Back = (studio_id)=>{
         navigate('/classes/',{state:{studio_id:studio_id}})

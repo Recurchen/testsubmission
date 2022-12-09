@@ -252,7 +252,7 @@ class DropClassView(DestroyAPIView):
 
 
 class ClassInstancePagination(PageNumberPagination):
-    page_size = 10
+    page_size = 4
 
 
 class UserEnrollmentHistoryListView(ListAPIView):
