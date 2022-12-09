@@ -4,9 +4,16 @@ import './style.css';
 import { useNavigate } from "react-router-dom";
 import PlansAPIContext from "../../../Contexts/PlansAPIContext";
 
+
 const PlansTable = ({ perPage, params }) => {
     const { Plans } = useContext(PlansAPIContext);
     console.log(Plans)
+
+    const navigate = useNavigate();
+    const toSub = (plan_id, plan_name)=>{
+        navigate('/plans/subscribe', { state: { plan_id:plan_id, plan_name:plan_name } })
+    }
+
     if (Plans && Plans.length > 0){
         return <table className="plan_table">
             <thead>
@@ -27,12 +34,12 @@ const PlansTable = ({ perPage, params }) => {
                     <td> <button className="sub-now-btn" onClick={(e) => {
                         e.preventDefault();
                         const answer = window.confirm("" +
-                            "Are you sure you want to enrol in this class occurrence?\n " +
-                            "Click OK to enrol, Cancel to stop.");
+                            "Ready to become one of our TFC member?\n " +
+                            "Click OK to subscribe, Cancel to stop.");
                         if (answer) {
-                            console.log("Enrolled");
-                            // toEnroll(ClassInstance.belonged_class['id'], ClassInstance.class_date);
-                        } else {console.log("Not enrolled");}
+                            console.log("subed");
+                            toSub(Plan.id, Plan.name);
+                        } else {console.log("Not subed");}
                     }}>
                         Sub Now!
                     </button> </td>

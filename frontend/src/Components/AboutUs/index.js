@@ -46,7 +46,7 @@ const AboutUs = () => {
                 <h2 style={{textAlign:"center",color:"white"}}>Our Fitness Classes</h2>
                 <div className={'ourFitnessClass-section'}><br/>
                     {/*<hr style={{background:"white",width:500}}/>*/}
-                    <p style={{color:"white"}}>	With 30+ classes to choose from,
+                    <p style={{color:"white"}}>	With 50+ classes to choose from,
                         there’s a class for everyone at TFC.</p>
 
                     <div className="classType-row" style={{textAlign:"center"}}>

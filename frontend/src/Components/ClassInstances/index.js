@@ -1,19 +1,21 @@
 import {useContext, useEffect, useState} from "react";
 import ClassInstancesTable from "./ClassInstancesTable";
 import ClassInstancesAPIContext from "../../Contexts/ClassInstancesAPIContext";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import './style.css'
-const ClassInstances = ({studio_id}) => {
+const ClassInstances = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const { studio_id } = state;
+
     const toFilter = (method, studio_id)=>{
-        navigate('/classes/filter', { state: { method:method, studio_id:{studio_id}} })
+        navigate('/classes/filter', { state: { method:method, studio_id:studio_id} })
     }
-    // TODO: change this to studioinfor page
-    const toStudioInfoPage = ()=>{
-        navigate('/classes/')
+    const toStudioInfoPage = (studio_id)=>{
+        navigate('/studio/detail',{state:{studio_id:studio_id}})
     }
-    const perPage = 10;
+    const perPage = 5;
     const [params, setParams] = useState({page: 1});
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
@@ -31,22 +33,22 @@ const ClassInstances = ({studio_id}) => {
 
     return (
         <>
-            <button className={'back'} onClick={toStudioInfoPage}>
+            <button className={'back'} onClick={()=>toStudioInfoPage(studio_id)}>
                 Back
             </button>
             <h1 className={'filterTitle'}>Class Schedule</h1>
             <div className={'filterButtons'}>
                 <button className={'filter'}
-                        onClick={() => toFilter('coach',{studio_id})}> filter by coach </button>
+                        onClick={() => toFilter('coach',{studio_id: studio_id})}> filter by coach </button>
                 <button className={'filter'}
-                        onClick={() => toFilter('class_name',{studio_id})}> filter by class name </button>
+                        onClick={() => toFilter('class_name',{studio_id: studio_id})}> filter by class name </button>
                 <button className={'filter'}
-                        onClick={() => toFilter('date',{studio_id})}> filter by class date </button>
+                        onClick={() => toFilter('date',{studio_id: studio_id})}> filter by class date </button>
                 <button className={'filter'}
-                        onClick={() => toFilter('time_range',{studio_id})}> filter by range of class start time </button>
+                        onClick={() => toFilter('time_range',{studio_id: studio_id})}> filter by range of class start time </button>
             </div>
 
-            <ClassInstancesTable perPage={perPage} params={params} />
+            <ClassInstancesTable perPage={perPage} params={params} studio_id={studio_id} />
             <button hidden={!hasPrev} className={'prev'}
                 onClick={() => setParams({
                 ...params,

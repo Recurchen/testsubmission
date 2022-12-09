@@ -3,19 +3,20 @@ import ClassInstancesAPIContext from "../../../Contexts/ClassInstancesAPIContext
 import { useNavigate } from "react-router-dom";
 import './style.css'
 import useToken from "../../../useToken";
-const ClassInstancesTable = ({ perPage, params }) => {
+const ClassInstancesTable = ({ perPage, params, studio_id }) => {
     const { ClassInstances } = useContext(ClassInstancesAPIContext);
     const navigate = useNavigate();
     const toEnroll = (id,date)=>{
-        navigate('/enroll/', { state: { class_id:id, class_date:date } })
+        navigate('/enroll/', { state: { class_id:id, class_date:date,studio_id:studio_id } })
     }
-    const toLogin = ()=>{
-        navigate('/login');
-    }
+    const toLogin = ()=>{navigate('/login');}
     const toClassSchedule = ()=>{
-        navigate('/classes');
+        console.log(studio_id);
+        console.log('back schedule');
+        navigate('/classes',{state:{studio_id:studio_id}});
     }
     const token = useToken();
+
     if (ClassInstances && ClassInstances.length > 0){
         return <table className={'ClassInstancesTable'}>
             <thead>
@@ -57,11 +58,13 @@ const ClassInstancesTable = ({ perPage, params }) => {
                                     toLogin();
                                 }else{
                                     toClassSchedule();
+                                    // navigate(-1);
                                 }
+                            }else{
+                                console.log("Enrolled");
+                                toEnroll(ClassInstance.belonged_class['id'], ClassInstance.class_date);
                             }
-                            console.log("Enrolled");
-                            toEnroll(ClassInstance.belonged_class['id'], ClassInstance.class_date);
-                        } else {console.log("Not enrolled");}
+                        }else {console.log("Not enrolled");}
                     }}>
                         Enroll
                     </button> </td>
@@ -81,6 +84,7 @@ const ClassInstancesTable = ({ perPage, params }) => {
                                 if(ans){
                                     toLogin();
                                 }else{
+                                    // navigate(-1);
                                     toClassSchedule();
                                 }
 
