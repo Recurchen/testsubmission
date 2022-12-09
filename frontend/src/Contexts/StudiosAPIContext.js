@@ -1,16 +1,16 @@
 import {createContext, useState} from "react";
 
-export const useGeneralClassesAPIContext = () => {
-    const [GeneralClasses, setGeneralClasses] = useState([]);
+export const useStudiosAPIContext = () => {
+    const [Studios, setStudios] = useState([]);
 
     return {
-        GeneralClasses,
-        setGeneralClasses,
+        Studios,
+        setStudios,
     }
 }
 
-const GeneralClassesAPIContext = createContext({
-    GeneralClasses: null, setGeneralClasses: () => {},
+const StudiosAPIContext = createContext({
+    Studios: null, setStudios: () => {},
 })
 
-export default GeneralClassesAPIContext;
+export default StudiosAPIContext;
