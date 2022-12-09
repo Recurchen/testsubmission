@@ -14,3 +14,4 @@ const GeneralClassesAPIContext = createContext({
 })
 
 export default GeneralClassesAPIContext;
+

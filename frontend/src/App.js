@@ -35,9 +35,10 @@ import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
+import StudiosNearMe from './Components/StudiosNearMe';
 import StudioInfo from './Components/StudioInfo';
 import FiltedStudios from './Components/FilteredStudios';
-import GeneralClasses from './Components/Classes';
+import GeneralClasses from './Components/GeneralClasses';
 
 function App() {
 
@@ -115,6 +116,16 @@ const edituserinfo = (
       <Footer />
   </div>)    
 
+      const studiosnearme = (
+        <div>
+        <Header />
+        <Top_Nav_Menu />
+        <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
+        <StudiosNearMe />
+        </StudiosAPIContext.Provider>
+        <Footer />
+    </div>)    
+
   const StudioInfoPage = (
     <div>
     <Header />
@@ -138,10 +149,10 @@ const edituserinfo = (
     <div>
     <Header />
     <Top_Nav_Menu />
+    <GeneralClassesAPIContext.Provider value={useGeneralClassesAPIContext()}>
+
     <GeneralClasses />
-    {/* <StudiosAPIContext.Provider value={useStudiosAPIContext()}> */}
-    {/* <FiltedStudios />
-    </StudiosAPIContext.Provider> */}
+    </GeneralClassesAPIContext.Provider>
     <Footer />
   </div>
   )
@@ -170,6 +181,7 @@ const edituserinfo = (
                 <Route path="studios" element={studios} />
                 <Route path="studios/filter" element={FiltedStudioPage} />
                 <Route path="studio/detail"  element={StudioInfoPage}/>
+                <Route path="studios/nearme"  element={studiosnearme}/>
                 <Route path="allclasses" element={GeneralClassesPage} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
