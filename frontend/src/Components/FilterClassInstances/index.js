@@ -9,13 +9,15 @@ import './style.css'
 const FilterClassInstances = () => {
     const { state } = useLocation();
     const { method, studio_id } = state;
-    const studioid = studio_id['studio_id']['studio_id']
+
+    const studioid = studio_id['studio_id']
+    console.log(studioid)
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
     const perPage = 10;
     const navigate = useNavigate();
-    const Back = ()=>{
-        navigate('/classes/')
+    const Back = (studio_id)=>{
+        navigate('/classes/',{state:{studio_id:studio_id}})
     }
     // for class date
     const [startDate, setStartDate] = useState(new Date());
@@ -42,32 +44,12 @@ const FilterClassInstances = () => {
                     })
             }
         }
-        // if (method === 'time_range'){
-        //     if(input !== ''){
-        //         fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
-        //             .then(res => res.json())
-        //             .then(json => {
-        //                 setClassInstances(json.results);
-        //                 json.next?setHasNext(true):setHasNext(false);
-        //                 json.previous?setHasPrev(true):setHasPrev(false);
-        //             })
-        //     }
-        // }
-        // if(method === 'coach' || method === 'class_name'){
-        //     fetch(`http://localhost:8000/classes/${studioid}/all?page=${page}&per_page=${perPage}&${method}=${input}`)
-        //         .then(res => res.json())
-        //         .then(json => {
-        //             setClassInstances(json.results);
-        //             json.next?setHasNext(true):setHasNext(false);
-        //             json.previous?setHasPrev(true):setHasPrev(false);
-        //         })
-        // }
         }, [params])
 
     if (method === 'date'){
         return (
             <>
-                <button className={'back'} onClick={Back}>
+                <button className={'back'} onClick={()=>Back(studioid)}>
                 Back
                 </button>
 
@@ -126,7 +108,7 @@ const FilterClassInstances = () => {
     }
     if (method === 'time_range'){
         return (
-            <> <button className={'back'} onClick={Back}>
+            <> <button className={'back'} onClick={()=>Back(studioid)}>
                 Back
             </button>
                 <h1 className={'filterTitle'}>Filter by Range of Class's Start Time</h1>
@@ -219,7 +201,7 @@ const FilterClassInstances = () => {
     }
     //filter by coach or class name
     return (
-        <> <button className={'back'} onClick={Back}>
+        <> <button className={'back'} onClick={()=>Back(studioid)}>
             Back
         </button>
             <h1 className={'filterTitle'}>Filter by {method==='class_name'?'Class Name':'Coach'}</h1>
