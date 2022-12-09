@@ -16,7 +16,7 @@ const ClassInstances = () => {
     const toStudioInfoPage = (studio_id)=>{
         navigate('/studio/detail',{state:{studio_id:studio_id}})
     }
-    const perPage = 4;
+    const perPage = 5;
     const [params, setParams] = useState({page: 1});
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
