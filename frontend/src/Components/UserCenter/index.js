@@ -77,6 +77,8 @@ const UserCenter = () => {
         navigate('/payment/method/add')
     }
     const navToEnrollmentHistory = ()=>navigate('/enrollments/')
+    
+    const navToPaymentHistory = ()=>navigate('/payment/history')
 
     const navToEditPay = ()=>{
         navigate('/payment/method/edit')
@@ -120,6 +122,7 @@ const UserCenter = () => {
             <button className="uc-btn" onClick={navToAddPay}> Add Payment Method</button>
             <button className="uc-btn" onClick={navToEditPay}> View/Edit Payment Method</button>
             <button className="uc-btn" onClick={navToEnrollmentHistory}> View Enrollment History</button>
+            <button className="uc-btn" onClick={navToPaymentHistory}> View Payment History</button>
 
         </div>
         </div>

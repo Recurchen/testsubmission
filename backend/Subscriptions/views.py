@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
@@ -115,10 +115,10 @@ class CreateSubView(CreateAPIView):
             res = {"message":"Sorry! the plan you enter is invalid"}
             return Response(res, status=status.HTTP_404_NOT_FOUND)
 
-        dt = datetime.now()
+        dt = datetime.datetime.now()
         past_sub = Subscription.objects.filter(user=profile).order_by('-start_time').first()
         if past_sub is not None:
-            if past_sub.start_time.year == datetime.now().year and past_sub.start_time.month == datetime.now().month:
+            if past_sub.start_time.year == datetime.datetime.now().year and past_sub.start_time.month == datetime.datetime.now().month:
                     dt = (dt.replace(day=1) + timedelta(days=32)).replace(day=1)
         sub = Subscription.objects.create(user=profile, plan = plan, start_time = dt)
         paid = _make_payment(sub)
@@ -251,7 +251,7 @@ class PastPaymentView(ListAPIView):
         user = get_object_or_404(User, pk=user_id)
         self.check_object_permissions(self.request, user)
         queryset = self.model.objects.filter(user=user_id)
-        pastPayments = queryset.exclude(datetime__gte = datetime.now())
+        pastPayments = queryset.exclude(datetime__gte = datetime.datetime.now())
         return pastPayments.order_by('datetime')
 
 class FuturePaymentView(ListAPIView):
@@ -265,5 +265,5 @@ class FuturePaymentView(ListAPIView):
         user = get_object_or_404(User, pk=user_id)
         self.check_object_permissions(self.request, user)
         queryset = self.model.objects.filter(user=user_id)
-        futurePayments = queryset.exclude(datetime__lte = datetime.now())
+        futurePayments = queryset.exclude(datetime__lte = datetime.datetime.now())
         return futurePayments.order_by('datetime')
