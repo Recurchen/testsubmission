@@ -12,14 +12,11 @@ const Top_Nav_Menu = () => {
                       <div className="col-lg-6">
                           <nav className="header__menu" >
                               <ul>
-                                  {/*<li class="active"><a href="src/Components/top_nav_menu/index#">Home</a></li>*/}
                                   <li className="active"><a href="/">Home</a></li>
-                                  <li><a href="src/Components/top_nav_menu/index#">Studios</a></li>
-                                  <li><a href="src/Components/top_nav_menu/index#">Classes</a></li>
-                                  {/*<li><a href="src/Components/top_nav_menu/index#">Membership Plans</a></li>*/}
+                                  <li><a href="/studios">Studios</a></li>
+                                  <li><a href="/classes">Classes</a></li>
                                   <li><a href="/plans">Membership Plans</a></li>
                                   <li><a href="/aboutus">About Us</a></li>
-                                  {/*<li><a href="src/Components/top_nav_menu/index#">User Center</a></li>*/}
                               </ul>
                           </nav>
                       </div>

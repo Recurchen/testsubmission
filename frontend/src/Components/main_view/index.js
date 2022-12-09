@@ -12,11 +12,9 @@ const Main_View = () => {
                                   <span>Check out 👇</span>
                               </div>
                               <ul>
-                                  <li><a href="src/Components/main_view/index#">Studios</a></li>
-                                  <li><a href="src/Components/main_view/index#">Classes</a></li>
+                                  <li><a href="./studios">Studios</a></li>
+                                  <li><a href="./classes">Classes</a></li>
                                   <li><a href="./plans">Membership Plans</a></li>
-                                  {/*<li><a href="src/Components/main_view/index#">Membership Plans</a></li>*/}
-                                  {/*<li><a href="src/Components/main_view/index#">User Center</a></li>*/}
                                   <li><a href="./aboutus">About Us</a></li>
 
                               </ul>

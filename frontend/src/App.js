@@ -16,6 +16,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
+import StudiosAPIContext, {useStudiosAPIContext} from './Contexts/StudiosAPIContext';
 import EnrollmentHistory from "./Components/EnrollmentHistory";
 import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
@@ -30,6 +31,8 @@ import MakeSub from './Components/MakeSub';
 import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
+import Studios from './Components/Studios';
+// import Classes from './Components/Classes';
 
 function App() {
 
@@ -86,7 +89,19 @@ const edituserinfo = (
 
         </div>
     )
-   
+
+    const studios = (
+      <div>
+      <Header />
+      <Top_Nav_Menu />
+      <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
+      <Studios />
+    </StudiosAPIContext.Provider>
+      <Footer />
+  </div>)    
+  
+
+ 
   const main = (
     <div className="MainDiv">
       
@@ -105,6 +120,7 @@ const edituserinfo = (
         <Routes>
                 <Route index element={ main } />
                 <Route path="aboutus" element={aboutUs} />
+                <Route path="studios" element={studios} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
