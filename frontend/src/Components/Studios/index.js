@@ -7,7 +7,7 @@ import './style.css';
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
 
 const Studios = () => {
-    const perPage = 5;
+    // const perPage = 5;
     const [params, setParams] = useState({page: 1});
     const navigate = useNavigate();
     const toFilter = (keyword)=>{
@@ -34,6 +34,9 @@ const Studios = () => {
         <>
         <div className="plan">
             <button onClick={() => toFilter('name')}> Search by Studio Name </button>
+            <button onClick={() => toFilter('amenities')}> Search by Amenities </button>
+            <button onClick={() => toFilter('class')}> Search by Classess </button>
+            <button onClick={() => toFilter('coach')}> Search by Coaches </button>
             {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
             <StudiosTable id="plans-table"/>
             {/* <div>
