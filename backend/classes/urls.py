@@ -1,7 +1,7 @@
 from django.urls import path
 
 from classes.views import ClassInstancesListView, DropClassView, EnrollClassView, \
-    UserEnrollmentHistoryListView
+    UserEnrollmentHistoryListView, AllClassListView
 
 app_name = 'classes'
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path('drop/', DropClassView.as_view()),
     # see user class schedule and history
     path('enrollments/', UserEnrollmentHistoryListView.as_view()),
+    path('all/', AllClassListView.as_view())
 
     # not required stuff
     # path('categories/all/', CategoriesListView.as_view()),

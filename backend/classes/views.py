@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView, DestroyAPIView, get_object_or
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from classes.models import Class, ClassInstance, Enrollment
-from classes.serializers import ClassInstanceSerializer, EnrollmentSerializer
+from classes.serializers import ClassInstanceSerializer, ClassSerializer, EnrollmentSerializer
 from rest_framework.response import Response
 import datetime
 from Accounts.models import Profile
@@ -265,6 +265,13 @@ class UserEnrollmentHistoryListView(ListAPIView):
         user = Profile.objects.get(user=self.request.user).user
         return Enrollment.objects.filter(user=user).order_by('class_start_time')
 
+
+class AllClassListView(ListAPIView):
+    serializer_class = ClassSerializer
+    pagination_class = ClassInstancePagination
+
+    def get_queryset(self):
+        return Class.objects.all()
 
 class ClassInstancesListView(ListAPIView):
     serializer_class = ClassInstanceSerializer
