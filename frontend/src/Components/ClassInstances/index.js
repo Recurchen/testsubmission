@@ -8,7 +8,6 @@ const ClassInstances = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const { studio_id } = state;
-    console.log(studio_id)
 
     const toFilter = (method, studio_id)=>{
         navigate('/classes/filter', { state: { method:method, studio_id:studio_id} })
@@ -49,7 +48,7 @@ const ClassInstances = () => {
                         onClick={() => toFilter('time_range',{studio_id: studio_id})}> filter by range of class start time </button>
             </div>
 
-            <ClassInstancesTable perPage={perPage} params={params} />
+            <ClassInstancesTable perPage={perPage} params={params} studio_id={studio_id} />
             <button hidden={!hasPrev} className={'prev'}
                 onClick={() => setParams({
                 ...params,

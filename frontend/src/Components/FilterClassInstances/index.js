@@ -86,7 +86,7 @@ const FilterClassInstances = () => {
                 </div>
 
 
-                <ClassInstancesTable perPage={perPage} params={params} />
+                <ClassInstancesTable perPage={perPage} params={params} studio_id={studioid} />
 
                 <button  hidden={!hasPrev}
                     onClick={() => setParams({
@@ -179,7 +179,7 @@ const FilterClassInstances = () => {
                 </div>
 
 
-                <ClassInstancesTable perPage={perPage} params={params} />
+                <ClassInstancesTable perPage={perPage} params={params} studio_id={studioid}/>
 
                 <button hidden={!hasPrev}
                     onClick={() => setParams({
@@ -216,7 +216,7 @@ const FilterClassInstances = () => {
                        })
                    }}
             /><br/>
-            <ClassInstancesTable perPage={perPage} params={params} />
+            <ClassInstancesTable perPage={perPage} params={params} studio_id={studioid}/>
 
             <button hidden={!hasPrev}
                 onClick={() => setParams({
