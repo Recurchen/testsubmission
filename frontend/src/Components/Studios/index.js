@@ -1,6 +1,7 @@
 import './style.css'
 import {useContext, useEffect, useState} from "react";
 import StudiosTable from "./StudiosTable";
+import { useNavigate } from "react-router-dom";
 
 import './style.css';
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
@@ -8,6 +9,10 @@ import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
 const Studios = () => {
     const perPage = 5;
     const [params, setParams] = useState({page: 1});
+    const navigate = useNavigate();
+    const toFilter = (method, studio_id)=>{
+        navigate('/classes/filter', { state: { method:method, studio_id:{studio_id}} })
+    }
 
     // const [hasNext, setHasNext] = useState(false);
     // const [hasPrev, setHasPrev] = useState(false);
@@ -15,7 +20,7 @@ const Studios = () => {
     const { setStudios } = useContext(StudiosAPIContext);
     useEffect(() => {
         // const { page } = params;
-        fetch(`http://127.0.0.1:8000/studio/all/`)
+        fetch(`http://localhost:8000/studio/all/`)
             .then(res => res.json())
             .then(json => {
                 console.log(json);
