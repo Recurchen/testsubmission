@@ -17,6 +17,7 @@ import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
 import StudiosAPIContext, {useStudiosAPIContext} from './Contexts/StudiosAPIContext';
+import GeneralClassesAPIContext, {useGeneralClassesAPIContext} from './Contexts/GeneralClassesAPIContext';
 import EnrollmentHistory from "./Components/EnrollmentHistory";
 import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
@@ -36,7 +37,7 @@ import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
 import StudioInfo from './Components/StudioInfo';
 import FiltedStudios from './Components/FilteredStudios';
-// import Classes from './Components/Classes';
+import GeneralClasses from './Components/Classes';
 
 function App() {
 
@@ -137,6 +138,7 @@ const edituserinfo = (
     <div>
     <Header />
     <Top_Nav_Menu />
+    <GeneralClasses />
     {/* <StudiosAPIContext.Provider value={useStudiosAPIContext()}> */}
     {/* <FiltedStudios />
     </StudiosAPIContext.Provider> */}
