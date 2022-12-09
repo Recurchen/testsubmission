@@ -33,6 +33,7 @@ import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
 import StudioInfo from './Components/StudioInfo';
+import FiltedStudios from './Components/FilteredStudios';
 // import Classes from './Components/Classes';
 
 function App() {
@@ -110,6 +111,14 @@ const edituserinfo = (
     <Footer />
   </div>)
 
+  const FiltedStudioPage = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    <FiltedStudios />
+    <Footer />
+  </div>)
+
   
 
  
@@ -132,10 +141,8 @@ const edituserinfo = (
                 <Route index element={ main } />
                 <Route path="aboutus" element={aboutUs} />
                 <Route path="studios" element={studios} />
-                {/* <Route exact path="studio/:studio_id" component={StudioInfo}/> */}
+                <Route path="studios/filter" element={FiltedStudioPage} />
                 <Route path="studio/detail"  element={StudioInfoPage}/>
-                {/* <Route path="studio/:studio_id" render={(props) => <StudioInfo {...props} />}/ */}
-                {/* <Route path="/studiodetail" render={({match}) => (<StudioInfo id={match.params.id}/> )}/> */}
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
