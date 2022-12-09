@@ -13,7 +13,7 @@ const Main_View = () => {
                               </div>
                               <ul>
                                   <li><a href="./studios">Studios</a></li>
-                                  <li><a href="./classes">Classes</a></li>
+                                  <li><a href="./allclasses">Classes</a></li>
                                   <li><a href="./plans">Membership Plans</a></li>
                                   <li><a href="./aboutus">About Us</a></li>
 

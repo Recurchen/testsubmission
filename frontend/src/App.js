@@ -117,7 +117,19 @@ const edituserinfo = (
     <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
     <FiltedStudios />
     </StudiosAPIContext.Provider>
+    <Footer />
   </div>)
+
+  const GeneralClassesPage = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    {/* <StudiosAPIContext.Provider value={useStudiosAPIContext()}> */}
+    {/* <FiltedStudios />
+    </StudiosAPIContext.Provider> */}
+    <Footer />
+  </div>
+  )
 
   
 
@@ -143,6 +155,7 @@ const edituserinfo = (
                 <Route path="studios" element={studios} />
                 <Route path="studios/filter" element={FiltedStudioPage} />
                 <Route path="studio/detail"  element={StudioInfoPage}/>
+                <Route path="allclasses" element={GeneralClassesPage} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
                 <Route path="login" element={<Login setToken={setToken} setUserId = {setUserId} />} />
