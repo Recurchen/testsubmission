@@ -2,15 +2,15 @@ const Top_Nav_Menu = () => {
 
     return (
         <>
-        <div class="container">
-                  <div class="row">
-                      <div class="col-lg-3">
-                          <div class="header__logo">
-                              <a href="/" class="logo">Toronto Fitness Center</a>
+        <div className="container">
+                  <div className="row">
+                      <div className="col-lg-3">
+                          <div className="header__logo">
+                              <a href="/" className="logo">Toronto Fitness Center</a>
                           </div>
                       </div>
-                      <div class="col-lg-6">
-                          <nav class="header__menu" >
+                      <div className="col-lg-6">
+                          <nav className="header__menu" >
                               <ul>
                                   <li className="active"><a href="/">Home</a></li>
                                   <li><a href="/studios">Studios</a></li>
@@ -21,8 +21,8 @@ const Top_Nav_Menu = () => {
                           </nav>
                       </div>
                   </div>
-                  <div class="humberger__open">
-                      <i class="fa fa-bars"></i>
+                  <div className="humberger__open">
+                      <i className="fa fa-bars"></i>
                   </div>
               </div>
         </>

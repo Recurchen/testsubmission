@@ -6,6 +6,14 @@ const StudioInfo = () => {
     const { state } = useLocation();
     const { studio_id } = state;
     const [ studioName, setStudioName ] = useState('');
+
+    const navigate = useNavigate();
+    const toClassSchedule = (studio_id)=>{
+        navigate('/classes/',{ state: {studio_id:studio_id} })
+    }
+    const toStudios = ()=>{
+        navigate('/studios')
+    }
     
 
     useEffect(() => {
@@ -19,6 +27,7 @@ const StudioInfo = () => {
                 console.log(json);
                 setStudioName(json.name);
                 console.log(json.name);
+                console.log(studio_id)
                 // json.next?setHasNext(true):setHasNext(false);
                 // json.previous?setHasPrev(true):setHasPrev(false);
             })
@@ -30,8 +39,12 @@ const StudioInfo = () => {
     return(
     <>
         <div>
+            <button className={'back'} onClick={()=>toStudios()}>
+                Back
+            </button>
             <h1>{studioName}</h1>
-            <button> Check Classes Happening Now!</button>
+            <button onClick={()=>toClassSchedule(studio_id)}
+            > Check Classes Happening Now!</button>
         </div>
     </>
     )

@@ -2,13 +2,13 @@ const Footer = () => {
 
     return (
         <>
-          <footer class="footer spad">
-              <div class="container">
-                  <div class="row">
-                      <div class="col-lg-3 col-md-6 col-sm-6">
-                          <div class="footer__about">
-                              <div class="footer__about__logo">
-                                  <a href="src/Components/footer/index#" class="logo">Toroto Fitness Center</a>
+          <footer className="footer spad">
+              <div className="container">
+                  <div className="row">
+                      <div className="col-lg-3 col-md-6 col-sm-6">
+                          <div className="footer__about">
+                              <div className="footer__about__logo">
+                                  <a href="src/Components/footer/index#" className="logo">Toroto Fitness Center</a>
                               </div>
                               <ul>
                                   <li>10+ Branches in GTA</li>
