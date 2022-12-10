@@ -13,9 +13,15 @@ const MakeSub = () =>{
     const token = useToken();
     const user_id = useUserId();
     const navigate = useNavigate();
-    const Back = ()=>{
-        navigate('/plans')
+
+    const navToAddPayment = ()=>{
+        navigate('/payment/method/add')
     }
+
+    const navToMain = ()=>{
+        navigate('/')
+    }
+
     const toLogin = ()=>{
         navigate('/login');
     }
@@ -41,12 +47,14 @@ const MakeSub = () =>{
                     if (res.status==='301'){
                         console.log(res.status);
                         toLogin();
-                    } else{return res;}
+                    }else{return res;}
             })
-                .then(res => res.json())
-                .then(json => {
-                    console.log(json);
-                });
+            .then(res => res.json())
+            .then(json => {
+                console.log(json)
+                if(json.message === 'oops! subscription is canceled as no recorded payment method'){
+                    setErrorMsg(json.message);
+                }});
             sent = true;
         }}
 
@@ -57,9 +65,9 @@ const MakeSub = () =>{
             { errorMsg &&
                 <span className="error">
                     { errorMsg }  <br/>
-                    <button className={'back'} onClick={Back}
+                    <button className={'back'} onClick={navToAddPayment}
                     >
-                        Back</button>
+                        Go to Add Payment Method</button>
                     <br/>
 
                 </span> }
@@ -68,7 +76,7 @@ const MakeSub = () =>{
                     <h1 className={"success"}> Successful!</h1>
                     <br/>
                     <h2> You have subscribed <b>{plan_name}</b></h2>
-                    <button className={'back'} onClick={Back}>View Subscription</button>
+                    <button className={'back'} onClick={navToMain}>Go to Home Page</button>
                 </div>
             }
 
