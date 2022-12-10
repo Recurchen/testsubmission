@@ -149,7 +149,6 @@ const edituserinfo = (
     <Header />
     <Top_Nav_Menu />
     <StudioInfo />
-    <h1>hello</h1>
     <Footer />
   </div>)
 
