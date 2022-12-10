@@ -36,7 +36,7 @@ const StudiosTable = ({ perPage, params }) => {
                         <td>{ Studio.phone_number}</td>
                         <td>{ Studio.postal_code}</td>
                         {/* <td> <img src="http://localhost:8000/studio_images/Oakville_Pic_1.jpg"></img>  </td> */}
-                        <td> <img class="studioImage" src={`http://localhost:8000` + Studio.images[0].image}></img>  </td>
+                        <td> <img class="studioImage" src={Studio.images[0].image}></img>  </td>
                         {/* <td> { Studio.images[0].image} </td> */}
                         <td><button class="button-5"
                             onClick={
@@ -65,7 +65,7 @@ const StudiosTable = ({ perPage, params }) => {
     
         }
         return(
-            <span style={{color:'red'}}> nothing </span>
+            <span style={{color:'White'}}> Loading </span>
         )
     
         }
