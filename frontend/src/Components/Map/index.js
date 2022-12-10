@@ -99,6 +99,15 @@ const MyMapComponent = compose(
           document.getElementById('c2number').innerHTML = json[1]['phone_number'];
           document.getElementById('c3number').innerHTML = json[2]['phone_number'];
           document.getElementById('c4number').innerHTML = json[3]['phone_number'];
+          document.getElementById('c5number').innerHTML = json[4]['phone_number'];
+          document.getElementById('c6number').innerHTML = json[5]['phone_number'];
+          document.getElementById('c7number').innerHTML = json[6]['phone_number'];
+          document.getElementById('c8number').innerHTML = json[7]['phone_number'];
+          document.getElementById('c9number').innerHTML = json[8]['phone_number'];
+          document.getElementById('c10number').innerHTML = json[9]['phone_number'];
+          document.getElementById('c11number').innerHTML = json[10]['phone_number'];
+          document.getElementById('c12number').innerHTML = json[11]['phone_number'];
+          document.getElementById('c13number').innerHTML = json[12]['phone_number'];
 
           document.getElementById('c1bholder').innerHTML = 
           '<a href="http://localhost:3000/studios"> Check it out </a> '
@@ -108,9 +117,25 @@ const MyMapComponent = compose(
           '<a href="http://localhost:3000/studios"> Check it out  </a> '
           document.getElementById('c4bholder').innerHTML = 
           '<a href="http://localhost:3000/studios"> Check it out  </a> '
-
-
-
+          document.getElementById('c5bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out </a> '
+          document.getElementById('c6bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out  </a> '
+          document.getElementById('c7bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out  </a> '
+          document.getElementById('c8bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out  </a> '
+          document.getElementById('c9bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out </a> '
+          document.getElementById('c10bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out  </a> '
+          document.getElementById('c11bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out  </a> '
+          document.getElementById('c12bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out  </a> '
+          document.getElementById('c13bholder').innerHTML = 
+          '<a href="http://localhost:3000/studios"> Check it out </a> '
+         
         })
     }}
     defaultZoom={10}
