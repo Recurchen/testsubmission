@@ -33,7 +33,7 @@ const EditPaymentMethod = (props) => {
 
      useEffect(() => {
         const { page } = params;
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/payment_method/`,
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/payment_method/`,
         {headers: userDetailHeaders
         })
         .then(res => res.json())
@@ -51,15 +51,15 @@ const EditPaymentMethod = (props) => {
         const formData = new FormData();
         formData.append("card_type", `${card_type}`);
         formData.append("card_num", `${card_num}`);
-        formData.append("expired_date", `${expired_date}`);
-        formData.append("cvv", `${cvv}`);
-        formData.append("billing_address", `${billing_address}`);
+        if(expired_date){formData.append("expired_date", `${expired_date}`);}
+        if(cvv){formData.append("cvv", `${cvv}`);}
+        if(billing_address){formData.append("billing_address", `${billing_address}`);}
 
         for (var pair of formData.entries()) {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/payment_method/`, {
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/payment_method/`, {
             method: 'PUT',
             body: formData,
             headers: userDetailHeaders})
@@ -72,7 +72,6 @@ const EditPaymentMethod = (props) => {
             })
     }
 
-    console.log(currInfo.expired_date);
 
     return (
         <div className="auth-form-container">
@@ -81,7 +80,7 @@ const EditPaymentMethod = (props) => {
              {success ? <EditSuccessPop /> : null}
               </div>
         <form className="paymentmethod-form" onSubmit={handleSubmit}>
-            <label htmlFor="card_type">Select Payment Method</label>
+            <label htmlFor="card_type">Select Payment Method*</label>
             <select name="slt_card_type" 
                     id="slt_card_type" 
                     onChange={handleSelect}>
@@ -92,7 +91,7 @@ const EditPaymentMethod = (props) => {
                         </option>
                 })}
             </select>
-            <label htmlFor="card_num">Card Number</label>
+            <label htmlFor="card_num">Card Number*</label>
             <input value={card_num} 
                    onChange={(e) => setCardNum(e.target.value)}
                    type="card_num" 

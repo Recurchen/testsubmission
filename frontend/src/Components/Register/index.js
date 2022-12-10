@@ -4,7 +4,7 @@ import {Link, Outlet} from "react-router-dom";
 import PopUp from "../Popup";
 import Header from '../header';
 import Footer from '../footer';
-
+import Top_Nav_Menu from "../top_nav_menu";
 
 
 
@@ -21,71 +21,83 @@ const Register = (props) => {
 
     function showSuccess(){
        setSuccess(!success);
-       console.log("here");
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(avatar);
         const formData = new FormData();
+
         formData.append("username", `${username}`);
         formData.append("password", `${pass1}`);
         formData.append("password2", `${pass2}`);
+        formData.append("email", `${email}`);
         formData.append("first_name", `${firstname}`);
         formData.append("last_name", `${lastname}`);
-        formData.append("email", `${email}`);
-        formData.append("phone_number", `${phone}`);
-        formData.append('avatar', avatar);
+        if(phone){ formData.append("phone_number", `${phone}`);}
+        if(avatar){formData.append('avatar', avatar);}
 
-       //  for (const pair of formData.entries()){
-       //        console.log(`${pair[0]},${pair[1]}`);
-       //  }
+        for (const pair of formData.entries()){
+              console.log(`${pair[0]},${pair[1]}`);
+        }
 
+        var registered = false;
+        var message = "Sorry, register failed as: \n";
 
-        fetch('http://127.0.0.1:8000/accounts/register/', {
+        fetch('http://localhost:8000/accounts/register/', {
             method: 'POST',
             body: formData,
             redirect: "follow" })
             .then(res=>{
               if(res.status === 200){
-                     showSuccess();
-                     console.log("here");
+                     registered = true;
               }
-            })
-       //      .then(res=>res.json())
-       //      .then(json => console.log(json))
-            // TODO: redirect
+              return res.json();
+            }).then(json => {
+              console.log(json);
+
+              if(registered){showSuccess();
+              }else{
+              for (const [key, value] of Object.entries(json)){
+                     if(key === 'password2'){
+                            message = message + "confrim password: This field may not be blank.\n"
+                     }
+                     else{const temp = `${key}: ${value}\n`;
+                     message = message + temp;}
+              }
+              alert(message);
+              }});
     }
 
     return (
        <div>
        < Header />
+       < Top_Nav_Menu />
         <div className="auth-form-container">
             <h2 className="log-reg-title" >Register</h2>
             <div>
               {success ? <PopUp /> : null}
               </div>
         <form className="register-form" onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Username*</label>
             <input value={username} 
                    onChange={(e) => setUsername(e.target.value)}
                    name="username" 
                    id="username" 
                    placeholder="enter your username" />
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email*</label>
             <input value={email} 
                    onChange={(e) => setEmail(e.target.value)}
                    type="email" 
                    placeholder="enter your email" 
                    id="email" 
                    name="email" />
-            <label htmlFor="firstname">First Name</label>
+            <label htmlFor="firstname">First Name*</label>
             <input value={firstname} 
                    onChange={(e) => setFirstname(e.target.value)}
                    placeholder="enter your first name"
                    id="firstname" 
                    name="firstname" />
-            <label htmlFor="lastname">Last Name</label>
+            <label htmlFor="lastname">Last Name*</label>
             <input value={lastname} 
                    onChange={(e) => setLastname(e.target.value)}
                    placeholder="enter your last name"
@@ -106,14 +118,14 @@ const Register = (props) => {
                    id="avatar" 
                    name="avatar"
                    accept="image/png, image/jpeg" />           
-            <label htmlFor="pass1">Password</label>
+            <label htmlFor="pass1">Password*</label>
             <input value={pass1} 
                    onChange={(e) => setPass1(e.target.value)} 
                    type="password" 
                    placeholder="enter your password" 
                    id="pass1" 
                    name="pass1" />
-            <label htmlFor="pass1">Confirm Password</label>
+            <label htmlFor="pass1">Confirm Password*</label>
             <input value={pass2} 
                    onChange={(e) => setPass2(e.target.value)} 
                    type="password" 

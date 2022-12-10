@@ -1,0 +1,42 @@
+.update_or_cancel_sub {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.update_or_cancel_sub_title{
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 2rem;
+}
+
+.uoc_btn {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #eb6a32;
+    font-weight: bold;
+    
+}
+
+.update-plan-btn {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #eb6a32;
+    font-weight: bold;
+}

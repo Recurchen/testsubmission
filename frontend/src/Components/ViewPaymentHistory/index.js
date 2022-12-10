@@ -34,15 +34,10 @@ const ViewPaymentHistory = () => {
     
     useEffect(() => {
         const { page, checker } = params;
-        console.log(checker);
-        console.log(user_id.userId);
-        fetch(`http://127.0.0.1:8000/subscriptions/users/${user_id.userId}/payments/${checker}/?page=${page}`,
+        fetch(`http://localhost:8000/subscriptions/users/${user_id.userId}/payments/${checker}/?page=${page}`,
         {headers: viewPaymentsHeaders})
             .then(res => res.json())
             .then(json => {
-                console.log(json);
-                console.log(json.results);
-                console.log("okk");
                 setPaymentHistory(json.results);
                 json.next?setHasNext(true):setHasNext(false);
                 json.previous?setHasPrev(true):setHasPrev(false);
