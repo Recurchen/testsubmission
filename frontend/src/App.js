@@ -39,6 +39,7 @@ import Studios from './Components/Studios';
 import StudiosNearMe from './Components/StudiosNearMe';
 import StudioInfo from './Components/StudioInfo';
 import FiltedStudios from './Components/FilteredStudios';
+import MapLoader from './Components/Map';
 
 import UpdateSub from './Components/UpdateSub';
 // import Classes from './Components/Classes';
