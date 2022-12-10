@@ -10,22 +10,33 @@ const GeneralClassesTable = () => {
             return <table className="plan_table">
                 <thead>
                 <tr className="row_title">
-                    
-                    <th> Name </th>
-                    <th> Description </th>
-                    <th> Coach </th>
-                    <th> Capacity </th>
+                    <th className={'th'}> In Studio </th>
+                    <th className={'th'}> Name </th>
+                    <th className={'th'}> Description </th>
+                    <th className={'th'}> Coach </th>
+                    <th className={'th'}> Capacity </th>
+                    <th className={'th'}> Recurrences </th>
+                    <th className={'th'}> Start Date </th>
+                    <th className={'th'}> End Date </th>
+                    <th className={'th'}> Time </th>
+                    <th className={'th'}> Categories </th>
                 </tr>
                 </thead>
                 <tbody>
     
-                {GeneralClasses && GeneralClasses.map((GeneralClass, index) => (
+                {GeneralClasses && GeneralClasses.map((c, index) => (
                     
-                    <tr className="plans" key={GeneralClass.id}>
-                        <td>{ GeneralClass.name }</td>
-                        <td>{ GeneralClass.description}</td>
-                        <td>{ GeneralClass.coach}</td>
-                        <td>{ GeneralClass.capacity}</td>
+                    <tr className="plans" key={c.id}>
+                        <td>{c.studio['name']}</td>
+                        <td>{ c.name }</td>
+                        <td>{ c.description}</td>
+                        <td>{ c.coach}</td>
+                        <td>{ c.capacity}</td>
+                        <td>{c.recurrences.split(':')[1]}</td>
+                        <td>{c.start_date}</td>
+                        <td>{c.end_date}</td>
+                        <td>{c.start_time +'~'+c.end_time}</td>
+                        <td>{c.categories}</td>
 
                     </tr>
                 ))}
