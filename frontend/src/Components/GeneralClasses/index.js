@@ -28,7 +28,7 @@ const GeneralClasses = () => {
     <>
         <div>
             <h1>Classes</h1>
-            <button className={'filter'}> Know More</button>
+            
             <GeneralClassesTable id="plans-table"/>
             <button hidden={!hasPrev} className={'prev'}
                     onClick={() => setParams({
