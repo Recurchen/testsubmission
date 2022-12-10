@@ -36,3 +36,7 @@ a {
     color:  #eb6a32;
     font-size: 15px;
 }
+
+html {
+    background-color: linear-gradient(to right, #EE8A5E , #595959 );;
+}
