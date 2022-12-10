@@ -23,13 +23,13 @@ const Studios = () => {
     const { setStudios } = useContext(StudiosAPIContext);
     useEffect(() => {
         // const { page } = params;
-        fetch(`http://localhost:8000/studio/all/`)
+        fetch(`http://localhost:8000/studio/all1/`)
             .then(res => res.json())
             .then(json => {
                 console.log(json);
-                setStudios(json);
-                // json.next?setHasNext(true):setHasNext(false);
-                // json.previous?setHasPrev(true):setHasPrev(false);
+                setStudios(json.results);
+                json.next?setHasNext(true):setHasNext(false);
+                json.previous?setHasPrev(true):setHasPrev(false);
             })
     }, [params])
 
@@ -42,7 +42,7 @@ const Studios = () => {
                     <td> <button  class="button-5"  onClick={() => toFilter('amenities')}> Search by Amenities </button> </td>
                     <td> <button  class="button-5" onClick={() => toFilter('class')}> Search by Classess </button></td>
                     <td> <button  class="button-5" onClick={() => toFilter('coach')}> Search by Coaches </button></td>
-                    <td> <button   class="button-5" onClick={() => toNearMe()}> Find Studios Near Me </button></td>
+                    <td> <button  class="button-5" onClick={() => toNearMe()}> Find Studios Near Me </button></td>
                 </tr>
 
             </table>
@@ -54,22 +54,22 @@ const Studios = () => {
             
             {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
             <StudiosTable id="plans-table"/>
-            {/* <div>
+            {<div>
                 <button className="change-page-btn" hidden={!hasPrev}
                     onClick={() => setParams({
                     ...params,
                     page: Math.max(1, params.page - 1)
                 })}>
-                    Go Back
+                    Prev
                 </button>
                 <button className="change-page-btn" hidden={!hasNext}
                     onClick={() => setParams({
                     ...params,
                     page: params.page + 1
                 })}>
-                    View More
+                    Next
                 </button>
-            </div> */}
+            </div>}
         </div>
         </>)
 
