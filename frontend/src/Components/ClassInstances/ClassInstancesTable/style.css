@@ -1,0 +1,101 @@
+/*reference:https://codepen.io/alassetter/pen/nBEVJx*/
+body {
+    font-family: "Roboto", helvetica, arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
+
+/*** Class Instances Table **/
+.ClassInstancesTable {
+    background: white;
+    border-radius:3px;
+    border-collapse: collapse;
+    height: 320px;
+    margin: auto;
+    max-width: 900px;
+    padding:5px;
+    width: 100%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    animation: float 5s infinite;
+}
+
+.ClassInstancesTable th {
+    background: linear-gradient(to bottom, orangered, darkgrey);
+    color:white;
+    font-weight: bold;
+    border-bottom:4px solid white;
+    border-right: 2px solid white;
+    font-size:23px;
+    padding:24px;
+    text-align:left;
+    text-shadow: 0 5px 1px rgba(0, 0, 0, 0.1);
+    vertical-align:middle;
+}
+
+.ClassInstancesTable tr {
+    border-top: 1px solid #C1C3D1;
+    border-bottom: 1px solid #C1C3D1;
+    color:black;
+    font-size:20px;
+    font-weight:normal;
+    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+}
+
+.ClassInstancesTable tr:hover td {
+    background:orangered;
+    color:#FFFFFF;
+    border-top: 1px solid #22262e;
+}
+
+
+.ClassInstancesTable tr:nth-child(odd) td {
+    background:white;
+}
+
+.ClassInstancesTable tr:nth-child(odd):hover td {
+    background:orangered;
+}
+
+.ClassInstancesTable td {
+    background:#FFFFFF;
+    padding:20px;
+    text-align:left;
+    vertical-align:middle;
+    font-weight:300;
+    font-size:18px;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #C1C3D1;
+}
+
+/*enroll btn*/
+button.enroll {
+    background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+    border: 0;
+    border-radius: 20px;
+    color: #FFFFFF;
+    /*display: inline-block;*/
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 2.5;
+    outline: transparent;
+    padding: 0 1rem;
+    text-align: center;
+}
+button.enroll:not([disabled]):focus {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+button.enroll:not([disabled]):hover {
+    box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+span.noMatchClass{
+    font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size: 50px;
+    font-weight: 500;
+    color: white;
+    display: table;
+    margin: 1% auto;
+}

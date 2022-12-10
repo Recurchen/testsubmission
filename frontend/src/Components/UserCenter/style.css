@@ -1,0 +1,42 @@
+html {
+    background: linear-gradient(180deg, #EE8A5E 0%, #595959 100%);
+  }
+
+.user_center {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.info{
+    text-align: center;
+    display: flex;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.detailed{
+    color: black;
+}
+
+.buttons{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20rem;
+    flex-direction: column;
+}
+.uc-btn{
+    border: none;
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #eb6a32;
+}
