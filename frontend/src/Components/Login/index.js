@@ -59,10 +59,10 @@ export default function Login({ setToken, setUserId }) {
                 
                 <h2 className="log-reg-title">Login</h2>
                 <form className="login-form" onSubmit={handleSubmit}>
-                    <label htmlFor="username">Username</label>
-                    <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="enter your username here" id="username" name="username" />
-                    <label htmlFor="password">Password</label>
-                    <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
+                    <label className="login-label" htmlFor="username">Username</label>
+                    <input className="login-input" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="enter your username here" id="username" name="username" />
+                    <label className="login-label" htmlFor="password">Password</label>
+                    <input className="login-input" value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="********" id="password" name="password" />
                     <button className="reg-log-btn" id="submit" type="submit">Log In</button>
                 </form>
                 <Link to="/register" className="link-btn">Don't have an account? Register here.</Link>

@@ -79,13 +79,13 @@ const Register = (props) => {
               </div>
         <form className="register-form" onSubmit={handleSubmit}>
             <label htmlFor="username">Username*</label>
-            <input value={username} 
+            <input className="reg-input" value={username} 
                    onChange={(e) => setUsername(e.target.value)}
                    name="username" 
                    id="username" 
                    placeholder="enter your username" />
             <label htmlFor="email">Email*</label>
-            <input value={email} 
+            <input className="reg-input" value={email} 
                    onChange={(e) => setEmail(e.target.value)}
                    type="email" 
                    placeholder="enter your email" 
@@ -96,42 +96,48 @@ const Register = (props) => {
                    onChange={(e) => setFirstname(e.target.value)}
                    placeholder="enter your first name"
                    id="firstname" 
-                   name="firstname" />
+                   name="firstname"
+                   className="reg-input" />
             <label htmlFor="lastname">Last Name*</label>
             <input value={lastname} 
                    onChange={(e) => setLastname(e.target.value)}
                    placeholder="enter your last name"
                    id="lastname" 
-                   name="lastname" />
+                   name="lastname"
+                   className="reg-input" />
             <label htmlFor="phone">Phone Number</label>
             <input value={phone} 
                    onChange={(e) => setPhone(e.target.value)}
                    placeholder="enter your phone number"
                    type="tel"
                    id="phone" 
-                   name="phone" />
-            <label htmlFor="avatar">Upload Your Avatar</label>   
+                   name="phone" 
+                   className="reg-input"/>
+            <label id="avatar-label" htmlFor="avatar">Upload Your Avatar</label>   
             <input 
               //      value={avatar} 
                    onChange={(e) => setAvatar(e.target.files[0])}
                    type="file"
                    id="avatar" 
                    name="avatar"
-                   accept="image/png, image/jpeg" />           
+                   accept="image/png, image/jpeg" 
+                   className="reg-input"/>           
             <label htmlFor="pass1">Password*</label>
             <input value={pass1} 
                    onChange={(e) => setPass1(e.target.value)} 
                    type="password" 
                    placeholder="enter your password" 
                    id="pass1" 
-                   name="pass1" />
+                   name="pass1" 
+                   className="reg-input"/>
             <label htmlFor="pass1">Confirm Password*</label>
             <input value={pass2} 
                    onChange={(e) => setPass2(e.target.value)} 
                    type="password" 
                    placeholder="confirm your password" 
                    id="pass2" 
-                   name="pass2" />
+                   name="pass2" 
+                   className="reg-input"/>
             <button className="reg-log-btn" id="submit" type="submit">Sign Up</button>
         </form>
         <Link to="/login" className="link-btn">Already have an account? Login here.</Link>
