@@ -30,6 +30,7 @@ import EditPaymentMethod from './Components/EditPaymentMethod';
 import MakeSub from './Components/MakeSub';
 import ViewPaymentHistory from './Components/ViewPaymentHistory';
 import PaymentHistoryAPIContext, { usePaymentHistoryAPIContext } from './Contexts/PaymentHistoryAPIContext';
+import UpdateOrCancelSub from './Components/UpdateOrCancelSub';
 
 import useToken from './useToken';
 import useUserId from './useUserId';
@@ -38,8 +39,13 @@ import Studios from './Components/Studios';
 import StudiosNearMe from './Components/StudiosNearMe';
 import StudioInfo from './Components/StudioInfo';
 import FiltedStudios from './Components/FilteredStudios';
+
+import UpdateSub from './Components/UpdateSub';
+// import Classes from './Components/Classes';
+
 import GeneralClasses from './Components/GeneralClasses';
 import MapLoader from './Components/Map'
+
 
 function App() {
 
@@ -63,6 +69,16 @@ function App() {
     <PaymentHistoryAPIContext.Provider value={usePaymentHistoryAPIContext()}>
       < ViewPaymentHistory />
     </PaymentHistoryAPIContext.Provider>)
+    <Footer />
+    </div>)
+
+  const uoc_sub = (
+    <div>
+    <Header />
+    <Top_Nav_Menu />
+    <PlansAPIContext.Provider value={usePlansAPIContext()}>
+      < UpdateOrCancelSub />
+    </PlansAPIContext.Provider>
     <Footer />
     </div>)
 
@@ -195,6 +211,8 @@ const edituserinfo = (
                 <Route path="payment/method/edit" element={<EditPaymentMethod />} />
                 <Route path="payment/history" element={payments_history} />
                 <Route path="/plans/subscribe" element={<MakeSub/> } />
+                <Route path="/subscription" element={uoc_sub} />
+                <Route path="plans/update" element={<UpdateSub />} />
                 <Route path="classes/" element={classInstances} />
                 <Route path="classes/filter/" element={filterClassInstances}/>
                 <Route path="enrollments/" element={enrollmentHistory} />

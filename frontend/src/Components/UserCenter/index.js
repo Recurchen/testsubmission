@@ -17,6 +17,7 @@ const UserCenter = () => {
     const [params, setParams] = useState({page: 1});
     const [subscribe, setSubscribe] = useState(false);
     const [subInfo, setSubInfo] = useState(null);
+    const [planName, setPlanName] = useState('');
 
     const userDetailHeaders = new Headers({
         'Content-Type': 'application/json',
@@ -65,6 +66,7 @@ const UserCenter = () => {
                     </div>
                 )
                 setSubInfo(temp);
+                setPlanName(info_json.plan_name)
             })
         }
     }, [subscribe])
@@ -84,20 +86,33 @@ const UserCenter = () => {
         navigate('/payment/method/edit')
     }
 
+    const navToPlans = ()=>{
+        navigate('/plans')
+    }
+
+    const navToUpdateCancelSub = (plan_name)=>{
+        navigate('/subscription', { state: { plan_name:planName} })
+    }
+
     const sub = (userInfo) => {
         if(userInfo.is_subscribed){
                 return (
                     <div className="detailed">
                         Welcome back our TFC Member!
                         {subInfo}
-                    </div >
+                    {/* <button className="uc-btn" onClick={navToPlans}> Check Membership Plans</button> */}
+                    <button className="uc-btn" onClick={navToUpdateCancelSub}> Update/Cancel Your Membership</button>
+                    </div>
                 )
         }
         else{
             return (
+                <div>
                 <p className="detailed">
                     Subscribe now to become our member! 
                 </p >
+                <button className="uc-btn" onClick={navToPlans}> Check Membership Plans</button>
+                </div>
             )
         }
     }

@@ -21,25 +21,24 @@ const Register = (props) => {
 
     function showSuccess(){
        setSuccess(!success);
-       console.log("here");
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(avatar);
         const formData = new FormData();
+
         formData.append("username", `${username}`);
         formData.append("password", `${pass1}`);
         formData.append("password2", `${pass2}`);
+        formData.append("email", `${email}`);
         formData.append("first_name", `${firstname}`);
         formData.append("last_name", `${lastname}`);
-        formData.append("email", `${email}`);
-        formData.append("phone_number", `${phone}`);
-        formData.append('avatar', avatar);
+        if(phone){ formData.append("phone_number", `${phone}`);}
+        if(avatar){formData.append('avatar', avatar);}
 
-       //  for (const pair of formData.entries()){
-       //        console.log(`${pair[0]},${pair[1]}`);
-       //  }
+        for (const pair of formData.entries()){
+              console.log(`${pair[0]},${pair[1]}`);
+        }
 
 
         fetch('http://127.0.0.1:8000/accounts/register/', {
@@ -52,9 +51,6 @@ const Register = (props) => {
                      console.log("here");
               }
             })
-       //      .then(res=>res.json())
-       //      .then(json => console.log(json))
-            // TODO: redirect
     }
 
     return (
@@ -66,26 +62,26 @@ const Register = (props) => {
               {success ? <PopUp /> : null}
               </div>
         <form className="register-form" onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Username*</label>
             <input value={username} 
                    onChange={(e) => setUsername(e.target.value)}
                    name="username" 
                    id="username" 
                    placeholder="enter your username" />
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email*</label>
             <input value={email} 
                    onChange={(e) => setEmail(e.target.value)}
                    type="email" 
                    placeholder="enter your email" 
                    id="email" 
                    name="email" />
-            <label htmlFor="firstname">First Name</label>
+            <label htmlFor="firstname">First Name*</label>
             <input value={firstname} 
                    onChange={(e) => setFirstname(e.target.value)}
                    placeholder="enter your first name"
                    id="firstname" 
                    name="firstname" />
-            <label htmlFor="lastname">Last Name</label>
+            <label htmlFor="lastname">Last Name*</label>
             <input value={lastname} 
                    onChange={(e) => setLastname(e.target.value)}
                    placeholder="enter your last name"
@@ -106,14 +102,14 @@ const Register = (props) => {
                    id="avatar" 
                    name="avatar"
                    accept="image/png, image/jpeg" />           
-            <label htmlFor="pass1">Password</label>
+            <label htmlFor="pass1">Password*</label>
             <input value={pass1} 
                    onChange={(e) => setPass1(e.target.value)} 
                    type="password" 
                    placeholder="enter your password" 
                    id="pass1" 
                    name="pass1" />
-            <label htmlFor="pass1">Confirm Password</label>
+            <label htmlFor="pass1">Confirm Password*</label>
             <input value={pass2} 
                    onChange={(e) => setPass2(e.target.value)} 
                    type="password" 

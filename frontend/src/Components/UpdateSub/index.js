@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import useToken from "../../useToken";
 import useUserId from "../../useUserId";
 
-const MakeSub = () =>{
+const UpdateSub = () =>{
     const { state } = useLocation();
     const { plan_id, plan_name } = state;
     const [errorMsg, setErrorMsg] = useState();
@@ -29,7 +29,7 @@ const MakeSub = () =>{
         }
         else{
             if (sent === false){
-            fetch(`http://127.0.0.1:8000/subscriptions/users/${user_id.userId}/add/`,
+            fetch(`http://127.0.0.1:8000/subscriptions/users/${user_id.userId}/update/`,
                 {method:'post',
                 headers: new Headers({
                         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const MakeSub = () =>{
                 <div>
                     <h1 className={"success"}> Successful!</h1>
                     <br/>
-                    <h2> You have subscribed <b>{plan_name}</b></h2>
+                    <h2> You have updated to <b>{plan_name}</b></h2>
                     <button className={'back'} onClick={Back}>View Subscription</button>
                 </div>
             }
@@ -80,4 +80,4 @@ const MakeSub = () =>{
 
 }
 
-export default MakeSub;
+export default UpdateSub;
