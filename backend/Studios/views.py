@@ -1,4 +1,3 @@
-
 from datetime import timezone
 from pydoc import classname
 from django.shortcuts import get_object_or_404
@@ -21,10 +20,18 @@ from .models import Amenity, Studio
 from classes.models import Class
 from rest_framework.pagination import PageNumberPagination
 
+
 class StudioPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 5
+
 
 # Create your views here.
+class AllStudioListView(generics.ListCreateAPIView):
+    pagination_class = StudioPagination
+    serializer_class = StudioSerializer
+
+    def get_queryset(self):
+        return Studio.objects.all()
 
 
 class StudiosListView(generics.ListCreateAPIView):
@@ -51,18 +58,18 @@ class StudiosListView(generics.ListCreateAPIView):
                     condition1 |= Q(amenities__type__contains=amenity)
 
             # set the classes condition check
-            condition2 = Q(classes__name__contains = class_list[0])
+            condition2 = Q(classes__name__contains=class_list[0])
             if len(class_list) >= 1:
                 for class_name in class_list[1:]:
                     condition2 |= Q(classes__name__contains=class_name)
 
             studios = Studio.objects.filter(
-                                        condition1,
-                                        condition2,
-                                        name__contains = name,
-                                        classes__coach__contains = coach
-                                        ).distinct()
-        
+                condition1,
+                condition2,
+                name__contains=name,
+                classes__coach__contains=coach
+            ).distinct()
+
         # only 1 or more amenities search
         elif len(amenities) > 0:
             amenities_list = amenities.split()
@@ -75,38 +82,38 @@ class StudiosListView(generics.ListCreateAPIView):
                     condition1 |= Q(amenities__type__contains=amenity)
 
             studios = Studio.objects.filter(
-                                        condition1,
-                                        classes__name__contains = class_name, \
-                                        name__contains = name,
-                                        classes__coach__contains = coach
-                                        ).distinct()
+                condition1,
+                classes__name__contains=class_name, \
+                name__contains=name,
+                classes__coach__contains=coach
+            ).distinct()
 
         # only 1 or more classes search
         elif len(class_name) > 0:
             class_list = class_name.split()
 
             # set the classes condition check
-            condition2 = Q(classes__name__contains = class_list[0])
+            condition2 = Q(classes__name__contains=class_list[0])
             if len(class_list) >= 1:
                 for class_name in class_list[1:]:
                     condition2 |= Q(classes__name__contains=class_name)
 
             studios = Studio.objects.filter(condition2,
-                                        amenities__type__contains = amenities, 
-                                        name__contains = name,
-                                        classes__coach__contains = coach
-                                        ).distinct()        
+                                            amenities__type__contains=amenities,
+                                            name__contains=name,
+                                            classes__coach__contains=coach
+                                            ).distinct()
 
-        elif name=='' and amenities=='' and class_name==''and coach=='':
+        elif name == '' and amenities == '' and class_name == '' and coach == '':
             return Studio.objects.all()
 
         # general search, not multiple key words for classes and amenities
-        else:    
-            studios = Studio.objects.filter(name__contains = name, \
-                                        amenities__type__contains = amenities, \
-                                        classes__name__contains = class_name, \
-                                        classes__coach__contains = coach
-                                        ).distinct()
+        else:
+            studios = Studio.objects.filter(name__contains=name, \
+                                            amenities__type__contains=amenities, \
+                                            classes__name__contains=class_name, \
+                                            classes__coach__contains=coach
+                                            ).distinct()
 
         return studios
 
@@ -115,11 +122,11 @@ class StudiosListView(generics.ListCreateAPIView):
         amenities = self.request.query_params.get('amenities') or ''
         class_name = self.request.query_params.get('class') or ''
         coach = self.request.query_params.get('coach') or ''
-        
+
         # 1 or more amenities searching and
         # 1 or more classes searching at the same time
         if (len(amenities) > 0) \
-            and (len(class_name) > 0):
+                and (len(class_name) > 0):
             amenities_list = amenities.split()
             class_list = class_name.split()
 
@@ -130,18 +137,18 @@ class StudiosListView(generics.ListCreateAPIView):
                     condition1 |= Q(amenities__type__contains=amenity)
 
             # set the classes condition check
-            condition2 = Q(classes__name__contains = class_list[0])
+            condition2 = Q(classes__name__contains=class_list[0])
             if len(class_list) >= 1:
                 for class_name in class_list[1:]:
                     condition2 |= Q(classes__name__contains=class_name)
 
             studios = Studio.objects.filter(
-                                        condition1,
-                                        condition2,
-                                        name__contains = name,
-                                        classes__coach__contains = coach
-                                        ).distinct()
-        
+                condition1,
+                condition2,
+                name__contains=name,
+                classes__coach__contains=coach
+            ).distinct()
+
         # only 1 or more amenities search
         elif len(amenities) > 0:
             amenities_list = amenities.split()
@@ -154,40 +161,40 @@ class StudiosListView(generics.ListCreateAPIView):
                     condition1 |= Q(amenities__type__contains=amenity)
 
             studios = Studio.objects.filter(
-                                        condition1,
-                                        classes__name__contains = class_name, \
-                                        name__contains = name,
-                                        classes__coach__contains = coach
-                                        ).distinct()
+                condition1,
+                classes__name__contains=class_name, \
+                name__contains=name,
+                classes__coach__contains=coach
+            ).distinct()
 
         # only 1 or more classes search
         elif (len(class_name) > 0 and ' ' in class_name):
             class_list = class_name.split()
 
             # set the classes condition check
-            condition2 = Q(classes__name__contains = class_list[0])
+            condition2 = Q(classes__name__contains=class_list[0])
             if len(class_list) >= 1:
                 for class_name in class_list[1:]:
                     condition2 |= Q(classes__name__contains=class_name)
 
             studios = Studio.objects.filter(condition2,
-                                        amenities__type__contains = amenities, 
-                                        name__contains = name,
-                                        classes__coach__contains = coach
-                                        ).distinct()        
+                                            amenities__type__contains=amenities,
+                                            name__contains=name,
+                                            classes__coach__contains=coach
+                                            ).distinct()
 
         # general search, not multiple key words for classes and amenities
-        else:    
-            studios = Studio.objects.filter(name__contains = name, \
-                                        amenities__type__contains = amenities, \
-                                        classes__name__contains = class_name, \
-                                        classes__coach__contains = coach
-                                        ).distinct()
-        
-        def calculate_dist(origin, destination):
-            url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origin+"&destinations="+destination+"&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
+        else:
+            studios = Studio.objects.filter(name__contains=name, \
+                                            amenities__type__contains=amenities, \
+                                            classes__name__contains=class_name, \
+                                            classes__coach__contains=coach
+                                            ).distinct()
 
-            payload={}
+        def calculate_dist(origin, destination):
+            url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + origin + "&destinations=" + destination + "&units=imperial&key=AIzaSyCcnFNK3iBodsyc0utQgF0ULxB_wS8pAMs"
+
+            payload = {}
             headers = {}
 
             response = requests.request("GET", url, headers=headers, data=payload)
@@ -198,8 +205,8 @@ class StudiosListView(generics.ListCreateAPIView):
 
             return seconds
 
-
-        sorted_studios = sorted(studios, key = lambda studio: calculate_dist(origin, studio.address), reverse = False)
+        sorted_studios = sorted(studios, key=lambda studio: calculate_dist(origin, studio.address),
+                                reverse=False)
         return sorted_studios
 
     def list(self, request):
@@ -213,8 +220,7 @@ class StudiosListView(generics.ListCreateAPIView):
 
         if serializer.is_valid():
             origin_data = serializer.data.get('location')
-        
-        
+
             queryset = self.get_queryset_sorted(origin_data)
             serializer = StudioSerializer(queryset, many=True)
 
