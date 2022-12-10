@@ -4,7 +4,7 @@ import {Link, Outlet} from "react-router-dom";
 import PopUp from "../Popup";
 import Header from '../header';
 import Footer from '../footer';
-
+import Top_Nav_Menu from "../top_nav_menu";
 
 
 
@@ -41,7 +41,7 @@ const Register = (props) => {
         }
 
 
-        fetch('http://127.0.0.1:8000/accounts/register/', {
+        fetch('http://localhost:8000/accounts/register/', {
             method: 'POST',
             body: formData,
             redirect: "follow" })
@@ -56,6 +56,7 @@ const Register = (props) => {
     return (
        <div>
        < Header />
+       < Top_Nav_Menu />
         <div className="auth-form-container">
             <h2 className="log-reg-title" >Register</h2>
             <div>

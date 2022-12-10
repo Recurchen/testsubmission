@@ -45,7 +45,7 @@ const AddPaymentMethod = (props) => {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/payment_method/add/`, {
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/payment_method/add/`, {
             method: 'POST',
             body: formData,
             headers: userDetailHeaders})

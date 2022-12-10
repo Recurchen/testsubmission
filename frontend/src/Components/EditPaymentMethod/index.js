@@ -33,7 +33,7 @@ const EditPaymentMethod = (props) => {
 
      useEffect(() => {
         const { page } = params;
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/payment_method/`,
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/payment_method/`,
         {headers: userDetailHeaders
         })
         .then(res => res.json())
@@ -59,7 +59,7 @@ const EditPaymentMethod = (props) => {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/payment_method/`, {
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/payment_method/`, {
             method: 'PUT',
             body: formData,
             headers: userDetailHeaders})
