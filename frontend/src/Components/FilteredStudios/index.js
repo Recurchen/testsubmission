@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
 import StudiosTable from '../Studios/StudiosTable';
+import "./style.css"
 
 const FiltedStudios = () => {
     const { state } = useLocation();
@@ -75,9 +76,9 @@ const FiltedStudios = () => {
     return(
     <>
         <div>
-            <h1>Filted Studios</h1>
-            <input   type="text"
-                   placeholder="Search ..."
+            <h1>Search Studios</h1>
+            <input  type="text"
+                   placeholder="Enter Keyword..."
                    value={params.input}
                    onChange={(event) => {
                        setParams({
