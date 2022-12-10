@@ -53,7 +53,7 @@ const StudioInfo = () => {
             </button>
             <h1 display="inline">{studioName}</h1>
 
-            <img id="studio_image"  src={ studioImage} ></img>
+            <img id="studio_image"  src={ studioImage}  onerror="this.onerror=null;this.src='https://images.dailyhive.com/20200609094309/DH-GYM.jpg'"  ></img>
             
 
             <h3> Address: {studioAddress} </h3>
