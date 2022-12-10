@@ -36,11 +36,22 @@ const Studios = () => {
     return (
         <>
         <div className="plan">
-            <button onClick={() => toFilter('name')}> Search by Studio Name </button>
-            <button onClick={() => toFilter('amenities')}> Search by Amenities </button>
-            <button onClick={() => toFilter('class')}> Search by Classess </button>
-            <button onClick={() => toFilter('coach')}> Search by Coaches </button>
-            <button onClick={() => toNearMe()}> Find Studios Near Me </button>
+            <table class="buttonTable">
+                <tr>
+                    <td> <button  class="button-5" onClick={() => toFilter('name')}> Search by Studio Name </button></td>
+                    <td> <button  class="button-5"  onClick={() => toFilter('amenities')}> Search by Amenities </button> </td>
+                    <td> <button  class="button-5" onClick={() => toFilter('class')}> Search by Classess </button></td>
+                    <td> <button  class="button-5" onClick={() => toFilter('coach')}> Search by Coaches </button></td>
+                    <td> <button   class="button-5" onClick={() => toNearMe()}> Find Studios Near Me </button></td>
+                </tr>
+
+            </table>
+            
+        
+            
+            
+            
+            
             {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
             <StudiosTable id="plans-table"/>
             {/* <div>
