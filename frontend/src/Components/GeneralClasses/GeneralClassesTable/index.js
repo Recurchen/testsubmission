@@ -3,16 +3,9 @@ import GeneralClassesAPIContext from "../../../Contexts/GeneralClassesAPIContext
 import { useNavigate } from "react-router-dom";
 
 
-const GeneralClassesTable = ({ perPage, params }) => {
+const GeneralClassesTable = () => {
         const { GeneralClasses } = useContext(GeneralClassesAPIContext);
-        const navigate = useNavigate();
-        // const toDetail = (studio_id)=>{
-        //     navigate('/studio/detail', {state:{studio_id:studio_id}});
-        // }
-
-
         if (GeneralClasses && GeneralClasses.length > 0){
-        
             console.log('inside')
             return <table className="plan_table">
                 <thead>
@@ -33,25 +26,7 @@ const GeneralClassesTable = ({ perPage, params }) => {
                         <td>{ GeneralClass.description}</td>
                         <td>{ GeneralClass.coach}</td>
                         <td>{ GeneralClass.capacity}</td>
-                        {/* <td><button 
-                            onClick={
-                                (e) => {e.preventDefault();
-                                    toDetail(Studio.id);
-                                    }}> 
-                                    
-                                Know More</button> </td> */}
-                        {/* <td> <button className="sub-now-btn" onClick={(e) => {
-                            e.preventDefault();
-                            const answer = window.confirm("" +
-                                "Are you sure you want to enrol in this class occurrence?\n " +
-                                "Click OK to enrol, Cancel to stop.");
-                            if (answer) {
-                                console.log("Enrolled");
-                                // toEnroll(ClassInstance.belonged_class['id'], ClassInstance.class_date);
-                            } else {console.log("Not enrolled");}
-                        }}>
-                            Sub Now!
-                    </button> </td> */}
+
                     </tr>
                 ))}
                 </tbody>
