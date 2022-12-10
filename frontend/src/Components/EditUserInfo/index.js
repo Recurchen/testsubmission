@@ -52,6 +52,7 @@ const EditUserInfo = (props) => {
         if(lastname){formData.append("last_name", `${lastname}`);}
         if(email){formData.append("email", `${email}`);}
         if(phone){formData.append("phone_number", `${phone}`);}
+        if(avatar){formData.append('avatar', avatar);}
 
         fetch(`http://localhost:8000/accounts/users/${id.userId}/detail/`, {
             method: 'PUT',
