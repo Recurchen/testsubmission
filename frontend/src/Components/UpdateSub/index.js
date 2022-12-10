@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import useToken from "../../useToken";
 import useUserId from "../../useUserId";
 
-const MakeSub = () =>{
+const UpdateSub = () =>{
     const { state } = useLocation();
     const { plan_id, plan_name } = state;
     const [errorMsg, setErrorMsg] = useState();
@@ -13,15 +13,9 @@ const MakeSub = () =>{
     const token = useToken();
     const user_id = useUserId();
     const navigate = useNavigate();
-
-    const navToAddPayment = ()=>{
-        navigate('/payment/method/add')
+    const Back = ()=>{
+        navigate('/plans')
     }
-
-    const navToMain = ()=>{
-        navigate('/')
-    }
-
     const toLogin = ()=>{
         navigate('/login');
     }
@@ -35,7 +29,7 @@ const MakeSub = () =>{
         }
         else{
             if (sent === false){
-            fetch(`http://localhost:8000/subscriptions/users/${user_id.userId}/add/`,
+            fetch(`http://127.0.0.1:8000/subscriptions/users/${user_id.userId}/update/`,
                 {method:'post',
                 headers: new Headers({
                         'Content-Type': 'application/json',
@@ -47,14 +41,12 @@ const MakeSub = () =>{
                     if (res.status==='301'){
                         console.log(res.status);
                         toLogin();
-                    }else{return res;}
+                    } else{return res;}
             })
-            .then(res => res.json())
-            .then(json => {
-                console.log(json)
-                if(json.message === 'oops! subscription is canceled as no recorded payment method'){
-                    setErrorMsg(json.message);
-                }});
+                .then(res => res.json())
+                .then(json => {
+                    console.log(json);
+                });
             sent = true;
         }}
 
@@ -65,9 +57,9 @@ const MakeSub = () =>{
             { errorMsg &&
                 <span className="error">
                     { errorMsg }  <br/>
-                    <button className={'back'} onClick={navToAddPayment}
+                    <button className={'back'} onClick={Back}
                     >
-                        Go to Add Payment Method</button>
+                        Back</button>
                     <br/>
 
                 </span> }
@@ -75,8 +67,8 @@ const MakeSub = () =>{
                 <div>
                     <h1 className={"success"}> Successful!</h1>
                     <br/>
-                    <h2> You have subscribed <b>{plan_name}</b></h2>
-                    <button className={'back'} onClick={navToMain}>Go to Home Page</button>
+                    <h2> You have updated to <b>{plan_name}</b></h2>
+                    <button className={'back'} onClick={Back}>View Subscription</button>
                 </div>
             }
 
@@ -88,4 +80,4 @@ const MakeSub = () =>{
 
 }
 
-export default MakeSub;
+export default UpdateSub;

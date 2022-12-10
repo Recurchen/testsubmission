@@ -37,15 +37,15 @@ const AddPaymentMethod = (props) => {
         const formData = new FormData();
         formData.append("card_type", `${card_type}`);
         formData.append("card_num", `${card_num}`);
-        formData.append("expired_date", `${expired_date}`);
-        formData.append("cvv", `${cvv}`);
-        formData.append("billing_address", `${billing_address}`);
+        if(expired_date){formData.append("expired_date", `${expired_date}`);}
+        if(cvv){formData.append("cvv", `${cvv}`);}
+        if(billing_address){formData.append("billing_address", `${billing_address}`);}
 
         for (var pair of formData.entries()) {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/payment_method/add/`, {
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/payment_method/add/`, {
             method: 'POST',
             body: formData,
             headers: userDetailHeaders})
@@ -65,7 +65,7 @@ const AddPaymentMethod = (props) => {
              {success ? <AddSuccessPop /> : null}
               </div>
         <form className="paymentmethod-form" onSubmit={handleSubmit}>
-            <label htmlFor="card_type">Select Payment Method</label>
+            <label htmlFor="card_type">Select Payment Method*</label>
             <select name="slt_card_type" 
                     id="slt_card_type" 
                     onChange={handleSelect}>
@@ -76,7 +76,7 @@ const AddPaymentMethod = (props) => {
                         </option>
                 })}
             </select>
-            <label htmlFor="card_num">Card Number</label>
+            <label htmlFor="card_num">Card Number*</label>
             <input value={card_num} 
                    onChange={(e) => setCardNum(e.target.value)}
                    type="card_num" 

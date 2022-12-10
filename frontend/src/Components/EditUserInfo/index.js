@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './style.css';
 import {Link, Outlet} from "react-router-dom";
 import PopUp from '../Popup'; 
@@ -11,7 +11,26 @@ const EditUserInfo = (props) => {
     const token = useToken();
     const id = useUserId();
 
+    const [params, setParams] = useState({page: 1});
+    const [currUser, setCurrUser] = useState('');
+
     const userDetailHeaders = new Headers({
+        'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${token.token}`
+    })
+
+    useEffect(() => {
+        const { page } = params;
+        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/detail/`,
+        {headers: userDetailHeaders
+        })
+        .then(res => res.json())
+        .then(json => {
+            setCurrUser(json);  
+        })
+    }, [params])
+
+    const editHeaders = new Headers({
         'Authorization' : `Bearer ${token.token}`
     })
 
@@ -29,24 +48,17 @@ const EditUserInfo = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("first_name", `${firstname}`);
-        formData.append("last_name", `${lastname}`);
-        formData.append("email", `${email}`);
-        formData.append("phone_number", `${phone}`);
-        // formData.append("first_name", firstname);
-        // formData.append("last_name", lastname);
-        // formData.append("email", email);
-        // formData.append("phone_number", phone);
-        // formData.append('avatar', avatar);
+        if(firstname){formData.append("first_name", `${firstname}`);}
+        if(lastname){formData.append("last_name", `${lastname}`);}
+        if(email){formData.append("email", `${email}`);}
+        if(phone){formData.append("phone_number", `${phone}`);}
+        if(avatar){formData.append('avatar', avatar);}
 
-       console.log(formData.values());
-
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/detail/`, {
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/detail/`, {
             method: 'PUT',
             body: formData,
-            headers: userDetailHeaders})
+            headers: editHeaders})
             .then(res=>{
-                console.log(res);
               if(res.status === 200){
                      navToUserCenter();
               }
@@ -63,25 +75,25 @@ const EditUserInfo = (props) => {
             <input value={email} 
                    onChange={(e) => setEmail(e.target.value)}
                    type="email" 
-                   placeholder="enter your email" 
+                   placeholder= {`${currUser.email}`}
                    id="email" 
                    name="email" />
             <label htmlFor="firstname">First Name</label>
             <input value={firstname} 
                    onChange={(e) => setFirstname(e.target.value)}
-                   placeholder="enter your first name"
+                   placeholder= {`${currUser.first_name}`}
                    id="firstname" 
                    name="firstname" />
             <label htmlFor="lastname">Last Name</label>
             <input value={lastname} 
                    onChange={(e) => setLastname(e.target.value)}
-                   placeholder="enter your last name"
+                   placeholder= {`${currUser.last_name}`}
                    id="lastname" 
                    name="lastname" />
             <label htmlFor="phone">Phone Number</label>
             <input value={phone} 
                    onChange={(e) => setPhone(e.target.value)}
-                   placeholder="enter your phone number"
+                   placeholder= {`${currUser.phone_num}`}
                    type="tel"
                    id="phone" 
                    name="phone" />

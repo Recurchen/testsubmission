@@ -17,6 +17,7 @@ const UserCenter = () => {
     const [params, setParams] = useState({page: 1});
     const [subscribe, setSubscribe] = useState(false);
     const [subInfo, setSubInfo] = useState(null);
+    const [planName, setPlanName] = useState('');
 
     const userDetailHeaders = new Headers({
         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ const UserCenter = () => {
 
     useEffect(() => {
         const { page } = params;
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/detail/`,
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/detail/`,
         {headers: userDetailHeaders
         })
         .then(res => res.json())
@@ -43,7 +44,7 @@ const UserCenter = () => {
 
     useEffect(() => {
         if(subscribe === true){
-            fetch(`http://127.0.0.1:8000/subscriptions/users/${id.userId}/details/`,
+            fetch(`http://localhost:8000/subscriptions/users/${id.userId}/details/`,
             {headers: userDetailHeaders
             })
             .then(response => {
@@ -65,6 +66,7 @@ const UserCenter = () => {
                     </div>
                 )
                 setSubInfo(temp);
+                setPlanName(info_json.plan_name)
             })
         }
     }, [subscribe])
@@ -84,20 +86,33 @@ const UserCenter = () => {
         navigate('/payment/method/edit')
     }
 
+    const navToPlans = ()=>{
+        navigate('/plans')
+    }
+
+    const navToUpdateCancelSub = (plan_name)=>{
+        navigate('/subscription', { state: { plan_name:planName} })
+    }
+
     const sub = (userInfo) => {
         if(userInfo.is_subscribed){
                 return (
                     <div className="detailed">
                         Welcome back our TFC Member!
                         {subInfo}
-                    </div >
+                    {/* <button className="uc-btn" onClick={navToPlans}> Check Membership Plans</button> */}
+                    <button className="uc-btn" onClick={navToUpdateCancelSub}> Update/Cancel Your Membership</button>
+                    </div>
                 )
         }
         else{
             return (
+                <div>
                 <p className="detailed">
                     Subscribe now to become our member! 
                 </p >
+                <button className="uc-btn" onClick={navToPlans}> Check Membership Plans</button>
+                </div>
             )
         }
     }

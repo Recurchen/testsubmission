@@ -10,14 +10,14 @@ const Plans = () => {
     // const toFilter = (method)=>{
     //     navigate('/classes/filter', { state: { method:method } })
     // }
-    const perPage = 3;
+    const perPage = 6;
     const [params, setParams] = useState({page: 1});
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);
     const { setPlans } = useContext(PlansAPIContext);
     useEffect(() => {
         const { page } = params;
-        fetch(`http://127.0.0.1:8000/subscriptions/plans/?page=${page}`)
+        fetch(`http://localhost:8000/subscriptions/plans/?page=${page}`)
             .then(res => res.json())
             .then(json => {
                 console.log(json.results);
