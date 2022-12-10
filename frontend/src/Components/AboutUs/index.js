@@ -78,7 +78,7 @@ const AboutUs = () => {
                         </div>
                     </div>
                     <p style={{textAlign:"center",color:"white"}}> To see more, checkout our
-                        <a href="/"><i> classes page</i></a> .</p>
+                        <a href="/allclasses"><i> classes page</i></a> .</p>
                     <br/>
 
                 </div>
