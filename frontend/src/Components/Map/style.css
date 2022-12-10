@@ -1,0 +1,38 @@
+.plan_table {
+    width: 100%;
+    height: 60%;
+    text-align: center;
+    border: 10rem;
+    border-bottom: 5%;
+    padding: 10rem;
+    /* background-color: black; */
+    background-size: cover;
+    color: white;
+}
+.row_title{
+    font-size:2rem;
+}
+
+.plans{
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.sub-now-btn {
+    border: none;
+    margin: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    color: white;
+    background-color: #eb6a32;
+    width: 10rem;
+    font-size: large;
+    font-weight: bold;
+}
+
+a {
+    color:  #eb6a32;
+    font-size: 15px;
+}
