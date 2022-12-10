@@ -90,7 +90,7 @@ def update_future_payments(subscription, payment_method):
             payment.save()
 
 class PlansPagination(PageNumberPagination):
-    page_size = 3
+    page_size = 6
 
 class PlansView(ListAPIView):
     permission_classes = [AllowAny,]
