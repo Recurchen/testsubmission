@@ -1,5 +1,4 @@
 python3 -m venv venv
-cd ..
 cd frontend
 npm install
 npm install recompose --legacy-peer-deps
