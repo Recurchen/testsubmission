@@ -1,15 +1,31 @@
 import { redirect } from "react-router-dom";
 import useToken from "../../useToken";
+import { useNavigate } from "react-router-dom";
+import "./style.css"
 
 const Header = () => {
     var redirect;
     const token = useToken();
+    const navigate = useNavigate();
+    const navToLogin = ()=>{
+        navigate('/login')
+    }
+
+    const logout = () =>{
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('id');
+        navToLogin();
+    }
+
     if(token.token === null){
         redirect = (<a href="/login"><i className="fa fa-user"></i>Login </a>);
     }
     else {
-        redirect = (<a href="/usercenter"><i className="fa fa-user"></i> User Center</a>);
-        // TODO: redirect to user center
+        redirect = (
+        <div className="auth_user">
+        <a href="/usercenter"><i className="fa fa-user"></i> User Center</a>
+        <button id="logout" onClick={logout}> Log Out</button>
+        </div>);
     }
     return (
         <>

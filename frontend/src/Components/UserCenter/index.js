@@ -26,7 +26,7 @@ const UserCenter = () => {
 
     useEffect(() => {
         const { page } = params;
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/detail/`,
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/detail/`,
         {headers: userDetailHeaders
         })
         .then(res => res.json())
@@ -44,7 +44,7 @@ const UserCenter = () => {
 
     useEffect(() => {
         if(subscribe === true){
-            fetch(`http://127.0.0.1:8000/subscriptions/users/${id.userId}/details/`,
+            fetch(`http://localhost:8000/subscriptions/users/${id.userId}/details/`,
             {headers: userDetailHeaders
             })
             .then(response => {

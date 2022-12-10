@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Header from '../header';
 import Footer from '../footer';
+import Top_Nav_Menu from "../top_nav_menu";
 import {Link, useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types';
 import './style.css';
 
 async function loginUser(credentials) {
-    return fetch('http://127.0.0.1:8000/accounts/login/', {
+    return fetch('http://localhost:8000/accounts/login/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -31,18 +32,16 @@ export default function Login({ setToken, setUserId }) {
         const body = {"username": `${username}`,
                     "password":`${pass}`};
         const response = await loginUser(body);
-        console.log(response);
         const token = response.tokens.access;
-        // console.log(token);
         setUserId(response.id);
         setToken(token);
         navToMain();
-            // TODO: redirect
     }
 
     return (
         <div>
             <Header />
+            <Top_Nav_Menu />
             <div className="auth-form-container">
                 
                 <h2 className="log-reg-title">Login</h2>

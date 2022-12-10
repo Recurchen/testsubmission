@@ -92,7 +92,7 @@ const UpdateOrCancelSub = () => {
     useEffect(() => {
         const { page, is_update } = params;
         if(is_update === true){
-        fetch(`http://127.0.0.1:8000/subscriptions/plans/?page=${page}`)
+        fetch(`http://localhost:8000/subscriptions/plans/?page=${page}`)
             .then(res => res.json())
             .then(json => {
                 console.log(json);

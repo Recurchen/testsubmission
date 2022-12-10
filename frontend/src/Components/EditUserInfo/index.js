@@ -53,7 +53,7 @@ const EditUserInfo = (props) => {
         if(email){formData.append("email", `${email}`);}
         if(phone){formData.append("phone_number", `${phone}`);}
 
-        fetch(`http://127.0.0.1:8000/accounts/users/${id.userId}/detail/`, {
+        fetch(`http://localhost:8000/accounts/users/${id.userId}/detail/`, {
             method: 'PUT',
             body: formData,
             headers: editHeaders})

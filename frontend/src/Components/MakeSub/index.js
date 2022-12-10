@@ -29,7 +29,7 @@ const MakeSub = () =>{
         }
         else{
             if (sent === false){
-            fetch(`http://127.0.0.1:8000/subscriptions/users/${user_id.userId}/add/`,
+            fetch(`http://localhost:8000/subscriptions/users/${user_id.userId}/add/`,
                 {method:'post',
                 headers: new Headers({
                         'Content-Type': 'application/json',

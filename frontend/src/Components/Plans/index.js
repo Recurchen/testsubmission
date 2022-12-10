@@ -17,7 +17,7 @@ const Plans = () => {
     const { setPlans } = useContext(PlansAPIContext);
     useEffect(() => {
         const { page } = params;
-        fetch(`http://127.0.0.1:8000/subscriptions/plans/?page=${page}`)
+        fetch(`http://localhost:8000/subscriptions/plans/?page=${page}`)
             .then(res => res.json())
             .then(json => {
                 console.log(json.results);
