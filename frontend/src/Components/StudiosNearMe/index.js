@@ -1,29 +1,39 @@
 import './style.css'
 import {useContext, useEffect, useState} from "react";
 import StudiosTable from "./StudiosTable";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import './style.css';
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
 
-const Studios = () => {
+const StudiosNearMe = () => {
+    const { state } = useLocation();
+    const { setStudios } = useContext(StudiosAPIContext);
+    // const [params, setParams] = useState({page: 1, input: ""})
+    const [params, setParams] = useState({input: ""})
     // const perPage = 5;
-    const [params, setParams] = useState({page: 1});
+    // const [params, setParams] = useState({page: 1});
     const navigate = useNavigate();
     const toFilter = (keyword)=>{
         navigate('/studios/filter', {state: {keyword:keyword}})
-    }
-    const toNearMe = () => {
-        navigate('/studios/nearme')
     }
 
     // const [hasNext, setHasNext] = useState(false);
     // const [hasPrev, setHasPrev] = useState(false);
 
-    const { setStudios } = useContext(StudiosAPIContext);
     useEffect(() => {
+        const { input } = params;
         // const { page } = params;
-        fetch(`http://localhost:8000/studio/all/`)
+        fetch(`http://localhost:8000/studio/all/`, 
+            {
+                method:"POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                body: JSON.stringify({location:input},
+                )
+            })
             .then(res => res.json())
             .then(json => {
                 console.log(json);
@@ -36,12 +46,21 @@ const Studios = () => {
     return (
         <>
         <div className="plan">
-            <button onClick={() => toFilter('name')}> Search by Studio Name </button>
+            {/* <button onClick={() => toFilter('name')}> Search by Studio Name </button>
             <button onClick={() => toFilter('amenities')}> Search by Amenities </button>
             <button onClick={() => toFilter('class')}> Search by Classess </button>
             <button onClick={() => toFilter('coach')}> Search by Coaches </button>
-            <button onClick={() => toNearMe()}> Find Studios Near Me </button>
+            <button onClick={() => toNearMe()}> Find Studios Near Me </button> */}
             {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
+            <input   type="text"
+                   placeholder="Search Near"
+                   value={params.input}
+                   onChange={(event) => {
+                       setParams({
+                           input: event.target.value,
+                        //    page: 1,
+                       })
+                   }} />
             <StudiosTable id="plans-table"/>
             {/* <div>
                 <button className="change-page-btn" hidden={!hasPrev}
@@ -64,4 +83,4 @@ const Studios = () => {
 
     
 }
-export default Studios;
+export default StudiosNearMe;

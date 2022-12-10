@@ -17,6 +17,7 @@ import ClassInstances from "./Components/ClassInstances";
 import ClassInstancesAPIContext, {useClassInstanceAPIContext} from "./Contexts/ClassInstancesAPIContext";
 import EnrollmentHistoryAPIContext, {useEnrollmentHistoryAPIContext} from "./Contexts/EnrollmentHistoryAPIContext";
 import StudiosAPIContext, {useStudiosAPIContext} from './Contexts/StudiosAPIContext';
+import GeneralClassesAPIContext, {useGeneralClassesAPIContext} from './Contexts/GeneralClassesAPIContext';
 import EnrollmentHistory from "./Components/EnrollmentHistory";
 import EnrollClass from "./Components/EnrollClass";
 import DropClass from "./Components/DropClass";
@@ -35,10 +36,16 @@ import useToken from './useToken';
 import useUserId from './useUserId';
 import AboutUs from "./Components/AboutUs";
 import Studios from './Components/Studios';
+import StudiosNearMe from './Components/StudiosNearMe';
 import StudioInfo from './Components/StudioInfo';
 import FiltedStudios from './Components/FilteredStudios';
+
 import UpdateSub from './Components/UpdateSub';
 // import Classes from './Components/Classes';
+
+import GeneralClasses from './Components/GeneralClasses';
+import MapLoader from './Components/Map'
+
 
 function App() {
 
@@ -126,6 +133,17 @@ const edituserinfo = (
       <Footer />
   </div>)    
 
+      const studiosnearme = (
+        <div>
+        <Header />
+        <Top_Nav_Menu />
+        <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
+        <StudiosNearMe />
+        </StudiosAPIContext.Provider>
+        <MapLoader />
+        <Footer />
+    </div>)    
+
   const StudioInfoPage = (
     <div>
     <Header />
@@ -149,9 +167,10 @@ const edituserinfo = (
     <div>
     <Header />
     <Top_Nav_Menu />
-    {/* <StudiosAPIContext.Provider value={useStudiosAPIContext()}> */}
-    {/* <FiltedStudios />
-    </StudiosAPIContext.Provider> */}
+    <GeneralClassesAPIContext.Provider value={useGeneralClassesAPIContext()}>
+
+    <GeneralClasses />
+    </GeneralClassesAPIContext.Provider>
     <Footer />
   </div>
   )
@@ -180,6 +199,8 @@ const edituserinfo = (
                 <Route path="studios" element={studios} />
                 <Route path="studios/filter" element={FiltedStudioPage} />
                 <Route path="studio/detail"  element={StudioInfoPage}/>
+                {/* <Route path="studios/nearme"  element={studiosnearme}/> */}
+                <Route path="studios/nearme"  element={<MapLoader />}/>
                 <Route path="allclasses" element={GeneralClassesPage} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
