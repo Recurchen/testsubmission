@@ -70,7 +70,7 @@ const FiltedStudios = () => {
             //     // json.next?setHasNext(true):setHasNext(false);
             //     // json.previous?setHasPrev(true):setHasPrev(false);
             // })
-    })
+    }, [params])
 
 
     return(
