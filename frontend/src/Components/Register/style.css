@@ -32,7 +32,7 @@
     padding: 0.25rem 0;
   }
   
-  input {
+  .reg-input {
     margin: 0.5rem 0;
     padding: 1rem;
     border: none;
@@ -43,7 +43,6 @@
   .reg-log-btn {
     border: none;
     margin-top: 10px;
-    background-color: white;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
@@ -61,4 +60,12 @@
     background: none;
     color: white;
     text-decoration: underline;
+  }
+
+  #avatar-label {
+    margin-bottom: 0;
+  }
+
+  #avatar{
+    margin-top: 0;
   }
