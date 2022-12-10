@@ -124,7 +124,6 @@ const edituserinfo = (
         <StudiosAPIContext.Provider value={useStudiosAPIContext()}>
         <StudiosNearMe />
         </StudiosAPIContext.Provider>
-        <MapLoader />
         <Footer />
     </div>)    
 
@@ -182,8 +181,8 @@ const edituserinfo = (
                 <Route path="studios" element={studios} />
                 <Route path="studios/filter" element={FiltedStudioPage} />
                 <Route path="studio/detail"  element={StudioInfoPage}/>
-                {/* <Route path="studios/nearme"  element={studiosnearme}/> */}
-                <Route path="studios/nearme"  element={<MapLoader />}/>
+                <Route path="studios/nearme"  element={studiosnearme}/>
+                <Route path="studios/nearme/map"  element={<MapLoader />}/>
                 <Route path="allclasses" element={GeneralClassesPage} />
                 <Route path="plans" element={plans} />
                 <Route path="usercenter" element={usercenter} />
