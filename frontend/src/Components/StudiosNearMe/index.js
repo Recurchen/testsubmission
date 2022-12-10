@@ -1,15 +1,25 @@
 import './style.css'
 import {useContext, useEffect, useState} from "react";
+import React from "react"
 import StudiosTable from "./StudiosTable";
 import { useNavigate, useLocation } from "react-router-dom";
+// import { StyleSheet, Text, View } from "react-native";
+// import MapView from "react-native-maps";
+
+
+// import { StyleSheet, Text, View } from "react-native";
+// import MapView from "react-native-maps";
 
 import './style.css';
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
+
+
 
 const StudiosNearMe = () => {
     const { state } = useLocation();
     const { setStudios } = useContext(StudiosAPIContext);
     // const [params, setParams] = useState({page: 1, input: ""})
+    // const [params, setParams] = useState({input: "", check:false})
     const [params, setParams] = useState({input: ""})
     // const perPage = 5;
     // const [params, setParams] = useState({page: 1});
@@ -18,12 +28,20 @@ const StudiosNearMe = () => {
         navigate('/studios/filter', {state: {keyword:keyword}})
     }
 
+
+
     // const [hasNext, setHasNext] = useState(false);
     // const [hasPrev, setHasPrev] = useState(false);
 
     useEffect(() => {
-        const { input } = params;
+
+        const { input} = params;
+
         // const { page } = params;
+        console.log(input)
+        // if (input !== ''){
+        //     console.log("search ", input)
+        
         fetch(`http://localhost:8000/studio/all/`, 
             {
                 method:"POST",
@@ -38,30 +56,43 @@ const StudiosNearMe = () => {
             .then(json => {
                 console.log(json);
                 setStudios(json);
-                // json.next?setHasNext(true):setHasNext(false);
-                // json.previous?setHasPrev(true):setHasPrev(false);
-            })
-    }, [params])
+            })}
+        // }
+        , [params])
+
+
+
 
     return (
         <>
         <div className="plan">
-            {/* <button onClick={() => toFilter('name')}> Search by Studio Name </button>
-            <button onClick={() => toFilter('amenities')}> Search by Amenities </button>
-            <button onClick={() => toFilter('class')}> Search by Classess </button>
-            <button onClick={() => toFilter('coach')}> Search by Coaches </button>
-            <button onClick={() => toNearMe()}> Find Studios Near Me </button> */}
-            {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
+
+            <h3 color="white"> Enter your address or postal code </h3>
+  
             <input   type="text"
-                   placeholder="Search Near"
+                   placeholder="Search Closest Studios"
                    value={params.input}
                    onChange={(event) => {
                        setParams({
+                        ...params,
                            input: event.target.value,
                         //    page: 1,
                        })
                    }} />
-            <StudiosTable id="plans-table"/>
+                   {/* <button id="search"
+                   value={params.check}
+                   onClick={() => {
+                    setParams({
+                        check: true
+                     //    page: 1,
+                    }
+                ); console.log('clicked')
+                }}
+                > Enter</button> */}
+            
+            
+
+            <StudiosTable id="plans-table"params={params}/>
             {/* <div>
                 <button className="change-page-btn" hidden={!hasPrev}
                     onClick={() => setParams({
@@ -83,4 +114,6 @@ const StudiosNearMe = () => {
 
     
 }
+
+
 export default StudiosNearMe;

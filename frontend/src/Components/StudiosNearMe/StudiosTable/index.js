@@ -1,6 +1,7 @@
 import {useContext} from "react";
 import StudiosAPIContext from "../../../Contexts/StudiosAPIContext";
 import { useNavigate } from "react-router-dom";
+import "./style.css"
 
 
 const StudiosTable = ({ perPage, params }) => {
@@ -16,29 +17,34 @@ const StudiosTable = ({ perPage, params }) => {
             console.log('inside')
             return <table className="plan_table">
                 <thead>
-                <tr className="row_title">
+                <tr class="row_title">
                     <th> Name </th>
                     <th> Address </th>
                     <th> Number </th>
                     <th> Postal Code </th>
+                    <th> Picture</th>
                 </tr>
                 </thead>
                 <tbody>
     
                 {Studios && Studios.map((Studio, index) => (
                     // {Studios && Studios.map((Studio, index) => (
-                    <tr className="plans" key={Studio.id}>
+                    
+                    <tr class="studioRow" key={Studio.id}>
                         <td>{ Studio.name }</td>
                         <td>{ Studio.address}</td>
                         <td>{ Studio.phone_number}</td>
                         <td>{ Studio.postal_code}</td>
-                        <td><button 
+                        {/* <td> <img src="http://localhost:8000/studio_images/Oakville_Pic_1.jpg"></img>  </td> */}
+                        <td> <img class="studioImage" src={`http://localhost:8000` + Studio.images[0].image}></img>  </td>
+                        {/* <td> { Studio.images[0].image} </td> */}
+                        <td><button class="button-5"
                             onClick={
                                 (e) => {e.preventDefault();
                                     toDetail(Studio.id);
                                     }}> 
                                     
-                                Know More</button> </td>
+                                Know More!</button> </td>
                         {/* <td> <button className="sub-now-btn" onClick={(e) => {
                             e.preventDefault();
                             const answer = window.confirm("" +
@@ -59,7 +65,7 @@ const StudiosTable = ({ perPage, params }) => {
     
         }
         return(
-            <span style={{color:'red'}}> nothing </span>
+            <span style={{color:'white'}}> Please Make Sure Your Input Is Correct ;) </span>
         )
     
         }
