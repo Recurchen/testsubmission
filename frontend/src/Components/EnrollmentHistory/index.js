@@ -52,14 +52,14 @@ const EnrollmentHistory = () => {
 
 
             <EnrollmentHistoryTable perPage={perPage} params={params} />
-            <button hidden={!hasPrev}
+            <button  className={'filter'} hidden={!hasPrev}
                 onClick={() => setParams({
                 ...params,
                 page: Math.max(1, params.page - 1)
             })}>
                 prev
             </button>
-            <button hidden={!hasNext}
+            <button className={'filter'} hidden={!hasNext}
                 onClick={() => setParams({
                 ...params,
                 page: params.page + 1
