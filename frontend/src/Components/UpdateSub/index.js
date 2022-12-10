@@ -3,6 +3,9 @@ import {useEffect, useState} from "react";
 // import './style.css';
 import useToken from "../../useToken";
 import useUserId from "../../useUserId";
+import Footer from "../footer";
+import Header from "../header";
+import Top_Nav_Menu from "../top_nav_menu";
 
 const UpdateSub = () =>{
     const { state } = useLocation();
@@ -29,7 +32,7 @@ const UpdateSub = () =>{
         }
         else{
             if (sent === false){
-            fetch(`http://127.0.0.1:8000/subscriptions/users/${user_id.userId}/update/`,
+            fetch(`http://localhost:8000/subscriptions/users/${user_id.userId}/update/`,
                 {method:'post',
                 headers: new Headers({
                         'Content-Type': 'application/json',
@@ -53,6 +56,10 @@ const UpdateSub = () =>{
     },[state]
     )
     return (
+        <div>
+            <Header />
+            <Top_Nav_Menu />
+        
         <div className='confirmation'>
             { errorMsg &&
                 <span className="error">
@@ -71,8 +78,8 @@ const UpdateSub = () =>{
                     <button className={'back'} onClick={Back}>View Subscription</button>
                 </div>
             }
-
-
+        </div>
+        <Footer />
         </div>
 
     )

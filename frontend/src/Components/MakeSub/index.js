@@ -3,6 +3,9 @@ import {useEffect, useState} from "react";
 // import './style.css';
 import useToken from "../../useToken";
 import useUserId from "../../useUserId";
+import Footer from "../footer";
+import Header from "../header";
+import Top_Nav_Menu from "../top_nav_menu";
 
 const MakeSub = () =>{
     const { state } = useLocation();
@@ -61,6 +64,9 @@ const MakeSub = () =>{
     },[state]
     )
     return (
+        <div>
+            <Header />
+            <Top_Nav_Menu />
         <div className='confirmation'>
             { errorMsg &&
                 <span className="error">
@@ -79,10 +85,9 @@ const MakeSub = () =>{
                     <button className={'back'} onClick={navToMain}>Go to Home Page</button>
                 </div>
             }
-
-
         </div>
-
+            <Footer />
+        </div>
     )
 
 
