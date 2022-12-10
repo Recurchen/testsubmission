@@ -16,6 +16,9 @@ const Studios = () => {
     const toNearMe = () => {
         navigate('/studios/nearme')
     }
+    const toNearMeMap = () => {
+        navigate('/studios/nearme/map')
+    }
 
     // const [hasNext, setHasNext] = useState(false);
     // const [hasPrev, setHasPrev] = useState(false);
@@ -43,6 +46,7 @@ const Studios = () => {
                     <td> <button  class="button-5" onClick={() => toFilter('class')}> Search by Classess </button></td>
                     <td> <button  class="button-5" onClick={() => toFilter('coach')}> Search by Coaches </button></td>
                     <td> <button   class="button-5" onClick={() => toNearMe()}> Find Studios Near Me </button></td>
+                    <td> <button   class="button-5" onClick={() => toNearMeMap()}> Find Studios On Map </button></td>
                 </tr>
 
             </table>
