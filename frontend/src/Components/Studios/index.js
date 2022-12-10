@@ -17,8 +17,8 @@ const Studios = () => {
         navigate('/studios/nearme')
     }
 
-    // const [hasNext, setHasNext] = useState(false);
-    // const [hasPrev, setHasPrev] = useState(false);
+    const [hasNext, setHasNext] = useState(false);
+    const [hasPrev, setHasPrev] = useState(false);
 
     const { setStudios } = useContext(StudiosAPIContext);
     useEffect(() => {
