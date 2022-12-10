@@ -9,24 +9,24 @@ const GeneralClassesTable = () => {
             console.log('inside')
             return <table className="plan_table">
                 <thead>
-                <tr className="row_title">
-                    <th className={'th'}> In Studio </th>
-                    <th className={'th'}> Name </th>
-                    <th className={'th'}> Description </th>
-                    <th className={'th'}> Coach </th>
-                    <th className={'th'}> Capacity </th>
-                    <th className={'th'}> Recurrences </th>
-                    <th className={'th'}> Start Date </th>
-                    <th className={'th'}> End Date </th>
-                    <th className={'th'}> Time </th>
-                    <th className={'th'}> Categories </th>
+                <tr className="row_title" style={{fontSize:'x-large'}}>
+                    <th> In Studio </th>
+                    <th> Name </th>
+                    <th> Description </th>
+                    <th> Coach </th>
+                    <th> Capacity </th>
+                    <th> Recurrences </th>
+                    <th> Start Date </th>
+                    <th> End Date </th>
+                    <th> Time </th>
+                    <th> Categories </th>
                 </tr>
                 </thead>
                 <tbody>
     
                 {GeneralClasses && GeneralClasses.map((c, index) => (
                     
-                    <tr className="plans" key={c.id}>
+                    <tr className="plans" key={c.id} style={{fontSize:'large'}}>
                         <td>{c.studio['name']}</td>
                         <td>{ c.name }</td>
                         <td>{ c.description}</td>
