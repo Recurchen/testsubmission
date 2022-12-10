@@ -64,3 +64,26 @@
 /*        display: block;*/
 /*    }*/
 /*}*/
+
+#studio_detail{
+    /* float:left; */
+    margin-left: 200px;
+    /* background-color: black; */
+    width: 1000px;
+    height: 400px;
+}
+
+#studio_detail h1{
+    font-size: 55px;
+}
+
+#studio_detail h3{
+    color:black
+}
+
+#studio_image{
+    height: 300px;
+    /* margin-right:100px; */
+    float:right;
+    margin-top: -100px;
+}
