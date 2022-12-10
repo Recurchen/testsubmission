@@ -7,7 +7,7 @@ import './style.css';
 import StudiosAPIContext from '../../Contexts/StudiosAPIContext';
 
 const Studios = () => {
-    // const perPage = 5;
+    const perPage = 5;
     const [params, setParams] = useState({page: 1});
     const navigate = useNavigate();
     const toFilter = (keyword)=>{
@@ -25,8 +25,8 @@ const Studios = () => {
 
     const { setStudios } = useContext(StudiosAPIContext);
     useEffect(() => {
-        // const { page } = params;
-        fetch(`http://localhost:8000/studio/all1/`)
+        const { page } = params;
+        fetch(`http://localhost:8000/studio/all1/?page=${page}`)
             .then(res => res.json())
             .then(json => {
                 console.log(json);
@@ -51,25 +51,20 @@ const Studios = () => {
                 </tr>
 
             </table>
-            
-        
-            
-            
-            
-            
-            {/* <StudiosTable id="plans-table" perPage={perPage} params={params} /> */}
-            <StudiosTable id="plans-table"/>
+
+             <StudiosTable id="plans-table" perPage={perPage} params={params} />
+            {/*<StudiosTable id="plans-table" />*/}
             {<div>
                 <button className="change-page-btn" hidden={!hasPrev}
                     onClick={() => setParams({
-                    ...params,
+
                     page: Math.max(1, params.page - 1)
                 })}>
                     Prev
                 </button>
                 <button className="change-page-btn" hidden={!hasNext}
                     onClick={() => setParams({
-                    ...params,
+
                     page: params.page + 1
                 })}>
                     Next
