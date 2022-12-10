@@ -59,7 +59,6 @@ const EditUserInfo = (props) => {
             body: formData,
             headers: editHeaders})
             .then(res=>{
-                console.log(res);
               if(res.status === 200){
                      navToUserCenter();
               }

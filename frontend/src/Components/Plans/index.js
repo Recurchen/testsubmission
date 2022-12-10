@@ -10,7 +10,7 @@ const Plans = () => {
     // const toFilter = (method)=>{
     //     navigate('/classes/filter', { state: { method:method } })
     // }
-    const perPage = 3;
+    const perPage = 6;
     const [params, setParams] = useState({page: 1});
     const [hasNext, setHasNext] = useState(false);
     const [hasPrev, setHasPrev] = useState(false);

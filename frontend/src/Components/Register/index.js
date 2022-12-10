@@ -40,6 +40,8 @@ const Register = (props) => {
               console.log(`${pair[0]},${pair[1]}`);
         }
 
+        var registered = false;
+        var message = "Sorry, register failed as: \n";
 
         fetch('http://localhost:8000/accounts/register/', {
             method: 'POST',
@@ -47,10 +49,23 @@ const Register = (props) => {
             redirect: "follow" })
             .then(res=>{
               if(res.status === 200){
-                     showSuccess();
-                     console.log("here");
+                     registered = true;
               }
-            })
+              return res.json();
+            }).then(json => {
+              console.log(json);
+
+              if(registered){showSuccess();
+              }else{
+              for (const [key, value] of Object.entries(json)){
+                     if(key === 'password2'){
+                            message = message + "confrim password: This field may not be blank.\n"
+                     }
+                     else{const temp = `${key}: ${value}\n`;
+                     message = message + temp;}
+              }
+              alert(message);
+              }});
     }
 
     return (

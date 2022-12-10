@@ -7,13 +7,26 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 async function loginUser(credentials) {
+    var succ = false;
     return fetch('http://localhost:8000/accounts/login/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
           },
         body: JSON.stringify(credentials)})
-        .then(data => data.json())
+        .then(res => {
+            if (res.status === 200){
+                succ = true;
+            }
+            return res.json()
+        }).then(json => {
+            if(succ){
+                return json;
+            }
+            else{
+                alert(json.detail);
+            }
+        })
 }
 
 export default function Login({ setToken, setUserId }) {
