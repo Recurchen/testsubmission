@@ -6,6 +6,9 @@ import useToken from "../../useToken";
 import useUserId from "../../useUserId";
 import { useNavigate } from "react-router-dom";
 import EditSuccessPop from "./EditSuccessPop";
+import Footer from "../footer";
+import Header from "../header";
+import Top_Nav_Menu from "../top_nav_menu";
 
 const EditPaymentMethod = (props) => {
 
@@ -74,6 +77,9 @@ const EditPaymentMethod = (props) => {
 
 
     return (
+        <div>
+            <Header />
+            <Top_Nav_Menu />
         <div className="auth-form-container">
             <h2 className="payment-title" >Add Your Payment Method Here</h2>
             <div>
@@ -120,6 +126,8 @@ const EditPaymentMethod = (props) => {
                     />         
             <button className="reg-log-btn" id="submit" type="submit">Update</button>
         </form>
+    </div>
+    <Footer />
     </div>
     )
 }
