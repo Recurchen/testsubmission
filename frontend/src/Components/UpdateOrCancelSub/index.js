@@ -16,7 +16,7 @@ const UpdateOrCancelSub = () => {
     const { plan_name } = state;
     const [is_cancel, setIsCancel] = useState(false);
     const [params, setParams] = useState({page: 1, is_update: false});
-    const perPage = 3;
+    const perPage = 6;
     const [hasNext, setHasNext] = useState(true);
     const [hasPrev, setHasPrev] = useState(false);
     const { setPlans } = useContext(PlansAPIContext);

@@ -40,6 +40,7 @@ const Register = (props) => {
               console.log(`${pair[0]},${pair[1]}`);
         }
 
+        var registered = false;
 
         fetch('http://localhost:8000/accounts/register/', {
             method: 'POST',
@@ -47,10 +48,13 @@ const Register = (props) => {
             redirect: "follow" })
             .then(res=>{
               if(res.status === 200){
-                     showSuccess();
-                     console.log("here");
+                     registered = true;
               }
-            })
+              return res.json()
+            }).then(json => {
+              if(registered){showSuccess();
+              }else{
+              alert("Please enter all required fields with * ");}})
     }
 
     return (
